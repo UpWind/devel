@@ -1,0 +1,73 @@
+#-------------------------------------------------
+#
+# Project created by QtCreator 2011-11-02T15:02:27
+#
+#-------------------------------------------------
+
+QT += core gui
+
+TARGET = ChartProviderInterface
+
+TEMPLATE = lib
+
+SOURCES += \
+    objects/coastline.cpp \
+    objects/rock.cpp \
+    objects/limit.cpp \
+    objects/deptharea.cpp \
+    objects/wreck.cpp \
+    objects/navigline.cpp \
+    objects/transmline.cpp \
+    objects/bridge.cpp \
+    objects/signsound.cpp \
+    objects/navaid.cpp \
+    objects/generarea.cpp \
+    objects/depthcontour.cpp \
+    objects/depthareashallow.cpp
+
+HEADERS += \
+    ../UWPluginInterface/uwplugininterface.h \
+    chartproviderinterface.h \
+    corechartprovider.h \
+    chartobjectinterface.h \
+    objects/coastline.h \
+    objects/rock.h \
+    objects/limit.h \
+    objects/deptharea.h \
+    objects/wreck.h \
+    objects/navigline.h \
+    objects/transmline.h \
+    objects/bridge.h \
+    objects/signsound.h \
+    objects/navaid.h \
+    objects/depthcontour.h \
+    objects/generarea.h \
+    objects/depthareashallow.h
+
+DESTDIR += ../uwplugins
+
+
+mac {
+    INCLUDEPATH += /Library/Frameworks/GDAL.framework/Headers/
+    LIBS += -L/Library/Frameworks/GDAL.framework/unix/lib -lgdal -lpq
+}
+
+else:unix {
+
+    INCLUDEPATH +=/usr/include/gdal/ \
+        /usr/include/postgresql
+    LIBS +=-lpq -lgdal1.7.0
+}
+
+win32 {
+    INCLUDEPATH += "C:\\gdal\\gdal\\include"
+    LIBS += "C:\\gdal\\gdal\\bin\\libgdal-1.dll"
+
+    INCLUDEPATH += "C:\\Program Files (x86)\\PostgreSQL\\8.4\\include"
+    LIBS += "C:\\Program Files (x86)\\PostgreSQL\\8.4\\bin\\libpq.dll"
+}
+
+
+
+
+

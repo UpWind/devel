@@ -1,0 +1,79 @@
+\documentclass[12pt,titlepage]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[english]{minitoc}
+\usepackage{enumitem}
+\usepackage{float}
+\renewcommand{\thesection}{\arabic{section}}
+
+\date{\today}
+\title{Pre-study report for UpWind Project}
+\author{Jesse Mikkola\\
+		Ari-Pekka Kervinen\\
+		Markku Kuuselo\\
+		Kimmo Leppälä\\
+		Pau Ruiz i Safont\\
+		Pekka Tyhtilä}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+	The UpWind project is an Open Source Software Development project initiated and coordinated by the UpWind team at TOL.
+	Since 2006, UpWind projects have developed an advanced navigator for sailboats together with a real world simulator against which the navigator can be efficiently tested
+
+	During last two semesters, student projects have renewed both the navigator and the simulator on a new plug-in based architecture.
+	Plug-in architecture allows easy adding and/or replacing of features. Now, the transformation of the navigator should be finished on the new architecture.
+	The remaining parts include the interesting functionalities of the chart rendering and automatic route planning.
+
+	After being developed by multiple different teams the software code became a mess.
+	To improve code maintainability and extendability a new plugin architecture has been introduced.
+	Spring 2010 project team designed and reimplemented most of the Upwind navigator software according the new plugin architecture.
+
+	The vector chart rendering, and automatic long term and short term route planning will be implemented by following the plug-in architecture.
+	Both of these features have been earlier implemented and tested, so the work will be mostly porting of code to the new architecture style.
+
+\section{Main references to be used in UpWind project}
+
+\subsection{Article: Continuous Integration by Martin Fowler}
+
+Article goes through the practices and benefits of continuous integration.
+From our team point of view continuous integration is quite important way of working.
+Software projects involve lots of files that need to be orchestrated together to build a product.
+Keeping track of all of these files is a major effort, particularly when there's multiple people involved.
+CI is a software development practice where members of a team integrate their work frequently.
+CI enables fast and extensive feedback of SW changes that are in our release chain.
+CI gives the possibility to reach fast to problems in builds; it enables errors and integration problems to found in early phase.
+That eventually leads to better SW quality.
+
+\subsection{Bachelor Thesis: Plugin-pohjaiset sovellukset arkkitehtuurit by Mikael Koskinen}
+
+Bachelors thesis examines plug-in based applications and plug-in architecture.
+From our team’s point of view, this bachelor’s thesis will give us information and understanding about plug-in architecture.
+This thesis work is important to our UpWind project work, because the vector chart rendering, and automatic long term and short term route planning will be implemented by following the plug-in architecture.
+Both of these features have been earlier implemented and tested, so our work will be mostly porting of code to the new architecture style
+
+\subsection{Master Thesis: Refactoring on maintaining and expanding software: Case UpWind Simulator by Tero Maijala}
+
+The Master thesis describes what refactoring is.
+Actually the thesis is a case study of UpWind 2 project.
+The UpWind2 was a refactoring project which focused on improving understandability, maintanability and reusability as a reflection of quality.
+
+The thesis gives us valuable knowledge on refactoring and how it can simplify the code and improve the process of software design.
+
+\subsection{Master Thesis: Assessing the utilisation of continous interaction in a large scale software integartion environment by Tomi Teriö.}
+
+The thesis describes the complexcity of software, the need to reduce the time-to-market and the need to improve the quality of the software as examples of situations where continuous interaction can be a big help.
+Our team´s work is mostly to integrate several software components.
+Therefore the thesis gives a good example anf framework on how to deal with our task.
+
+\bibliographystyle{plain}
+\bibliography{sources}
+
+\end{document}

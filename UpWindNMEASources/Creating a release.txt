@@ -1,0 +1,1 @@
+Copy the necessary DLL files from C:\Qt\2010.05\qt\bin or whatever your install path is. Don't copy from them Qt\2010.05\bin, these are not ment to be used with the release version.

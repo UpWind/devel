@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Compass</class>
+ <widget class="QGroupBox" name="Compass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>130</width>
+    <height>132</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>130</width>
+    <height>132</height>
+   </size>
+  </property>
+  <property name="cursor">
+   <cursorShape>PointingHandCursor</cursorShape>
+  </property>
+  <property name="windowTitle">
+   <string>GroupBox</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QGroupBox {
+		background-color: rgba(0, 0, 0, 0%);
+	color: white;
+     border: 2px rgba(0, 0, 0, 0%);
+}
+
+QGraphicsView{
+background-color: rgba(0, 0, 0, 0%);
+}
+
+
+QLabel {
+color:white;
+}</string>
+  </property>
+  <property name="title">
+   <string/>
+  </property>
+  <property name="flat">
+   <bool>true</bool>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>5</number>
+   </property>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

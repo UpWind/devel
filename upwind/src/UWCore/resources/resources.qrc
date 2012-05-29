@@ -1,0 +1,154 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="protractor1">Protractor1.png</file>
+        <file alias="protractor">Protractor1.svg</file>
+        <file alias="add">add.png</file>
+        <file>adept_install.png</file>
+        <file>adept_remove.png</file>
+        <file>arrows.png</file>
+        <file>back.png</file>
+        <file alias="boat">boat.png</file>
+        <file alias="buoyPillar">buoyPillar.png</file>
+        <file alias="buoySpar">buoySpar.png</file>
+        <file alias="buoyX">buoyX.png</file>
+        <file>button_cancel.png</file>
+        <file>button_ok.png</file>
+        <file>configure.png</file>
+        <file>downarrow.png</file>
+        <file>editclear.png</file>
+        <file>exit.png</file>
+        <file>fileopen.png</file>
+        <file>filesave.png</file>
+        <file alias="greenLightCone">greenLightCone.png</file>
+        <file>info.png</file>
+        <file>layers.png</file>
+        <file>leftarrow.png</file>
+        <file alias="lightMajor">lightMajor.png</file>
+        <file alias="lightMinor">lightMinor.png</file>
+        <file>loadmap.png</file>
+        <file alias="modern-compass">modern_compass.png</file>
+        <file>player_play.png</file>
+        <file>player_stop.png</file>
+        <file alias="point-opac">point-opac.png</file>
+        <file alias="poster">poster.png</file>
+        <file alias="redLightCone">redLightCone.png</file>
+        <file>rightarrow.png</file>
+        <file alias="rock1">rock1.png</file>
+        <file alias="rock2">rock2.png</file>
+        <file alias="rock3">rock3.png</file>
+        <file alias="rock4">rock4.png</file>
+        <file alias="rock5">rock5.png</file>
+        <file alias="rock6">rock6.png</file>
+        <file>rotate.png</file>
+        <file>rotate_cw.png</file>
+        <file>theme.png</file>
+        <file>uparrow.png</file>
+        <file alias="wreck1">wreck1.png</file>
+        <file alias="wreck2">wreck2.png</file>
+        <file alias="wreck3">wreck3.png</file>
+        <file alias="yellowLightCone">yellowLightCone.png</file>
+        <file>zoom.png</file>
+        <file>symbols/yellowcone.png</file>
+        <file>symbols/beacontower.png</file>
+        <file>symbols/building.png</file>
+        <file>symbols/buoy_danger.png</file>
+        <file>symbols/buoy_east.png</file>
+        <file>symbols/buoy_left.png</file>
+        <file>symbols/buoy_northern.png</file>
+        <file>symbols/buoy_right.png</file>
+        <file>symbols/buoy_safe.png</file>
+        <file>symbols/buoy_safewatermark.png</file>
+        <file>symbols/buoy_southern.png</file>
+        <file>symbols/buoy_specialmark.png</file>
+        <file>symbols/buoy_west.png</file>
+        <file>symbols/buoyX.png</file>
+        <file>symbols/cairn.png</file>
+        <file>symbols/church.png</file>
+        <file>symbols/dolphin.png</file>
+        <file>symbols/edgemark_dangermark.png</file>
+        <file>symbols/edgemark_east.png</file>
+        <file>symbols/edgemark_left.png</file>
+        <file>symbols/edgemark_northern.png</file>
+        <file>symbols/edgemark_right.png</file>
+        <file>symbols/edgemark_southern.png</file>
+        <file>symbols/edgemark_west.png</file>
+        <file>symbols/greencone.png</file>
+        <file>symbols/guestharbour.png</file>
+        <file>symbols/icebuoy_dangermark.png</file>
+        <file>symbols/icebuoy_east.png</file>
+        <file>symbols/icebuoy_left.png</file>
+        <file>symbols/icebuoy_northern.png</file>
+        <file>symbols/icebuoy_right.png</file>
+        <file>symbols/icebuoy_safewatermark.png</file>
+        <file>symbols/icebuoy_southern.png</file>
+        <file>symbols/icebuoy_specialmark.png</file>
+        <file>symbols/icebuoy_west.png</file>
+        <file>symbols/levycairn.png</file>
+        <file>symbols/lighthouse_major.png</file>
+        <file>symbols/lighthouse_minor.png</file>
+        <file>symbols/obstruction_depth.png</file>
+        <file>symbols/obstruction_nodepth.png</file>
+        <file>symbols/pile.png</file>
+        <file>symbols/radartarget.png</file>
+        <file>symbols/redcone.png</file>
+        <file>symbols/rock1.png</file>
+        <file>symbols/rock2.png</file>
+        <file>symbols/rock3.png</file>
+        <file>symbols/rock4.png</file>
+        <file>symbols/rock5.png</file>
+        <file>symbols/rock6.png</file>
+        <file>symbols/spar_dangermark.png</file>
+        <file>symbols/spar_east.png</file>
+        <file>symbols/spar_left.png</file>
+        <file>symbols/spar_northern.png</file>
+        <file>symbols/spar_right.png</file>
+        <file>symbols/spar_safewatermark.png</file>
+        <file>symbols/spar_southern.png</file>
+        <file>symbols/spar_specialmark.png</file>
+        <file>symbols/spar_west.png</file>
+        <file>symbols/visitorberth.png</file>
+        <file>symbols/wreck1.png</file>
+        <file>symbols/wreck2.png</file>
+        <file>symbols/wreck3.png</file>
+        <file>symbols/wreck.png</file>
+        <file>symbols/wreck_notdangerous.png</file>
+    </qresource>
+    <qresource prefix="/buttons">
+        <file>zoom-in.svg</file>
+        <file>zoom-out.svg</file>
+        <file>rotate-right.svg</file>
+        <file>rotate-left.svg</file>
+        <file>view-zoom-to-boat.svg</file>
+        <file>view-reset.svg</file>
+        <file>unlock_boat_view.svg</file>
+        <file>lock_boat_view.svg</file>
+        <file>zoom-tool.png</file>
+        <file>hand.svg</file>
+        <file>set_destiny.svg</file>
+        <file>important.svg</file>
+        <file>set_sim_boat.svg</file>
+        <file>set_sim_route.svg</file>
+        <file>clear.svg</file>
+        <file>view-refresh.svg</file>
+        <file>Button Back.svg</file>
+        <file>Button Day.svg</file>
+        <file>Button General.svg</file>
+        <file>Button General2.svg</file>
+        <file>Button Glasses.svg</file>
+        <file>Button Info.svg</file>
+        <file>Button Info2.svg</file>
+        <file>Button Night.svg</file>
+        <file>Button Quit.svg</file>
+        <file>Upwind Icon.svg</file>
+        <file>Upwind Icon2.svg</file>
+        <file>Button Config.svg</file>
+        <file>set_route.svg</file>
+    </qresource>
+    <qresource prefix="/route">
+        <file>checkpoint.svg</file>
+        <file>wind2.svg</file>
+        <file>sailboat2.svg</file>
+        <file>sailboat.svg</file>
+        <file>wind.svg</file>
+    </qresource>
+</RCC>

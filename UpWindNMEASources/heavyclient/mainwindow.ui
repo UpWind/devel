@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>469</width>
+    <height>661</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>UpWind::NMEA Heavyweight Client</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QFrame.containerFrame { border-top: 1px solid rgba(100, 100, 100);
+border-left: 1px solid rgba(100, 100, 100);
+border-right: 1px solid rgba(100, 100, 100);
+border-bottom: 1px solid rgba(75, 75, 75);
+padding: 3px;
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+stop: 0.0 rgba(95, 95, 95),
+stop: 0.15 rgba(75, 75, 75),
+stop: 0.9 rgba(95, 95, 95),
+stop: 1.0 rgba(45, 45, 45));
+border-top-left-radius: 8px;
+border-top-right-radius: 8px;
+border-bottom-left-radius: 4px;
+border-bottom-right-radius: 4px;
+}
+
+QFrame.containerFrame QLabel {
+border: none;
+background: transparent;
+font-weight: bold;
+color: rgba(225, 225, 225);
+}
+
+QFrame.containerFrame QPushButton {
+padding: 4px;
+border-radius: 4px;
+border: 1px solid rgba(125, 125, 125);
+background: qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(25, 25, 25),
+stop: 0.05 rgba(75, 75, 75),
+stop: 0.15 rgba(125, 125, 125),
+stop: 0.85 rgba(75, 75, 75),
+stop: 1.0 rgba(25, 25, 25));
+color: rgba(225, 225, 225);
+}
+
+QFrame.containerFrame QPushButton:pressed {
+background:qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(0, 0, 0),
+stop: 0.05 rgba(50, 50, 50),
+stop: 0.15 rgba(100, 100, 100),
+stop: 0.85 rgba(50, 50, 50),
+stop: 1.0 rgba(0, 0, 0));
+color: rgba(200, 200, 200);
+}
+
+QFrame.containerFrame QPushButton:disabled {
+background:qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(50, 50, 50),
+stop: 0.05 rgba(100, 100, 100),
+stop: 0.15 rgba(150, 150, 150),
+stop: 0.85 rgba(100, 100, 100),
+stop: 1.0 rgba(50, 50, 50));
+}
+
+QFrame.contentFrame {
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-bottom-left-radius: 2px;
+border-bottom-right-radius: 2px;
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+stop: 0.0 rgba(125, 125, 125),
+stop: 0.02 rgba(200, 200, 200),
+stop: 0.98 rgba(200, 200, 200),
+stop: 1.0 rgba(125, 125, 125));
+}
+
+QFrame.contentFrame QLabel {
+color: rgba(35, 35, 35);
+font-weight: normal;
+background: transparent;
+border: none;
+}
+
+QFrame.contentFrame QCheckBox {
+background: transparent;
+border: none;
+}
+
+QFrame.contentFrame QPushButton {
+border-radius: 4px;
+border: 1px solid rgba(75, 75, 75);
+background: qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(25, 25, 25),
+stop: 0.05 rgba(75, 75, 75),
+stop: 0.15 rgba(125, 125, 125),
+stop: 0.85 rgba(75, 75, 75),
+stop: 1.0 rgba(25, 25, 25));
+color: rgba(225, 225, 225);
+}
+
+QFrame.contentFrame QPushButton:pressed {
+background:qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(0, 0, 0),
+stop: 0.05 rgba(50, 50, 50),
+stop: 0.15 rgba(100, 100, 100),
+stop: 0.85 rgba(50, 50, 50),
+stop: 1.0 rgba(0, 0, 0));
+color: rgba(200, 200, 200);
+}
+
+
+QDockWidget::title {
+border: 1px solid rgba(95, 95, 95);
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-bottom-right-radius: 2px;
+border-bottom-left-radius: 2px;
+padding: 4px;
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+stop: 0.0 rgba(255, 255, 255),
+stop: 0.1 rgba(225, 225, 225),
+stop: 0.49 rgba(255, 255, 255),
+stop: 0.5 rgba(225, 225, 225),
+stop: 0.55 rgba(195, 195, 195),
+stop: 1.0 rgba(175, 175, 175));
+color: rgba(175, 175, 175);
+}
+
+QDockWidget.dockWidgetFrame {
+	background-color: rgba(175, 175, 175);
+}
+
+QTextEdit {
+border: 1px solid rgba(175, 175, 175);
+background: rgba(255, 255, 255);
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+border-bottom-left-radius: 4px;
+}
+
+QListWidget {
+border: 1px solid rgba(175, 175, 175);
+background: rgba(255, 255, 255);
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+border-bottom-left-radius: 4px;
+}
+
+QGroupBox {
+border: 1px solid rgba(175, 175, 175);
+border-radius: 4px;
+margin-top: 1ex;
+}
+
+QSlider {
+color: rgba(175, 175, 175);
+}</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="serialBox">
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Serial port settings</string>
+      </property>
+      <widget class="QCheckBox" name="serialCheckBox">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Enable serial port output</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="serialSpinBox">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>50</y>
+         <width>42</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="maximum">
+        <number>99</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>50</y>
+         <width>51</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Serial port</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="connectionBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>230</width>
+        <height>140</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Connection settings</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="2">
+        <widget class="QLineEdit" name="portEdit">
+         <property name="text">
+          <string>9999</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" colspan="2">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Server port:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="ipEdit">
+         <property name="text">
+          <string>127.0.0.1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Server address:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" colspan="2">
+        <widget class="QLineEdit" name="nameEdit">
+         <property name="inputMask">
+          <string>NNNNNNNNNNNNNNN; </string>
+         </property>
+         <property name="text">
+          <string>Name</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="nameLbl">
+         <property name="text">
+          <string>Name:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <widget class="QPushButton" name="connectBtn">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Connect</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QTextEdit" name="textOutput">
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>400</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QFrame" name="pluginFrame">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>10</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QWebView" name="gemap">
+         <property name="url">
+          <url>
+           <string>about:blank</string>
+          </url>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="clearButton">
+        <property name="text">
+         <string>Clear</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKit/QWebView</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>connectBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>makeConnection()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>296</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>344</x>
+     <y>63</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>makeConnection()</slot>
+ </slots>
+</ui>

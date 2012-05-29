@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/upwind/icons">
+        <file>upwindicon.ico</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>maximize.png</file>
+        <file>minimize.png</file>
+        <file>redbutton.png</file>
+        <file>greenbutton.png</file>
+    </qresource>
+</RCC>

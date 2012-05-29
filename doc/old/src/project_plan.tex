@@ -1,0 +1,396 @@
+\documentclass[12pt,titlepage]{article}
+
+\oddsidemargin   -0.7 cm   % dist from left edge of paper to left margin of
+                          % the text on right-hand pages
+\evensidemargin -0.8 cm   % same than oddsidemargin but for left-hand pages
+\textwidth      18 cm   % normal width of text on page
+
+\topmargin       -1 cm   % dist from top edege of paper to top page's head
+\parindent       0.7 cm   % width of indentation at beginning of paragraph
+\parskip           2 ex   % extra vertical space inserted before a paragraph
+\footskip        0.5 cm   % min dist from bottom of last line of text to 
+                          % bottom of the foot
+\textheight      24.0 cm  % normal height of the body of a page
+\raggedbottom             % lets height of text vary a bit from page to page
+\headsep          0.5 cm
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[english]{minitoc}
+\usepackage{enumitem}
+\usepackage{float}
+\renewcommand{\thesection}{\arabic{section}}
+
+\date{\today}
+\title{\textsc{Project Plan for Upwind::Plugins II}}
+\author{Jesse Mikkola\\
+		Ari-Pekka Kervinen\\
+		Markku Kuuselo\\
+		Kimmo Leppälä\\
+		Pau Ruiz i Safont\\
+		Pekka Tyhtilä}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%section 1
+\section{Introduction}
+
+	UpWind is an Open Source Software project initiated and coordinated by the UpWind team at Department of Information Processing Science at University of Oulu.
+	Since 2006 there has been several project teams designing and developing an advanced navigation software for sailboats.
+	Today, the software includes all essential navigation features and can be used as such in real boats. 
+	After being developed by multiple different teams the software code became a mess. To improve code maintainability and extendibility a new plugin architecture has been introduced.
+	Spring 2010 project team designed and reimplemented most of the Upwind navigator software according the new plugin architecture.
+
+	The main goal of UpWind::Plugins II (fall 2011) project is to port remaining software components to new architecture.
+	After UpWind::Plugins II project all features are expected to be implemented as plugins. 
+	Another target is that all project members spend their allocated 300 hours working on project and pass university course ``Project 2''.
+
+%this is section 2
+\section{Scope of the project}
+ 
+ 	This project continues the work done in UpWind::Architecture project.
+ 	
+	\subsection{What has been done so far?}
+ 
+		The objectives of UpWind::Architecture project were:
+
+		\begin{itemize}
+			\item Creating a new, manageable and scalable architecture for the navigator software, with a modular design.
+				This architecture is based on a plugin system.
+			\item Documenting the entire project with UML diagrams.
+			\item Starting implementing the new architecture.
+		\end{itemize}
+ 
+	\subsection{Scope of the UpWind::Plugins II}
+ 
+		Scope of the UpWind::Plugins II project is to implement two plugins to the architecture created in the UpWind::Architecture.
+		The vector chart rendering, and automatic long term and short term route planning will be implemented by following the plugin architecture.
+		Both of these features have been earlier implemented, so the work will be mostly porting of code to the new architecture style.
+		We are planning to implement the features at a basic level first, where all of them are working in demos.
+		Then we plan to extend tests for them and, if there is enough time, optimize the program to the level where they can run in real time on real environment.
+
+%this is section 3
+\section{Limitations}
+	Project group has six members. Each member has to spend 300 hours in the project.
+	This limits the scope of the project as project goals have to be adjusted according to group member's skills and learning curve.
+	The project has specific goal given by the supervisor Víctor, which means the group will follow the project boundaries.
+
+%this is section 4
+\section{Schedule}
+ 
+	\subsection{Meetings}
+
+		\begin{center}
+		\begin{tabular}{|l|c|c|c|}
+			\hline
+			\textbf{Meeting} & \textbf{Date} & \textbf{Participation} & \textbf{Location} \\
+			\hline
+			\hline
+			Kick off & 15.9 & Steering group & At university \\
+			\hline
+			1st steering group & 4.10 & Steering group & At university \\
+			\hline
+			2nd steering group & 18.11 & Steering group & At university \\
+			\hline
+			Final steering group & 6.12 & Steering group & At university \\
+			\hline
+			Sprint planning & After each sprint & Project group & At university \\
+			\hline
+		\end{tabular}
+		\end{center}	
+ 
+		The first steering group meeting is for approving the project plan and getting a green light for the project.
+		Project plan is to be presented to the TOL representative.
+		The second steering group meeting's purpose is to verify that the project is on the right track by presenting the achieved results beforehand and receiving feedback about the project's status at the meeting.
+		The final steering group meeting's purpose is to ultimately approve the project's closure and to review the portfolio.
+ 
+		Tasks will be partially assigned during sprint planning meetings.
+		Daily scrums are not used.
+		Instead, the project manager will send email regularly to every project member about the status of the project and the tasks to do.
+		
+		Features implemented in each sprint will be demoed after it.
+		Dates for the demoes can be agreed separately with Samuli and Víctor.
+ 
+		\subsubsection{Policies}
+ 
+			An official invitation will be used for steering group meetings via email to all project related parties at least 2 weeks before the meeting along with related documents.
+ 
+			For less formal meetings, such as code reviews and sprint demo, an informal email (e.g. automated invites of conference room reservation) will be sent to remind about the meetings at least one day before the meeting.
+
+			Acting as the chairman in steering group meetings will be TOL representative Samuli Saukkonen.
+			After approving the project plan, changes to this document can only be done if all parties involved approve the changes.
+			This excludes the risks section which can be updated regularly by the project manager.
+ 
+		\subsection{Implementation}
+ 
+			\subsubsection{Development}
+ 
+				Project will use the Scrum process model for managing the development.
+				Each of the first five project sprints is meant to be two weeks long, having five working days per week.
+				The last sprint is going to be a week long.
+ 
+		\subsubsection{Sprints}
+
+			\begin{center}
+			\begin{tabular}{|l|c|c|}
+				\hline
+				\textbf{Sprint} & \textbf{Estimated schedule} & \textbf{Main concentration} \\
+				\hline
+				\hline
+				Sprint 1 & 19.9 to 31.9 & Making the project plan and setting up the working environment. \\
+				\hline
+				Sprint 2 & 3.10 to 14.10 &  \\
+				\hline
+				Sprint 3 & 17.10 to 28.10 & \\
+				\hline
+				Sprint 4 & 31.10 to 11.11 & \\
+				\hline
+				Sprint 5 & 14.11 to 25.11 & \\
+				\hline
+				Sprint 6 & 28.11 to 2.12 & \\
+				\hline
+			\end{tabular}
+			\end{center}
+
+			Sprint schedules presented above are estimates and they can be renegotiated with the Samuli.
+			However, rescheduling must not affect the final deadline (Final SGM) for the project.
+			According to the estimated sprint schedules, each project member should use around 30 hours per week.
+			Contents and goals for each sprint will be decided in pre-sprint (sprint review) meetings.
+			This will be shortly documented and emailed to both Samuli Saukkonen and Víctor Arroyo.
+
+%this is section 5
+\section{Project deliverables}
+			\begin{center}
+			\begin{tabular}{|l|p{5cm}|l|l|}
+				\hline
+				\textbf{Deliverable} & \textbf{Short description} & \textbf{Delivered to} & \textbf{Delivered at}\\
+				\hline
+				\hline
+				Project plan & This document & SG & 1st SGM \\
+				\hline
+				Prestudy report & Research report & TOL & 1st SGM \\
+				\hline
+				Time management & Working hours & TOL & Before every SGM\\
+				\hline
+				Software package & Source codes and binaries of the UpWind application & Samuli Saukkonen & After each sprint\\
+				\hline
+				Project portfolio & Project management document & TOL & 2 weeks after last SGM \\
+				\hline
+				Seminar report & Seminar report & TOL & after the project \\
+				\hline
+			\end{tabular}
+			\end{center}
+
+%this is section 6
+\section{Resources}
+	\subsection{Personnel}
+		\begin{itemize}
+		\item Steering Committee
+			\begin{itemize}
+				\item Samuli Saukkonen, TOL representative:  \href{mailto:samuli.saukkonen@oulu.fi}{samuli.saukkonen@oulu.fi}
+				\item Víctor Arroyo, Project coordinator: \href{mailto:victor.arroyo@oulu.fi}{victor.arroyo@oulu.fi}
+			\end{itemize}
+		
+		\item Project Group:
+			\begin{itemize}
+				\item Jesse Mikkola, Project manager: \href{mailto:jesmikko@mail.student.oulu.fi}{jesmikko@mail.student.oulu.fi}
+				\item Ari-Pekka Kervinen, Project member: \href{mailto:ari-pekka.kervinen@accenture.com}{ari-pekka.kervinen@accenture.com}
+				\item Markku Kuuselo, Project member: \href{mailto:markku.kuuselo@gmail.com}{markku.kuuselo@gmail.com}
+				\item Kimmo Leppälä, Project member: \href{mailto:kimmo.leppala@gmail.com}{kimmo.leppala@gmail.com}
+				\item Pau Ruiz i Safont, Project member: \href{mailto:pruizisa@mail.student.oulu.fi}{pruizisa@mail.student.oulu.fi}
+				\item Pekka Tyhtilä, Project member: \href{mailto:ptyhtila@mail.student.oulu.fi}{ptyhtila@mail.student.oulu.fi}
+			\end{itemize}
+		\end{itemize}
+		
+		The project manager will be responsible for arranging the meetings involving TOL and the project coordinator.
+		He will also be responsible for managing the project-related documents and schedules set in this project plan.
+		Project members are expected to manage their own work and actively participate in the project planning, as well as helping other when needed.
+		Each project member has 300 working hours to use in this project and the work load for one week is around 30 hours.
+
+	\subsection{Work Environment}
+		The workplace is going to be a small room at the computer science labs, at the University of Oulu. The main tools that are going to be used to build the project are:
+		\begin{itemize}
+			\item Qt 7.4.4: Library for building the application.
+			\item Qt Creator:  Software development environment.
+			\item git: Version control system.
+			\item \LaTeX{}: Document-making software tool.
+			\item StarUML: Software for making UML diagrams.
+			\item PostgreSQL 8.3: Database Manager.
+			\item GDAL 1.???: External library for managing chart data.
+			\item Workstations: computers that are used to design and code the project. 
+			\item Server: computer to build the project executable file, store the database and version control system.
+		\end{itemize}
+
+	\subsection{Documents}
+	
+		Base document for this project is the project assignment document introduced at the Project II initiation lecture.
+		The document describes the general contents of the assignment and the same information can be found in more detail from this document's Scope of the project chapter.
+		This document describes the project work done at UpWind::Plugins II by a group of six students that work for the customer under the Department of Information Processing Science of the University of Oulu's supervision.
+
+%this is section 7
+\section{Risks}
+
+	First risk is schedule or maybe more that how can each project member spend about 300 hours in this project work.
+	Even though there are members in our group who are used to work in different kind of projects and time tables, there might be some hard times ahead; how to get the schedules match in and outside university.
+ 
+	Lack of knowledge about the product that project group is working in might slow the entire process so the project may start slower than desired. 
+ 
+	\subsection{Risk analysis}
+
+		\begin{center}
+		\begin{tabular}{|l|p{10cm}|}
+			\hline
+			\textbf{1} & \textbf{Project member is not able to work} \\
+			\hline
+			\hline
+			Description & Project member is not able to work in project because of unexpected issues for example illness or some other personal issues. \\
+			\hline
+			Time & At any time. \\
+			\hline
+			Probability & Low. \\
+			\hline
+			Effect & The workload for other members increases. \\
+			\hline
+			Prevention & Having a healthy lifestyle, not going naked on the street. \\
+			\hline
+			Threshold & The workload for other members changes. \\
+			\hline
+			Recovery & The member needs to go to the doctor and take his drugs or resolve his personal issues and inform the project manager by phone. \\
+			\hline
+			Notes & None. \\
+			\hline
+		\end{tabular}
+		\end{center}
+	
+		\begin{center}
+		\begin{tabular}{|l|p{10cm}|}
+			\hline
+			\textbf{2} & \textbf{Code is not working} \\
+			\hline
+			\hline
+			Description & The code made by multiple project members is not working or compiling. \\
+			\hline
+			Time & At any time. \\
+			\hline
+			Probability & High. \\
+			\hline
+			Effect & Porting the code to support new architecture might fail, having to rollback some changes. \\
+			\hline
+			Prevention & Frequent compilations, testing the code by several project members and use the repository wisely. \\
+			\hline
+			Threshold & Software does not work. \\
+			\hline
+			Recovery & The crew has to go bug hunting and fixing. \\
+			\hline
+			Notes & None. \\
+			\hline
+		\end{tabular}
+		\end{center}
+
+		\begin{center}
+		\begin{tabular}{|l|p{10cm}|}
+			\hline
+			\textbf{3} & \textbf{Technical problems} \\
+			\hline
+			\hline
+			Description & The lab hardware breaks down \\
+			\hline
+			Time & At any time. \\
+			\hline
+			Probability & Very high. \\
+			\hline
+			Effect & Project crew is unable to work. \\
+			\hline
+			Prevention & Computer maintenance and using git. \\
+			\hline
+			Threshold & Project crew is unable to work. \\
+			\hline
+			Recovery & Call maintenance, work with own laptops. \\
+			\hline
+			Notes & None. \\
+			\hline
+		\end{tabular}
+		\end{center}
+		
+		\begin{center}
+		\begin{tabular}{|l|p{10cm}|}
+			\hline
+			\textbf{4} & \textbf{Lack of skills} \\
+			\hline
+			\hline
+			Description & Project member does not have enough experience of working in agile mode,  C++, Git or OpenGL.
+			Porting of code to new architecture is not familiar concept. \\
+			\hline
+			Time & At any time, more likely to be at the beginning. \\
+			\hline
+			Probability & Medium. \\
+			\hline
+			Effect & Project work is delayed, takes more time to learn to get use to new tools and ways of working. \\
+			\hline
+			Prevention & Team members help each other whether in form of mini-courses or informally. Every member continuously studies the tools and methods that are used in the project. \\
+			\hline
+			Threshold & Task is not finished in estimated time. \\
+			\hline
+			Recovery & Training the team member or reassigning the task for another member. \\
+			\hline
+			Notes & None. \\
+			\hline
+		\end{tabular}
+		\end{center}
+
+		\begin{center}
+		\begin{tabular}{|l|p{10cm}|}
+			\hline
+			\textbf{5} & \textbf{Sprint targets aren't met} \\
+			\hline
+			\hline
+			Description & Porting the code to support new plugin architecture and the functionality of the code does not meet the project plan. \\
+			\hline
+			Time & At the end of any sprint. \\
+			\hline
+			Probability & Medium. \\
+			\hline
+			Effect & Objectives not achieved. \\
+			\hline
+			Prevention & Working efficiently and keeping the team motivated. \\
+			\hline
+			Threshold & Negative feedback from project evaluations or reviews. \\
+			\hline
+			Recovery & Changing the working method. \\
+			\hline
+			Notes & None. \\
+			\hline
+		\end{tabular}
+		\end{center}
+ 
+		\begin{center}
+		\begin{tabular}{|l|p{10cm}|}
+			\hline
+			\textbf{6} & \textbf{Schedule is too tight} \\
+			\hline
+			\hline
+			Description & The schedule is not reachable. Project members have other studies or work besides the project work. \\
+			\hline
+			Time & At the end of any sprint. \\
+			\hline
+			Probability & High. \\
+			\hline
+			Effect & Harming project's outcome. \\
+			\hline
+			Prevention & Having a schedule that fits everyone. \\
+			\hline
+			Threshold & Bad coordination. \\
+			\hline
+			Recovery & Getting the most out of the agile way of working. \\
+			\hline
+			Notes & None. \\
+			\hline
+		\end{tabular}
+		\end{center}
+
+\end{document}

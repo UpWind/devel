@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="hand">compassHand.png</file>
+        <file alias="compass">compassBackground.png</file>
+    </qresource>
+</RCC>

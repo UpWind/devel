@@ -1,0 +1,10 @@
+Makefile
+UWCore.app
+*.pro.user
+*.o
+moc_*.cpp
+qrc_resources.cpp
+ui_*.h
+qrc_resource.cpp
+plugins/
+.DS_Store

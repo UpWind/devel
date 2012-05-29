@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NMEAGPS</class>
+ <widget class="QWidget" name="NMEAGPS">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>731</width>
+    <height>674</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#NMEAGPS {
+border: none;
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+stop: 0.01 rgba(120, 120, 120),
+stop: 0.05 rgba(150, 150, 150),
+stop: 0.5 rgba(120, 120, 120),
+stop: 0.52 rgba(80, 80, 80),
+stop: 0.9 rgba(50, 50, 50),
+stop: 1.0 rgba(50, 50, 50));
+}
+
+#NMEAGPS { 
+padding: 3px;
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+stop: 0.0 rgba(95, 95, 95),
+stop: 0.15 rgba(75, 75, 75),
+stop: 0.9 rgba(95, 95, 95),
+stop: 1.0 rgba(45, 45, 45));
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-bottom-left-radius: 4px;
+border-bottom-right-radius: 4px;
+}
+
+QPushButton {
+padding: 4px;
+border-radius: 4px;
+border: 1px solid rgba(55, 55, 55);
+font-weight: bold;
+/*
+background: qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(25, 25, 25),
+stop: 0.05 rgba(75, 75, 75),
+stop: 0.15 rgba(125, 125, 125),
+stop: 0.85 rgba(75, 75, 75),
+stop: 1.0 rgba(25, 25, 25));
+*/
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+stop: 0.01 rgba(120, 120, 120),
+stop: 0.05 rgba(150, 150, 150),
+stop: 0.5 rgba(120, 120, 120),
+stop: 0.52 rgba(80, 80, 80),
+stop: 0.9 rgba(50, 50, 50),
+stop: 1.0 rgba(50, 50, 50));
+color: rgba(225, 225, 225);
+}
+
+QPushButton:pressed {
+background: qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(25, 25, 25),
+stop: 0.05 rgba(25, 25, 25),
+stop: 0.15 rgba(75, 75, 75),
+stop: 0.85 rgba(25, 25, 25),
+stop: 1.0 rgba(0, 0, 0));
+color: rgba(200, 200, 200);
+}
+
+QPushButton:disabled {
+background:qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(50, 50, 50),
+stop: 0.05 rgba(100, 100, 100),
+stop: 0.15 rgba(150, 150, 150),
+stop: 0.85 rgba(100, 100, 100),
+stop: 1.0 rgba(50, 50, 50));
+}
+
+QLabel {
+color: rgba(35, 35, 35);
+font-weight: normal;
+background: transparent;
+border: none;
+}
+
+/**
+QPushButton {
+border-radius: 4px;
+border: 1px solid rgba(75, 75, 75);
+background: qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(25, 25, 25),
+stop: 0.05 rgba(75, 75, 75),
+stop: 0.15 rgba(125, 125, 125),
+stop: 0.85 rgba(75, 75, 75),
+stop: 1.0 rgba(25, 25, 25));
+color: rgba(225, 225, 225);
+}
+/**
+QPushButton:pressed {
+background:qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(0, 0, 0),
+stop: 0.05 rgba(50, 50, 50),
+stop: 0.15 rgba(100, 100, 100),
+stop: 0.85 rgba(50, 50, 50),
+stop: 1.0 rgba(0, 0, 0));
+color: rgba(200, 200, 200);
+}**/
+
+#controlsFrame {
+	background: rgba(200, 200, 200);
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-bottom-left-radius: 2px;
+border-bottom-right-radius: 2px;
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+stop: 0.0 rgba(125, 125, 125),
+stop: 0.02 rgba(200, 200, 200),
+stop: 0.98 rgba(200, 200, 200),
+stop: 1.0 rgba(125, 125, 125));
+}
+
+QLineEdit {
+border: 1px solid rgba(175, 175, 175);
+background: rgba(255, 255, 255);
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+border-bottom-left-radius: 4px;
+}
+
+QGroupBox {
+border: 1px solid rgba(175, 175, 175);
+border-radius: 4px;
+margin-top: 1ex;
+}
+
+QGridLayout {
+border: 1px solid rgba(175, 175, 175);
+border-radius: 4px;
+margin: 10px;
+}
+
+#simulatorButton {
+width: 100px;
+}
+
+</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="8">
+    <widget class="QWebView" name="gemap">
+     <property name="minimumSize">
+      <size>
+       <width>400</width>
+       <height>200</height>
+      </size>
+     </property>
+     <property name="url">
+      <url>
+       <string>about:blank</string>
+      </url>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="8">
+    <widget class="QFrame" name="controlsFrame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Latitude</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLineEdit" name="latLineEdit">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QRadioButton" name="northButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>North</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QRadioButton" name="southButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>South</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QLineEdit" name="longLineEdit">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Longitude</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="4">
+       <widget class="QRadioButton" name="westButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>West</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="5">
+       <widget class="QRadioButton" name="eastButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>East</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0" colspan="6">
+       <layout class="QGridLayout" name="XMLFileLayout">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="selectXMLFileButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Select Xml File</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0">
+         <widget class="QLabel" name="speedInfoLabel">
+          <property name="text">
+           <string>Boat speed : </string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="regNumLabel">
+          <property name="text">
+           <string>Reg. number: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="boatNameLabel">
+          <property name="text">
+           <string>Boat name:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="selFileLabel">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLabel" name="boatNameLabelValue">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QLabel" name="regNumLabelValue">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QLabel" name="resultLabel">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QCheckBox" name="spinnaker">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Use Spinnaker</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="6" column="0" colspan="6">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="simulatorButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#simulatorButton {
+width: 100px;
+}</string>
+          </property>
+          <property name="text">
+           <string>Start simulation</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKit/QWebView</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

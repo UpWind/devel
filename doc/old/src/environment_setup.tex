@@ -1,0 +1,34 @@
+\documentclass[12pt]{article}
+
+\usepackage{hyperref}
+\usepackage{examplep}
+
+\title{How to set up the environment for the project}
+
+\begin{document}
+\maketitle
+
+\section{Set up the compiler}
+
+	This procedure is only needed for Windows environment in case Qt creator does not find the header files in the project.
+
+	The project can be then compiled using the command line.
+	For this, two paths must be added to the \%PATH\% system variable.
+	The window to change it can be accesed right clicking the computer item in the start menu, clicking advanced system settings, and clicking Environment variables.
+
+	Then edit the path variable by adding
+	\begin{verbatim};<QtSDK\>\mingw\bin;<QtSDK\>\Desktop\Qt\4.7.4\mingw\bin\end{verbatim} to the end of the text, where \textless{}QtSDK\textgreater{} is the path where QtSDK was installed.
+
+	After this open a terminal, navigate to the root of the project and type \texttt{qmake \&\& make}.
+
+\section{Set up the database}
+\begin{itemize}
+	\item Install PostgreSQL 8.3 or 8.4 from the official page: \url{http://www.postgresql.org/download/}
+	\item Install PostGIS 1.5 from the official site: \url{http://postgis.refractions.net/download/}
+	\item Install the postgresql cube module.
+	\item Create a new database with pgAdmin III
+	\item Right-click the database icon it, click restore and navigate where the backup file is, it should be in te repository, and press ok.
+\end{itemize}
+If there are any errors on OS X or Linux because liblwgeom can't be found make it a link to the postgis library, for example: \begin{verbatim}sudo ln -s /usr/lib/postgis/1.5.1/postgres/8.4/lib/postgis-1.5.so /usr/lib/postgresql/8.4/lib/liblwgeom\end{verbatim}. Other errors that were found when importing in all platforms, like missing ``\$libdir/cube'', didn't seem to affect the database, so it's recommended to check if the tables are full just in case the database is allright.
+
+\end{document}

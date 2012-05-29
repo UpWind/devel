@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>730</width>
+    <height>200</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>230</width>
+    <height>180</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton {
+padding: 4px;
+border-radius: 4px;
+border: 1px solid rgba(55, 55, 55);
+font-weight: bold;
+
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+stop: 0.01 rgba(120, 120, 120),
+stop: 0.05 rgba(150, 150, 150),
+stop: 0.5 rgba(120, 120, 120),
+stop: 0.52 rgba(80, 80, 80),
+stop: 0.9 rgba(50, 50, 50),
+stop: 1.0 rgba(50, 50, 50));
+color: rgba(225, 225, 225);
+}
+
+QPushButton:pressed {
+background: qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(25, 25, 25),
+stop: 0.05 rgba(25, 25, 25),
+stop: 0.15 rgba(75, 75, 75),
+stop: 0.85 rgba(25, 25, 25),
+stop: 1.0 rgba(0, 0, 0));
+color: rgba(200, 200, 200);
+}
+
+QPushButton:disabled {
+background:qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(50, 50, 50),
+stop: 0.05 rgba(100, 100, 100),
+stop: 0.15 rgba(150, 150, 150),
+stop: 0.85 rgba(100, 100, 100),
+stop: 1.0 rgba(50, 50, 50));
+}
+
+
+#Widget {
+	background: rgba(200, 200, 200);
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+border-bottom-left-radius: 2px;
+border-bottom-right-radius: 2px;
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+stop: 0.0 rgba(125, 125, 125),
+stop: 0.02 rgba(200, 200, 200),
+stop: 0.98 rgba(200, 200, 200),
+stop: 1.0 rgba(125, 125, 125));
+}
+
+QGridLayout {
+border: 1px solid rgba(175, 175, 175);
+border-radius: 4px;
+margin: 10px;
+}
+
+</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="pushButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Clear</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>800</width>
+       <height>150</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**************************************************************************
+**
+** This file is part of Qt Creator
+**
+** Copyright (c) 2010 Nokia Corporation and/or its subsidiary(-ies).
+**
+** Contact: Nokia Corporation (qt-info@nokia.com)
+**
+** Commercial Usage
+**
+** Licensees holding valid Qt Commercial licenses may use this file in
+** accordance with the Qt Commercial License Agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Nokia.
+**
+** GNU Lesser General Public License Usage
+**
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 2.1 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU Lesser General Public License version 2.1 requirements
+** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+**
+** If you are unsure which license is appropriate for your use, please
+** contact the sales department at http://qt.nokia.com/contact.
+**
+**************************************************************************/
+
+Custom project wizard configuration example file. Note that by convention, 
+the project file goes last.
+The "class" and "firstpage" attributes specify that it is a Qt 4 wizard and 
+leave room for the Qt 4 target page.
+-->
+<wizard version="1" kind="project"
+        class="qt4project" firstpage="10"
+        id="A.NMEAPlugin" category="B.CustomProjects">
+    <icon>icon.png</icon>
+    <description>Creates a custom UpWind NMEA simulator plugin.</description>
+    <displayname>NMEA plugin</displayname>;
+    <displaycategory>Custom Projects</displaycategory>
+    <files>
+        <file source="pluginclass.cpp" target="%ProjectName:l%.%CppSourceSuffix%" openeditor="true"/>
+        <file source="pluginclass.h" target="%ProjectName:l%.%CppHeaderSuffix%" openeditor="true"/>
+	<file source="exportplug.cpp" target="exportplug.cpp" openeditor="true"/>
+        <file source="widget.ui" target="%ProjectName:l%.ui" openeditor="true"/>
+        <file source="pluginproject.pro" target="%ProjectName%.pro" openproject="true"/>
+    </files>
+    <!-- Create a 2nd wizard page with parameters
+    <fieldpagetitle>NMEA plugin Parameters</fieldpagetitle>
+    <fields>
+        <field mandatory="true" name="MESSAGE">
+            <fieldcontrol class="QLineEdit" validator='^[^"]+$'
+                          defaulttext="Hello world from project  '%ProjectName:c%'!" />
+            <fielddescription>Hello world message:</fielddescription>
+        </field>
+    </fields> -->
+</wizard>

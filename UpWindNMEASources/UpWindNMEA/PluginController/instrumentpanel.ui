@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InstrumentPanel</class>
+ <widget class="QWidget" name="InstrumentPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>241</width>
+    <height>235</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QFrame.headerFrame {
+border: none;
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+stop: 0.01 rgba(120, 120, 120),
+stop: 0.05 rgba(150, 150, 150),
+stop: 0.5 rgba(120, 120, 120),
+stop: 0.52 rgba(80, 80, 80),
+stop: 0.9 rgba(50, 50, 50),
+stop: 1.0 rgba(50, 50, 50));
+}
+
+QFrame.containerFrame {
+border-left: 1px solid rgba(170, 170, 170);
+border-right: 1px solid rgba(175, 175, 175);
+border-bottom: 1px solid rgba(175, 175, 175);
+padding: -4px;
+background: rgba(50, 50, 50);
+border-top-left-radius: 0px;
+border-top-right-radius: 0px;
+border-bottom-left-radius: 4px;
+border-bottom-right-radius: 4px;
+}
+
+QFrame.containerFrame QLabel {
+border: none;
+background: transparent;
+font-weight: bold;
+color: rgba(225, 225, 225);
+}
+
+/*
+QFrame.containerFrame QPushButton {
+background: transparent;
+border: 1px;
+}
+*/
+QFrame.containerFrame QPushButton {
+padding: 4px;
+border-radius: 4px;
+border: 1px solid rgba(55, 55, 55);
+/*
+background: qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(25, 25, 25),
+stop: 0.05 rgba(75, 75, 75),
+stop: 0.15 rgba(125, 125, 125),
+stop: 0.85 rgba(75, 75, 75),
+stop: 1.0 rgba(25, 25, 25));
+*/
+background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+stop: 0.01 rgba(120, 120, 120),
+stop: 0.05 rgba(150, 150, 150),
+stop: 0.5 rgba(120, 120, 120),
+stop: 0.52 rgba(80, 80, 80),
+stop: 0.9 rgba(50, 50, 50),
+stop: 1.0 rgba(50, 50, 50));
+color: rgba(225, 225, 225);
+}
+
+QFrame.containerFrame QPushButton:pressed {
+background: qlineargradient(x1:0, y1:0, x2: 0, y2:1,
+stop: 0.0 rgba(25, 25, 25),
+stop: 0.05 rgba(25, 25, 25),
+stop: 0.15 rgba(75, 75, 75),
+stop: 0.85 rgba(25, 25, 25),
+stop: 1.0 rgba(0, 0, 0));
+color: rgba(200, 200, 200);
+}
+
+QFrame.contentFrame {
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+stop: 0.0 rgba(125, 125, 125),
+stop: 0.01 rgba(200, 200, 200),
+stop: 0.99 rgba(200, 200, 200),
+stop: 1.0 rgba(125, 125, 125));
+border-radius: 0px;
+}
+
+QFrame.contentFrame QLabel {
+color: rgba(35, 35, 35);
+font-size: 11px;
+padding: 0px;
+font-weight: normal;
+background: transparent;
+border: none;
+}
+
+QFrame.contentFrame QLabel.title {
+color: rgba(35, 35, 35);
+font-size: 11px;
+font-weight: bold;
+background: transparent;
+border: none;
+}</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="class" stdset="0">
+      <string>containerFrame</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="headerFrame">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <property name="class" stdset="0">
+         <string>headerFrame</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>3</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Instrument Panel</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="maxMinButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="windowresources.qrc">
+               <normaloff>:/images/minimize.png</normaloff>:/images/minimize.png</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>5</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="panelFrame">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <property name="class" stdset="0">
+         <string>contentFrame</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QFrame" name="frame_3">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="bottomMargin">
+             <number>3</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="headingDescription">
+              <property name="text">
+               <string>Heading:</string>
+              </property>
+              <property name="class" stdset="0">
+               <string>title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="boatSpeedDescription">
+              <property name="text">
+               <string>Speed (SOG):</string>
+              </property>
+              <property name="class" stdset="0">
+               <string>title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="boatSpeedLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>0 km</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="boatPosDescription">
+              <property name="text">
+               <string>Boat position:</string>
+              </property>
+              <property name="class" stdset="0">
+               <string>title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="latitudeLabel">
+              <property name="text">
+               <string>0000.000 N</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="longitudeLabel">
+              <property name="text">
+               <string>00000.000 E</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="appWindSpeedDesc">
+              <property name="text">
+               <string>App. wind speed:</string>
+              </property>
+              <property name="class" stdset="0">
+               <string>title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLabel" name="appWindSpeedLabel">
+              <property name="text">
+               <string>0 m/s</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="appWindAngleDesc">
+              <property name="text">
+               <string>App. wind angle:</string>
+              </property>
+              <property name="class" stdset="0">
+               <string>title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="appWindAngleLabel">
+              <property name="text">
+               <string>0 deg</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="trueWindSpeedDesc">
+              <property name="text">
+               <string>True wind speed:</string>
+              </property>
+              <property name="class" stdset="0">
+               <string>title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLabel" name="trueWindSpeedLabel">
+              <property name="text">
+               <string>0 m/s</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="trueWindAngleDesc">
+              <property name="text">
+               <string>True wind angle:</string>
+              </property>
+              <property name="class" stdset="0">
+               <string>title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLabel" name="trueWindAngleLabel">
+              <property name="text">
+               <string>0 deg</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="timeDescription">
+              <property name="text">
+               <string>Time:</string>
+              </property>
+              <property name="class" stdset="0">
+               <string>title</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QLabel" name="timeLabel">
+              <property name="text">
+               <string>00:00:00</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QLabel" name="dateLabel">
+              <property name="text">
+               <string>00.00.0000</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="headingLabel">
+              <property name="text">
+               <string>0 deg</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="windowresources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
