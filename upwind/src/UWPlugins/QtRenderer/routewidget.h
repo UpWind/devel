@@ -31,6 +31,7 @@ signals:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void calculatePath();
     void geopointToPixel(QPointF *geopoint);
     
 public slots:
@@ -47,6 +48,7 @@ private:
     //QVector<QPolygonF> navcorrected;
     Route *route;
     QVector<QPointF> path;
+    QPointF EndPoint;
 
     QPen longroute_pen;
     QBrush longroute_brush;

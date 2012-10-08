@@ -112,23 +112,29 @@ void RouteWidget::drawRoute(bool activate)
     drawMode = activate;
 }
 
-void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) { //Listens for mouseEvents from User Interface
+    qDebug()<<"RouteWidget::mousePressEvent"<<  event->screenPos();
+   // QPointF = pathEndPoint;
+    this->EndPoint = event->screenPos();
+    calculatePath();
+}
 
+
+void RouteWidget::calculatePath(){
    QPointF start;
-   QPointF end;
+   QPointF &end = this->EndPoint;
 
    //Boat position?
    QPointF *boatPosition = uwScene->getBoat()->getGeoPosition();
    qDebug() << "boatPosition: " << boatPosition->x() << ", " << boatPosition->y();
    start = *boatPosition;
 
-   end = event->pos();
-   //geoPointToPixel(&start);
    pixelToGeoPoint(&end);
 
 
    Route* route = uwScene->getRoute();
-   path = route->path(start, end, 0);
+   path = route->path(start, this->EndPoint, 0);
+   path.append(this->EndPoint);
 
    for (int i = 0; i < path.size(); i++) {
        geoPointToPixel(&path[i]);
