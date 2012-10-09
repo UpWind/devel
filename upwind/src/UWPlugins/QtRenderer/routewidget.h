@@ -26,6 +26,7 @@ public:
     void drawRoute(bool);
     QPointF *geoPointToPixel(QPointF* geoPoint);
     QPointF *pixelToGeoPoint(QPointF* pixelPoint);
+    QPointF getLongTermLastPos(QVector<QPointF> *path);
 
 signals:
 
@@ -48,10 +49,14 @@ private:
     //QVector<QPolygonF> navcorrected;
     Route *route;
     QVector<QPointF> path;
-    QPointF EndPoint;
+    QPointF endPoint; //end point for short term navigation
+    QPointF pathEndPoint; //end point for long term navigation
 
     QPen longroute_pen;
     QBrush longroute_brush;
+
+    QPen marker_pen;
+    QBrush marker_brush;
 
     bool zoomMode;
 };
