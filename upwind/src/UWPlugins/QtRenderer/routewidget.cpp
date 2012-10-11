@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <limits>
 
 #include "routewidget.h"
 #include "../shared/uwmath.h"
@@ -123,21 +124,65 @@ void RouteWidget::drawRoute(bool activate)
 }
 
 void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) { //Listens for mouseEvents from User Interface
-    this->endPoint = event->screenPos(); //End point is the new end point (last coordinate item) in path variable in short term navigation
+
+    this->mousePosition = event->screenPos(); //End point is the new end point (last coordinate item) in path variable in short term navigation
     calculatePath();
 }
 
 QPointF RouteWidget::getLongTermLastPos(QVector<QPointF> *path){
 
-    QPointF pathEndPoint = path->at(path->size()-2);
+   QPointF pathEndPoint;// = path->at(path->size()-2);
     qDebug()<< "Your selected display coordinates: "<<pathEndPoint;
+
+    pathEndPoint = getClosestStartPoint();
+
     return pathEndPoint;
 }
 
+QPointF RouteWidget::getClosestStartPoint(){
+
+    QPointF closestStartPoint = this->path.at(0);
+    double distance = 9999999999.0;//numeric_limits<double>::max();
+    double currentDistance = 0;
+    bool shorterStartPointFound;
+    int shortestPointIndex = -1;
+
+    for(int i = this->path.size() - 2; i >= 0 ;i--){ //subtraction leaves the last appended point out
+
+        QPointF start = path.at(i);
+
+        QPointF end = this->mousePosition;
+       // qDebug() << "******************* Path point: " << path.at(i) << "start: " << start << " END: " << this->mousePosition;
+        pixelToGeoPoint(&start);
+        pixelToGeoPoint(&end);
+
+        currentDistance = UwMath::getDistance(start, end, 6371);
+        //qDebug() << "******************* Path point: " << start << "Destination: " << end << " Distance: " << currentDistance;
+
+        if (currentDistance < distance){
+
+            distance = currentDistance;
+            closestStartPoint = path.at(i);
+            shorterStartPointFound = true;
+        }
+        if (shorterStartPointFound && shortestPointIndex != -1){
+            //qDebug() << "Erasing value: " << path.at(shortestPointIndex);
+            this->path.erase(path.begin() + shortestPointIndex);
+        }
+         shortestPointIndex = i;
+         //qDebug() << "Path point: " << path.at(i);
+         // qDebug() << "Endpoint: " << this->endPoint << " ClosestStartPoint: " << closestStartPoint << " distance: " << distance;
+    }
+
+    return closestStartPoint;
+
+}
 
 void RouteWidget::calculatePath(){
    QPointF start;
-   QPointF &end = this->endPoint;
+   QPointF endPrint = this->mousePosition; //REMOVE LATER
+   QPointF end = this->mousePosition;
+   this->endPoint = this->mousePosition;
 
    //Boat position?
    QPointF *boatPosition = uwScene->getBoat()->getGeoPosition();
@@ -146,10 +191,11 @@ void RouteWidget::calculatePath(){
    start = *boatPosition;
 
    pixelToGeoPoint(&end);
-   qDebug() << "Your selected geo coordinates " << end;
+   qDebug() << "Your selected geo coordinates " << end.x() << ", " << end.y();
    Route* route = uwScene->getRoute();
-   path = route->path(start, this->endPoint, 0);
-   path.append(this->endPoint);
+   path = route->path(start, end, 0);
+
+   path.append(end);
 
    for (int i = 0; i < path.size(); i++) {
        geoPointToPixel(&path[i]);
