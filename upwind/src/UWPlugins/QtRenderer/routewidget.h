@@ -26,14 +26,11 @@ public:
     void drawRoute(bool);
     QPointF *geoPointToPixel(QPointF* geoPoint);
     QPointF *pixelToGeoPoint(QPointF* pixelPoint);
-    QPointF getLongTermLastPos(QVector<QPointF> *path);
-    QPointF getClosestStartPoint();
 
 signals:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void calculatePath();
     void geopointToPixel(QPointF *geopoint);
     
 public slots:
@@ -50,14 +47,9 @@ private:
     //QVector<QPolygonF> navcorrected;
     Route *route;
     QVector<QPointF> path;
-    QPointF endPoint; //end point for short term navigation
-    QPointF pathEndPoint; //end point for long term navigation
-     QPointF mousePosition;
+
     QPen longroute_pen;
     QBrush longroute_brush;
-
-    QPen marker_pen;
-    QBrush marker_brush;
 
     bool zoomMode;
 };

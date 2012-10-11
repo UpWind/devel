@@ -5,7 +5,6 @@
 #include <QPainter>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
-#include <limits>
 
 #include "routewidget.h"
 #include "../shared/uwmath.h"
@@ -26,10 +25,6 @@ RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chart
     longroute_pen.setColor(Qt::blue);
     longroute_pen.setWidthF(6);
     longroute_brush.setColor(Qt::blue);
-
-    marker_pen.setColor(Qt::black);
-    marker_pen.setWidthF(4);
-    marker_pen.setColor(Qt::black);
 
 }
 
@@ -59,8 +54,7 @@ QPointF* RouteWidget::pixelToGeoPoint(QPointF* pixelPoint){
 }
 
 void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-
-    QPointF &longTermLastPos = this->endPoint;
+    qDebug()<<Q_FUNC_INFO;
 
     painter->setPen(longroute_pen);
     painter->setBrush(longroute_brush);
@@ -70,13 +64,8 @@ void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->rotate(rotateAngle);
 
     painter->drawPolyline(routepoints);
-    longTermLastPos = getLongTermLastPos(&this->path);
 
-    //Mark short term navigation starting point//First set pen and then draw a cricle
-    painter->setPen(marker_pen);
-    painter->setBrush(marker_brush);
 
-    painter->drawEllipse(longTermLastPos,10.0,10.0);
 }
 
 void RouteWidget::zoomIn() {
@@ -123,79 +112,23 @@ void RouteWidget::drawRoute(bool activate)
     drawMode = activate;
 }
 
-void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) { //Listens for mouseEvents from User Interface
+void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
-    this->mousePosition = event->screenPos(); //End point is the new end point (last coordinate item) in path variable in short term navigation
-    calculatePath();
-}
-
-QPointF RouteWidget::getLongTermLastPos(QVector<QPointF> *path){
-
-   QPointF pathEndPoint;// = path->at(path->size()-2);
-    qDebug()<< "Your selected display coordinates: "<<pathEndPoint;
-
-    pathEndPoint = getClosestStartPoint();
-
-    return pathEndPoint;
-}
-
-QPointF RouteWidget::getClosestStartPoint(){
-
-    QPointF closestStartPoint = this->path.at(0);
-    double distance = 9999999999.0;//numeric_limits<double>::max();
-    double currentDistance = 0;
-    bool shorterStartPointFound;
-    int shortestPointIndex = -1;
-
-    for(int i = this->path.size() - 2; i >= 0 ;i--){ //subtraction leaves the last appended point out
-
-        QPointF start = path.at(i);
-
-        QPointF end = this->mousePosition;
-       // qDebug() << "******************* Path point: " << path.at(i) << "start: " << start << " END: " << this->mousePosition;
-        pixelToGeoPoint(&start);
-        pixelToGeoPoint(&end);
-
-        currentDistance = UwMath::getDistance(start, end, 6371);
-        //qDebug() << "******************* Path point: " << start << "Destination: " << end << " Distance: " << currentDistance;
-
-        if (currentDistance < distance){
-
-            distance = currentDistance;
-            closestStartPoint = path.at(i);
-            shorterStartPointFound = true;
-        }
-        if (shorterStartPointFound && shortestPointIndex != -1){
-            //qDebug() << "Erasing value: " << path.at(shortestPointIndex);
-            this->path.erase(path.begin() + shortestPointIndex);
-        }
-         shortestPointIndex = i;
-         //qDebug() << "Path point: " << path.at(i);
-         // qDebug() << "Endpoint: " << this->endPoint << " ClosestStartPoint: " << closestStartPoint << " distance: " << distance;
-    }
-
-    return closestStartPoint;
-
-}
-
-void RouteWidget::calculatePath(){
    QPointF start;
-   QPointF endPrint = this->mousePosition; //REMOVE LATER
-   QPointF end = this->mousePosition;
-   this->endPoint = this->mousePosition;
+   QPointF end;
 
    //Boat position?
    QPointF *boatPosition = uwScene->getBoat()->getGeoPosition();
    qDebug() << "boatPosition: " << boatPosition->x() << ", " << boatPosition->y();
-
    start = *boatPosition;
 
+   end = event->pos();
+   //geoPointToPixel(&start);
    pixelToGeoPoint(&end);
-   qDebug() << "Your selected geo coordinates " << end.x() << ", " << end.y();
+
+
    Route* route = uwScene->getRoute();
    path = route->path(start, end, 0);
-
-   path.append(end);
 
    for (int i = 0; i < path.size(); i++) {
        geoPointToPixel(&path[i]);
