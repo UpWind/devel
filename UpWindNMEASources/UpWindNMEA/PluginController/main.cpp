@@ -5,6 +5,8 @@
 
 int main(int argc, char *argv[]) {
 
+    //We are in the main.cpp
+
     const int splashTime = 1000;
 
     QApplication app(argc, argv);
