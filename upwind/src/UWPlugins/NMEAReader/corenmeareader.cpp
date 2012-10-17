@@ -3,6 +3,8 @@
 
 #define DEBUG 1;
 
+//another comment.
+
 CoreNMEAReader::CoreNMEAReader(){
     debug = DEBUG;
     if(debug)
