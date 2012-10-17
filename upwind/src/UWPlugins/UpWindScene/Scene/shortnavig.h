@@ -29,12 +29,13 @@
 #include <QLineF>
 #include <QVector>
 #include <QThread>
+#include "polardiagram.h"
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
-//#include "libpq-fe.h"
+#include "/usr/include/postgresql/libpq-fe.h"
 //#include "../settings/SettingsManager.h"
-//#include "../shared/uwstatus.h"
+#include "../shared/uwstatus.h"
 //#include "../shared/uwmath.h"
 //#include <limits>
 
@@ -56,7 +57,7 @@ public:
     bool createObstaclesTables();
 
     void loadChartObjects(QVector<ChartObjectInterface*> cObjects);
-/*
+
     void processData( const QVector<QPointF> * geoRoute,
                       QPointF &geoBoatPos, float &twd, float &wspeed,
                       PolarDiagram * pd, QThread::Priority = QThread::InheritPriority);
@@ -102,7 +103,7 @@ private:
 
     void updateCheckPoint();
     void updateLayLines();
-                                            */
+
     // local values for uws
     QVector<QPolygonF > polyObstacles;
     QVector<QPointF > pointObstacles;
@@ -110,11 +111,13 @@ private:
     QVector<ChartObjectInterface*> chartObjects;
      static ShortNavigation *instance;
 
-        /*
+     PGresult *res;
+     PGconn *conn;
+
     bool debug, new_data;
     //SettingsManager * settingsManager;
-    //UwStatus * status;
-    QMutex uws_mutex;
+    UwStatus * status;
+    //QMutex uws_mutex;
     QByteArray driver;
 
     // values coming from the settings
@@ -130,8 +133,6 @@ private:
     QVector<QPointF> * pLeftPath, * pRightPath;
     QPointF geoDestinyPos, destinyPos;
     float layLinesAngle;
-
-    */
 
 };
 
