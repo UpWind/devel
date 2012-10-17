@@ -48,6 +48,7 @@ class ShortNavigation : public QThread
 public:
     ShortNavigation(QObject * parent = 0);
     ~ShortNavigation();
+     static ShortNavigation* getInstance();  //Singleton class
 
     /**
     * Generate the obstacles tables, without them the class does not work
@@ -107,6 +108,7 @@ private:
     QVector<QPointF > pointObstacles;
     QVector<QLineF > lineObstacles;
     QVector<ChartObjectInterface*> chartObjects;
+     static ShortNavigation *instance;
 
         /*
     bool debug, new_data;

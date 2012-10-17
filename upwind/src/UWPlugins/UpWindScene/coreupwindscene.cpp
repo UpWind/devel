@@ -11,7 +11,7 @@ CoreUpWindScene::CoreUpWindScene(){
 
     settingsUI = new SettingsUI();
     settingsUI->setupSettings(settings);
-    this->shortnavig = new ShortNavigation();
+    this->shortnavig = ShortNavigation::getInstance();//new ShortNavigation();
     this->route = Route::getInstance();
 }
 

@@ -24,6 +24,7 @@
 
 #include "shortnavig.h"
 #include <ogrsf_frmts.h>
+#include <QDebug>
 
 /// Offset value factor aplied to this obstacles:
 #define POINT_OFFSET_FACTOR_ROCK 10
@@ -46,7 +47,18 @@ ShortNavigation::ShortNavigation( QObject * parent)
 
 
 
-    //this->start();
+    this->start();
+}
+
+ShortNavigation* ShortNavigation::instance = NULL;
+
+ShortNavigation* ShortNavigation::getInstance(){
+        if(instance == NULL) {
+                instance = new ShortNavigation();
+                qDebug() << __PRETTY_FUNCTION__;
+                return instance;
+        } else
+                return instance;
 }
 
 ShortNavigation::~ShortNavigation()
