@@ -53,12 +53,12 @@
 ShortNavigation* ShortNavigation::instance = NULL;
 
 ShortNavigation* ShortNavigation::getInstance(){
-        if(instance == NULL) {
-                instance = new ShortNavigation();
-                qDebug() << __PRETTY_FUNCTION__;
-                return instance;
-        } else
-                return instance;
+    if(instance == NULL) {
+        instance = new ShortNavigation();
+        qDebug() << __PRETTY_FUNCTION__;
+        return instance;
+    } else
+        return instance;
 }
 ShortNavigation::ShortNavigation(){
     //something todo
@@ -80,7 +80,7 @@ ShortNavigation::~ShortNavigation()
 
 void ShortNavigation::clear()
 {
- //do some clearing
+    //do some clearing
 }
 
 void ShortNavigation::loadChartObjects(QVector<ChartObjectInterface*> cObjects) {
@@ -97,159 +97,111 @@ bool ShortNavigation::createObstaclesTables()
 
 
 
-        /// POINT_OFFSET is the area around the obstacle,
-        /// so is it's value is 5, it will draw 10 m^2
+    /// POINT_OFFSET is the area around the obstacle,
+    /// so is it's value is 5, it will draw 10 m^2
 
-        //float POINT_OFFSET = settingsManager->getPOffset();
-        float POINT_OFFSET = 5; //test values, above comment from old code
-        //float NOT_ALLOWED_DEPTH = settingsManager->getMinDepth();
-        float NOT_ALLOWED_DEPTH = 2; //test values, above comment from old code
+    //float POINT_OFFSET = settingsManager->getPOffset();
+    float POINT_OFFSET = 5; //test values, above comment from old code
+    //float NOT_ALLOWED_DEPTH = settingsManager->getMinDepth();
+    float NOT_ALLOWED_DEPTH = 2; //test values, above comment from old code
 
-        /// signsound with depth from 0 to this value are
-        /// taken in consideration for the obstacles layer
+    /// signsound with depth from 0 to this value are
+    /// taken in consideration for the obstacles layer
 
-        //float SIGNSOUND_THRESHOLD = settingsManager->getSignsound();
-        float SIGNSOUND_THRESHOLD = 1; //test values, above comment from old code
-
-
-
-            // ##################################################
-            // list of polygon layers considered obstacles
-            QList<QString> polygon_layers;
-            polygon_layers.append("generarea_r");
-            // list of point layers to be considered as obstacles
-            QList<QString> point_layers;
-            point_layers.append("rock_p");
-            point_layers.append("wreck_p");
-            point_layers.append("navaid_p");
-            point_layers.append("signsound_p");
-            // line layers to be considered as obstacles
-            QList<QString> line_layers;
-            line_layers.append("depthcont_l");
-            //####################################################
-
-            //if (!this->obstacles.isEmpty()) this->obstacles.resize(0);
+    //float SIGNSOUND_THRESHOLD = settingsManager->getSignsound();
+    float SIGNSOUND_THRESHOLD = 1; //test values, above comment from old code
 
 
 
-            for (int i = 0 ; i < this->chartObjects.size(); i++) {
+    // ##################################################
+    // list of polygon layers considered obstacles
+    QList<QString> polygon_layers;
+    polygon_layers.append("generarea_r");
+    // list of point layers to be considered as obstacles
+    QList<QString> point_layers;
+    point_layers.append("rock_p");
+    point_layers.append("wreck_p");
+    point_layers.append("navaid_p");
+    point_layers.append("signsound_p");
+    // line layers to be considered as obstacles
+    QList<QString> line_layers;
+    line_layers.append("depthcont_l");
+    //####################################################
 
-                if(this->chartObjects.at(i)->getTableName() == "generarea_l") {
-                    for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
-                    this->polyObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j));
-                    }
-                }
-                if(this->chartObjects.at(i)->getTableName() == "depthcont_l") {
-                    for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) { //TODO: parse line from polygon
-                    //this->lineObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j));
-                    }
-                }
-                if(this->chartObjects.at(i)->getTableName() == "rock_p") {
-                    for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) { //need to check how vectors are written from DB. is getfeaturecount = polygonvector.size ?
-                        for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
-                            this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
-                        }
-                    }
-                }
-                if(this->chartObjects.at(i)->getTableName() == "wreck_p") {
-                    for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
-                        for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
-                            this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
-                        }
-                    }
-                }
-                if(this->chartObjects.at(i)->getTableName() == "navaid_p") {
-                    for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
-                        for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
-                            this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
-                        }
-                    }
-                }
-                if(this->chartObjects.at(i)->getTableName() == "signsound_p") {
-
-                    QVector<QPolygonF> qpoint;
-                    OGRLayer* layer;
-                    OGRFeatureDefn *poFDefn;
-                    OGRFeature *poFeature;
-
-                    qpoint = this->chartObjects.at(i)->getCoordinateGeometry();
-                    layer = this->chartObjects.at(i)->getFeatureData();
-                    layer->ResetReading();
-
-                    for(int m= 0; m < layer->GetFeatureCount();m++ ) {
-
-                       poFDefn = layer->GetLayerDefn();
-                       poFeature = layer->GetNextFeature();
-
-                       for(int j = 0; j < poFDefn->GetFieldCount(); j++ ){
-                           OGRFieldDefn *poFieldDefn = poFDefn->GetFieldDefn( j );
-                           QString str = poFieldDefn->GetNameRef() ;
-
-                           if(str.contains("depth") == true) {
-                               if (poFeature->GetFieldAsDouble(j) > SIGNSOUND_THRESHOLD) { //parse out depths above signsound threshold as since they are not obstacles
-                                    qpoint.remove(j);
-                               }
-                           }
-                        }
-                    }
-
-                    //for (int j = 0 ; j < qpoint.at(i)->getCoordinateGeometry().size();j++) {
-                   //     for(int k = 0; k < qpoint.at(i)->getCoordinateGeometry().at(j).size();k++) {
-                   //         this->pointObstacles.append(qpoint.at(i)->getCoordinateGeometry().at(j).at(k));
-                   //     }
-                   // }
+    //if (!this->obstacles.isEmpty()) this->obstacles.resize(0);
 
 
 
-                }
+    for (int i = 0 ; i < this->chartObjects.size(); i++) {
 
+        if(this->chartObjects.at(i)->getTableName() == "generarea_l") {
+            for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
+                this->polyObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j));
             }
-}
-            /*
-            for (int l = 0; l < this->pointObstacles.size();l++) {
-                if ( point_layers[i] == "rock_p")
-                    sql.append( UwShort::buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
-                else if ( point_layers[i] == "wreck_p" )
-                    sql.append( UwShort::buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
-                else if ( signsound)
-                    // for signsound POINT_OFFSET = POINT_OFFSET / ( depth of signsound / factor )
-                    // the bigger the signsound is, the bigger the point offset gets
-                    sql.append( UwShort::buildWKTPolygon( point, POINT_OFFSET / ( QString( PQgetvalue( res, j, 2)).toDouble() / POINT_OFFSET_FACTOR_SIGNSOUND ) ));
-                else
-                    sql.append( UwShort::buildWKTPolygon( point, POINT_OFFSET));
-            }
-//}
-
-            QString ShortNavigation::buildWKTPolygon( const QPointF &epoint, const float &offset ) {
-
-            QPointF point = epoint;
-            UwMath::toConformal( point);
-            double moffset = offset / ( cos( UwMath::toRadians(point.y())) * 6378000.0 );
-
-            QString WKTPolygon = "'POLYGON((";
-            WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() + moffset), 'f', WKT_P));
-            WKTPolygon.append( " ");
-            WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() + moffset), 'f', WKT_P));
-            WKTPolygon.append( ",");
-            WKTPolygon.append(  QString::number( UwMath::toDegrees( point.x() + moffset), 'f', WKT_P));
-            WKTPolygon.append( " ");
-            WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() - moffset), 'f', WKT_P));
-            WKTPolygon.append( ",");
-            WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() - moffset), 'f', WKT_P));
-            WKTPolygon.append( " ");
-            WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() - moffset), 'f', WKT_P));
-            WKTPolygon.append( ",");
-            WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() - moffset), 'f', WKT_P));
-            WKTPolygon.append( " ");
-            WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() + moffset), 'f', WKT_P));
-            WKTPolygon.append( ",");
-            WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() + moffset), 'f', WKT_P));
-            WKTPolygon.append( " ");
-            WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() + moffset), 'f', WKT_P));
-            WKTPolygon.append( "))'");
-
-            return WKTPolygon;
         }
+        if(this->chartObjects.at(i)->getTableName() == "depthcont_l") {
+            for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) { //TODO: parse line from polygon
+                //this->lineObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j));
+            }
+        }
+        if(this->chartObjects.at(i)->getTableName() == "rock_p") {
+            for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) { //need to check how vectors are written from DB. is getfeaturecount = polygonvector.size ?
+                for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
+                    this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
+                }
+            }
+        }
+        if(this->chartObjects.at(i)->getTableName() == "wreck_p") {
+            for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
+                for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
+                    this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
+                }
+            }
+        }
+        if(this->chartObjects.at(i)->getTableName() == "navaid_p") {
+            for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
+                for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
+                    this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
+                }
+            }
+        }
+        if(this->chartObjects.at(i)->getTableName() == "signsound_p") {
+
+            QVector<QPolygonF> qpoint;
+            OGRLayer* layer;
+            OGRFeatureDefn *poFDefn;
+            OGRFeature *poFeature;
+
+            qpoint = this->chartObjects.at(i)->getCoordinateGeometry();
+            layer = this->chartObjects.at(i)->getFeatureData();
+            layer->ResetReading();
+
+            QString sql("SELECT * FROM *"); //FIX THIS! //sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
+
+            for(int m= 0; m < layer->GetFeatureCount();m++ ) {
+
+                poFDefn = layer->GetLayerDefn();
+                poFeature = layer->GetNextFeature();
+
+                for(int j = 0; j < poFDefn->GetFieldCount(); j++ ){
+                    OGRFieldDefn *poFieldDefn = poFDefn->GetFieldDefn( j );
+                    QString str = poFieldDefn->GetNameRef() ;
+
+                    if(str.contains("depth") == true) {
+                        if (poFeature->GetFieldAsDouble(j) > SIGNSOUND_THRESHOLD) { //parse out depths above signsound threshold as since they are not obstacles
+                            qpoint.remove(j);
+                        }
+                    }
+                }
+            }
+
+            //for (int j = 0 ; j < qpoint.at(i)->getCoordinateGeometry().size();j++) {
+            //     for(int k = 0; k < qpoint.at(i)->getCoordinateGeometry().at(j).size();k++) {
+            //         this->pointObstacles.append(qpoint.at(i)->getCoordinateGeometry().at(j).at(k));
+            //     }
+            // }
+
+
 
 
             // CREATE NEW TABLES
@@ -311,6 +263,20 @@ bool ShortNavigation::createObstaclesTables()
                     sql.append( point_layers[i]);
                     sql.append( "'); ");
 
+
+                    for (int l = 0; l < this->pointObstacles.size();l++) {
+                        if ( point_layers[i] == "rock_p")
+                            sql.append( buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
+                        else if ( point_layers[i] == "wreck_p" )
+                            sql.append( buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
+                        else if ( signsound)
+                            // for signsound POINT_OFFSET = POINT_OFFSET / ( depth of signsound / factor )
+                            // the bigger the signsound is, the bigger the point offset gets
+                            sql.append( buildWKTPolygon( point, POINT_OFFSET / ( QString( PQgetvalue( res, j, 2)).toDouble() / POINT_OFFSET_FACTOR_SIGNSOUND ) ));
+                        else
+                            sql.append( buildWKTPolygon( point, POINT_OFFSET));
+                    }
+
                 }
                 PQclear(res);
 
@@ -345,18 +311,53 @@ bool ShortNavigation::createObstaclesTables()
             //status->setObstaclesTablesCreated( true); //uwstatus
 
             // tables are done
+            this->obstaclesTablesCreated = true;
             return true;
 
         } else {
 
 
             // tables are not done
+            this->obstaclesTablesCreated = false;
             return false;
 
         }
 
 
+    }
 }
+
+QString ShortNavigation::buildWKTPolygon( const QPointF &epoint, const float &offset ) {
+
+    QPointF point = epoint;
+    UwMath::toConformal( point);
+    double moffset = offset / ( cos( UwMath::toRadians(point.y())) * 6378000.0 );
+
+    QString WKTPolygon = "'POLYGON((";
+    WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() + moffset), 'f', WKT_P));
+    WKTPolygon.append( " ");
+    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() + moffset), 'f', WKT_P));
+    WKTPolygon.append( ",");
+    WKTPolygon.append(  QString::number( UwMath::toDegrees( point.x() + moffset), 'f', WKT_P));
+    WKTPolygon.append( " ");
+    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() - moffset), 'f', WKT_P));
+    WKTPolygon.append( ",");
+    WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() - moffset), 'f', WKT_P));
+    WKTPolygon.append( " ");
+    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() - moffset), 'f', WKT_P));
+    WKTPolygon.append( ",");
+    WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() - moffset), 'f', WKT_P));
+    WKTPolygon.append( " ");
+    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() + moffset), 'f', WKT_P));
+    WKTPolygon.append( ",");
+    WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() + moffset), 'f', WKT_P));
+    WKTPolygon.append( " ");
+    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() + moffset), 'f', WKT_P));
+    WKTPolygon.append( "))'");
+
+    return WKTPolygon;
+}
+
 
 QPointF ShortNavigation::getFromWKTPoint( QString wkt_geometry)
 {
@@ -389,7 +390,7 @@ QString ShortNavigation::buildWKTPolygon( const QPolygonF &rhomboid ) {
 }
 
 QString ShortNavigation::buildWKTPolygon( const QPolygonF &epolygon, const QPointF &ecentroid,
-                                  const double &perimeter, const float &offset )
+                                          const double &perimeter, const float &offset )
 {
     // THIS WAS INTENDED TO MAKE THE POLYGONS GROW, BY IS NOT AS SIMPLE...
     // Take a look into skeletons to continue this way
@@ -397,8 +398,8 @@ QString ShortNavigation::buildWKTPolygon( const QPolygonF &epolygon, const QPoin
     bool debug = 1;
 
     if (debug) {
-        qDebug() << "UwShort::builtWKTPolygon(): add offset to a polygon";
-        QString dbg("UwShort::builtWKTPolygon(): ");
+        qDebug() << "builtWKTPolygon(): add offset to a polygon";
+        QString dbg("builtWKTPolygon(): ");
         dbg.append( "polygon size: ");
         dbg.append( QString::number( epolygon.size()));
         dbg.append( " exple: (");
@@ -421,7 +422,7 @@ QString ShortNavigation::buildWKTPolygon( const QPolygonF &epolygon, const QPoin
     QPointF centroid = UwMath::toConformal( ecentroid);
 
     if (debug) {
-        QString dbg("UwShort::builtWKTPolygon(): ");
+        QString dbg("builtWKTPolygon(): ");
         dbg.append( "exple poly conf: (");
         dbg.append( QString::number( polygon[0].x()));
         dbg.append( " ,");
@@ -442,7 +443,7 @@ QString ShortNavigation::buildWKTPolygon( const QPolygonF &epolygon, const QPoin
     double factor = new_perimeter / perimeter;
 
     if (debug) {
-        QString dbg("UwShort::builtWKTPolygon(): ");
+        QString dbg("builtWKTPolygon(): ");
         dbg.append( "moffset: ");
         dbg.append( QString::number( moffset));
         dbg.append( " new_perimeter: ");
@@ -459,7 +460,7 @@ QString ShortNavigation::buildWKTPolygon( const QPolygonF &epolygon, const QPoin
     }
 
     if (debug) {
-        QString dbg("UwShort::builtWKTPolygon(): ");
+        QString dbg("builtWKTPolygon(): ");
         dbg.append( "exple output: (");
         dbg.append( QString::number( polygon[0].x()));
         dbg.append( " ,");
@@ -478,37 +479,6 @@ QString ShortNavigation::buildWKTPolygon( const QPolygonF &epolygon, const QPoin
     WKTPolygon.append( QString::number( UwMath::toDegrees( polygon[0].x()), 'f', WKT_P));
     WKTPolygon.append( " ");
     WKTPolygon.append( QString::number( UwMath::fromMercator( polygon[0].y()), 'f', WKT_P));
-    WKTPolygon.append( "))'");
-
-    return WKTPolygon;
-}
-
-QString ShortNavigation::buildWKTPolygon( const QPointF &epoint, const float &offset ) {
-
-    QPointF point = epoint;
-    UwMath::toConformal( point);
-    double moffset = offset / ( cos( UwMath::toRadians(point.y())) * 6378000.0 );
-
-    QString WKTPolygon = "'POLYGON((";
-    WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() + moffset), 'f', WKT_P));
-    WKTPolygon.append( " ");
-    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() + moffset), 'f', WKT_P));
-    WKTPolygon.append( ",");
-    WKTPolygon.append(  QString::number( UwMath::toDegrees( point.x() + moffset), 'f', WKT_P));
-    WKTPolygon.append( " ");
-    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() - moffset), 'f', WKT_P));
-    WKTPolygon.append( ",");
-    WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() - moffset), 'f', WKT_P));
-    WKTPolygon.append( " ");
-    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() - moffset), 'f', WKT_P));
-    WKTPolygon.append( ",");
-    WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() - moffset), 'f', WKT_P));
-    WKTPolygon.append( " ");
-    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() + moffset), 'f', WKT_P));
-    WKTPolygon.append( ",");
-    WKTPolygon.append( QString::number( UwMath::toDegrees( point.x() + moffset), 'f', WKT_P));
-    WKTPolygon.append( " ");
-    WKTPolygon.append( QString::number( UwMath::fromMercator( point.y() + moffset), 'f', WKT_P));
     WKTPolygon.append( "))'");
 
     return WKTPolygon;
@@ -585,7 +555,7 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QPolygo
     QString WKTTriangle = buildWKTPolygon( triangle );
     QString WKTPolygon = buildWKTPolygon( rhomboid );
 
-    return UwShort::checkIntersection( layerName, WKTTriangle, WKTPolygon);
+    return checkIntersection( layerName, WKTTriangle, WKTPolygon);
 
 }
 
@@ -593,7 +563,7 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QPointF
 
     QString WKTPoint = buildWKTPoint( point );
 
-    return UwShort::checkIntersection( layerName, WKTPoint);
+    return checkIntersection( layerName, WKTPoint);
 
 }
 
@@ -601,20 +571,20 @@ bool ShortNavigation::publicCheckIntersection( const QString &layerName, const Q
 
     bool self_conn = false;
 
-    if ( !status->obstaclesTablesCreated() )
+    if (obstaclesTablesCreated )
         this->createObstaclesTables();
 
-    if ( !this->hasConn() ) {
-        this->openConn();
-        self_conn = true;
-    }
+//    if ( !this->hasConn() ) {
+//        this->openConn();
+//        self_conn = true;
+//    }
 
     QString WKTPoint = buildWKTPoint( point );
 
-    bool result = UwShort::checkIntersection( layerName, WKTPoint);
+    bool result = checkIntersection( layerName, WKTPoint);
 
-    if ( self_conn )
-        this->closeConn();
+//    if ( self_conn )
+//        this->closeConn();
 
     return result;
 }
@@ -624,7 +594,7 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QLineF 
     QString WKTLine = buildWKTLine( heading.p1(), heading.p2() );
     QString WKTPolygon = buildWKTPolygon( rhomboid );
 
-    return UwShort::checkIntersection( layerName, WKTLine, WKTPolygon);
+    return checkIntersection( layerName, WKTLine, WKTPolygon);
 
 }
 
@@ -632,7 +602,7 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QLineF 
 
     QString WKTLine = buildWKTLine( heading.p1(), heading.p2() );
 
-    return UwShort::checkIntersection( layerName, WKTLine);
+    return checkIntersection( layerName, WKTLine);
 
 }
 
@@ -641,7 +611,7 @@ bool ShortNavigation::checkIntersection( const QLineF &line1, const QLineF &line
     QString WKTLine1 = buildWKTLine( line1.p1(), line1.p2() );
     QString WKTLine2 = buildWKTLine( line2.p1(), line2.p2() );
 
-    return UwShort::checkGeometriesIntersection( WKTLine1, WKTLine2);
+    return checkGeometriesIntersection( WKTLine1, WKTLine2);
 
 }
 
@@ -680,9 +650,9 @@ bool ShortNavigation::checkOffset( const QLineF &l1, const QLineF &l2, const flo
 }
 
 void ShortNavigation::getPath( const bool &side, const float &offset, const int &max_turns,
-                       const double &windAngle, const double &layLinesAngle,
-                       const QPointF &boatPos, const QPointF &destinyPos,
-                       const QPolygonF &obstacles_shape, QVector<QPointF> &Path )
+                               const double &windAngle, const double &layLinesAngle,
+                               const QPointF &boatPos, const QPointF &destinyPos,
+                               const QPolygonF &obstacles_shape, QVector<QPointF> &Path )
 {
     //input has to be Geographical data cause we check against PostGIS
 
@@ -718,8 +688,8 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
         present_triangle << destinyPos;
 
         // check for obstacles in the triangle
-        obs_r = UwShort::checkIntersection( "obstacles_r", present_triangle, obstacles_shape );
-        obs_l = UwShort::checkIntersection( "obstacles_l", present_triangle, obstacles_shape );
+        obs_r = checkIntersection( "obstacles_r", present_triangle, obstacles_shape );
+        obs_l = checkIntersection( "obstacles_l", present_triangle, obstacles_shape );
 
         if ( obs_r || obs_l ) {
 
@@ -733,8 +703,8 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
             while ( !ready ) {
 
                 // check again, put booleans first and checkIntersection will not be even called
-                if ( ( obs_r && UwShort::checkIntersection( "obstacles_r", present_triangle, obstacles_shape ) ) ||
-                     ( obs_l && UwShort::checkIntersection( "obstacles_l", present_triangle, obstacles_shape ) ) ) {
+                if ( ( obs_r && checkIntersection( "obstacles_r", present_triangle, obstacles_shape ) ) ||
+                     ( obs_l && checkIntersection( "obstacles_l", present_triangle, obstacles_shape ) ) ) {
 
                     // Still obstacles: reduce again!
                     last_triangle = present_triangle;
@@ -743,7 +713,7 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
                 } else {
 
                     // No more obstacles
-                    if (  UwShort::checkOffset( last_triangle, present_triangle, destinyPos, offset ) ) {
+                    if (  checkOffset( last_triangle, present_triangle, destinyPos, offset ) ) {
                         // the distance is acceptable, finetune done
                         ready = true;
                     } else {
@@ -770,10 +740,10 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
     //input should be in GEOGRAPHICAL format
 
-    if ( UwShort::checkIntersection( "obstacles_r", boatPos ) ) {
+    if ( checkIntersection( "obstacles_r", boatPos ) ) {
         // if we are inside an obstacle, don't even try
 
-        if (debug) qDebug() << "UwShort::getNextPoint(): WARNING! YOU ARE INSIDE AN OBSTACLE AREA!";
+        if (debug) qDebug() << "getNextPoint(): WARNING! YOU ARE INSIDE AN OBSTACLE AREA!";
 
         return boatPos;
     }
@@ -788,9 +758,9 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
         if ( temp < distance ) {
             distance = temp;
             nearest_point = i;
-//                 may be in the future we don't need to go through all of them...
-//		} else if ( temp > distance ) {
-//			break;
+            //                 may be in the future we don't need to go through all of them...
+            //		} else if ( temp > distance ) {
+            //			break;
         }
     }
 
@@ -848,7 +818,7 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
             // we must check if our position is between nearest and nearest + 1
             // or between nearest - 1 and nearest
-            if ( !UwShort::checkIntersection( route_line, projection_line) ) {
+            if ( !checkIntersection( route_line, projection_line) ) {
                 a = UwMath::toConformal( route.at( nearest_point - 1 ) );
                 b = UwMath::toConformal( route.at( nearest_point ) );
                 c = UwMath::toConformal( (const QPointF)boatPos );
@@ -869,15 +839,15 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
     if ( route.size() < 1 ) {
 
-        if (debug) qDebug() << "UwShort::getNextPoint(): Fatal: route must have at least 1 point!";
+        if (debug) qDebug() << "getNextPoint(): Fatal: route must have at least 1 point!";
 
     } else if ( route.size() == 1 ) {
 
         // ROUTE TO PROCESS ONLY HAS ONE POINT
         QLineF heading( boatPos, route.at( nearest_point));
 
-        bool hobs_r = UwShort::checkIntersection( "obstacles_r", heading );
-        bool hobs_l = UwShort::checkIntersection( "obstacles_l", heading );
+        bool hobs_r = checkIntersection( "obstacles_r", heading );
+        bool hobs_l = checkIntersection( "obstacles_l", heading );
 
         // FINETUNE CHECKPOINT IN THE HEADING
         if ( hobs_r || hobs_l ) {
@@ -889,14 +859,14 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
             while ( !ready ) {
 
 
-                if ( ( hobs_r && UwShort::checkIntersection( "obstacles_r", heading ) ) ||
-                     ( hobs_l && UwShort::checkIntersection( "obstacles_l", heading ) ) ) {
+                if ( ( hobs_r && checkIntersection( "obstacles_r", heading ) ) ||
+                     ( hobs_l && checkIntersection( "obstacles_l", heading ) ) ) {
 
                     last_heading = heading;
                     heading = UwMath::lineToHalf( heading);
 
                 } else {
-                    if (  UwShort::checkOffset( heading, last_heading, offset ) )
+                    if (  checkOffset( heading, last_heading, offset ) )
                         ready = true;
                     else
                         heading = UwMath::avgLine( heading, last_heading);
@@ -920,7 +890,7 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
         triangle << boatPos;
 
         // 2nd POINT
-        if ( UwShort::checkIntersection( route_line, projection_line) ) {
+        if ( checkIntersection( route_line, projection_line) ) {
             triangle << projection_point;
         } else {
             triangle << route.at( nearest_point);
@@ -940,8 +910,8 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
         if ( triangle.at( 0 ) == boatPos ) {
             QLineF heading( triangle.at( 0), triangle.at( 1));
 
-            bool hobs_r = UwShort::checkIntersection( "obstacles_r", heading, triangle );
-            bool hobs_l = UwShort::checkIntersection( "obstacles_l", heading, triangle );
+            bool hobs_r = checkIntersection( "obstacles_r", heading, triangle );
+            bool hobs_l = checkIntersection( "obstacles_l", heading, triangle );
 
             // FINETUNE CHECKPOINT IN THE HEADING
             if ( hobs_r || hobs_l ) {
@@ -953,14 +923,14 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
                 while ( !ready ) {
 
 
-                    if ( ( hobs_r && UwShort::checkIntersection( "obstacles_r", heading, triangle) ) ||
-                         ( hobs_l && UwShort::checkIntersection( "obstacles_l", heading, triangle)) ) {
+                    if ( ( hobs_r && checkIntersection( "obstacles_r", heading, triangle) ) ||
+                         ( hobs_l && checkIntersection( "obstacles_l", heading, triangle)) ) {
 
                         last_heading = heading;
                         heading = UwMath::lineToHalf( heading);
 
                     } else {
-                        if (  UwShort::checkOffset( heading, last_heading, offset ) )
+                        if (  checkOffset( heading, last_heading, offset ) )
                             ready = true;
                         else
                             heading = UwMath::avgLine( heading, last_heading);
@@ -976,8 +946,8 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
         // ########################################################################
 
 
-        bool obs_r = UwShort::checkIntersection( "obstacles_r", triangle, triangle );
-        bool obs_l = UwShort::checkIntersection( "obstacles_l", triangle, triangle );
+        bool obs_r = checkIntersection( "obstacles_r", triangle, triangle );
+        bool obs_l = checkIntersection( "obstacles_l", triangle, triangle );
 
         while ( !obs_r && !obs_l && ( i < ( route.size() - 2 ) ) ) {
 
@@ -988,8 +958,8 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
             triangle << route.at( i);
             triangle << route.at( i + 1);
 
-            obs_r = UwShort::checkIntersection( "obstacles_r", triangle, triangle );
-            obs_l = UwShort::checkIntersection( "obstacles_l", triangle, triangle );
+            obs_r = checkIntersection( "obstacles_r", triangle, triangle );
+            obs_l = checkIntersection( "obstacles_l", triangle, triangle );
         }
 
         // FINETUNE CHECKPOINT
@@ -1003,14 +973,14 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
             while ( !ready ) {
 
 
-                if ( ( obs_r && UwShort::checkIntersection( "obstacles_r", triangle, triangle) ) ||
-                     ( obs_l && UwShort::checkIntersection( "obstacles_l", triangle, triangle)) ) {
+                if ( ( obs_r && checkIntersection( "obstacles_r", triangle, triangle) ) ||
+                     ( obs_l && checkIntersection( "obstacles_l", triangle, triangle)) ) {
 
                     last_triangle = triangle;
                     triangle = UwMath::triangleToHalf_OnePointVersion( triangle);
 
                 } else {
-                    if (  UwShort::checkOffset_OnePointVersion( last_triangle, triangle, offset ) )
+                    if (  checkOffset_OnePointVersion( last_triangle, triangle, offset ) )
                         ready = true;
                     else
                         triangle = UwMath::avgTriangle_OnePointVersion( triangle, last_triangle);
@@ -1028,7 +998,7 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
 void ShortNavigation::updateCheckPoint()
 {
-    if (debug) qDebug() << "UwShort::updateCheckPoint(): started";
+    if (debug) qDebug() << "updateCheckPoint(): started";
 
     // Route has been updated by user or method
     // It is set in Conformal Inverted coordenates (Qt scene)
@@ -1041,13 +1011,13 @@ void ShortNavigation::updateCheckPoint()
     // and set it for Qt scene as well
     destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
 
-    if (debug) qDebug() << "UwShort::updateCheckPoint(): ended: ok";
+    if (debug) qDebug() << "updateCheckPoint(): ended: ok";
 
 }
 
 void ShortNavigation::updateLayLines()
 {
-    if (debug) qDebug() << "UwShort::updateLayLines(): started";
+    if (debug) qDebug() << "updateLayLines(): started";
 
     // layLines are not calculated with the actual TWA,
     // but the TWA that we will have when heading towards our destiny
@@ -1063,10 +1033,10 @@ void ShortNavigation::updateLayLines()
         // THEN WE ARE NOT REACHING
 
         if (debug) {
-            qDebug() << "UwShort::updateLayLines(): TWD: " << trueWindDirection
-                    << " layAng: " << layLinesAngle << " pos: ( " << geoBoatPos.x() << ", "
-                    << geoBoatPos.y() << ") ckp: ( " << geoDestinyPos.x() << " ,"
-                    << geoDestinyPos.y() << ")";
+            qDebug() << "updateLayLines(): TWD: " << trueWindDirection
+                     << " layAng: " << layLinesAngle << " pos: ( " << geoBoatPos.x() << ", "
+                     << geoBoatPos.y() << ") ckp: ( " << geoDestinyPos.x() << " ,"
+                     << geoDestinyPos.y() << ")";
         }
 
         QPointF TPleft, TPright;
@@ -1075,9 +1045,9 @@ void ShortNavigation::updateLayLines()
                                   trueWindDirection, layLinesAngle,
                                   geoBoatPos, geoDestinyPos);
         if (debug) {
-            qDebug() << "UwShort::updateLayLines(): master turning points: left: ( "
-                    << TPleft.x() << " ," << TPleft.y() << ")  right: ( "
-                    << TPright.x() << " ," << TPright.y() << ") ";
+            qDebug() << "updateLayLines(): master turning points: left: ( "
+                     << TPleft.x() << " ," << TPleft.y() << ")  right: ( "
+                     << TPright.x() << " ," << TPright.y() << ") ";
         }
 
         // ORDER IS VERY IMPORTANT!!
@@ -1137,21 +1107,21 @@ void ShortNavigation::updateLayLines()
 
     }
 
-    if (debug) qDebug() << "UwShort::updateLayLines(): ended ok";
+    if (debug) qDebug() << "updateLayLines(): ended ok";
 
 
 }
 
 void ShortNavigation::processData( const QVector<QPointF> * other_p_geo_route,
-                  QPointF &other_geo_boat_pos, float &other_twd, float &other_wspeed,
-                  PolarDiagram * other_p_pd, QThread::Priority other_priority )
+                                   QPointF &other_geo_boat_pos, float &other_twd, float &other_wspeed,
+                                   PolarDiagram * other_p_pd, QThread::Priority other_priority )
 {
-    if (debug) qDebug() << "UwShort::processData()";
+    if (debug) qDebug() << "processData()";
 
     this->new_data = true;
 
     // if the tables are created
-    if ( status->obstaclesTablesCreated() ) {
+    if (obstaclesTablesCreated) {
 
         this->pGeoRoute = other_p_geo_route;
         this->geoBoatPos = other_geo_boat_pos;
@@ -1159,11 +1129,11 @@ void ShortNavigation::processData( const QVector<QPointF> * other_p_geo_route,
         this->windSpeed = other_wspeed;
         this->pPolarDiagram = other_p_pd;
 
-        this->start( other_priority);
+//        this->start( other_priority);
 
     } else {
 
-        if (debug) qDebug() << "UwShort::processData(): WARNING: tables are not done, trying to do them...";
+        if (debug) qDebug() << "processData(): WARNING: tables are not done, trying to do them...";
 
         if ( this->createObstaclesTables() ) {
 
@@ -1173,42 +1143,41 @@ void ShortNavigation::processData( const QVector<QPointF> * other_p_geo_route,
             this->windSpeed = other_wspeed;
             this->pPolarDiagram = other_p_pd;
 
-            this->start( other_priority);
+//            this->start( other_priority);
 
         } else {
 
-            if (debug) qDebug() << "UwShort::processData(): FATAL: failed to create the tables";
+            if (debug) qDebug() << "processData(): FATAL: failed to create the tables";
 
-            this->quit();
+//            this->quit();
 
         }
     }
 }
 
-void ShortNavigation::run()
-{
-    if ( this->new_data) {
+//void ShortNavigation::run()
+//{
+//    if ( this->new_data) {
 
-        // we have new data to process!
-        if (debug) qDebug() << "UwShort::processData(): starting data processing...";
+//        // we have new data to process!
+//        if (debug) qDebug() << "processData(): starting data processing...";
 
-        if ( !this->hasConn() )
-            this->openConn();
+//        if ( !this->hasConn() )
+//            this->openConn();
 
-        this->updateCheckPoint();
-        this->updateLayLines();
+//        this->updateCheckPoint();
+//        this->updateLayLines();
 
-        this->closeConn();
+//        this->closeConn();
 
-        this->new_data = false;
+//        this->new_data = false;
 
-        emit finishedProcessing( geoDestinyPos, destinyPos, pLeftPath, pRightPath, layLinesAngle);
+//        emit finishedProcessing( geoDestinyPos, destinyPos, pLeftPath, pRightPath, layLinesAngle);
 
-        if (debug) qDebug() << "UwShort::processData(): data processed and signal send";
+//        if (debug) qDebug() << "processData(): data processed and signal send";
 
-    } else if ( !status->obstaclesTablesCreated() )
-        // this is just for the first run
-        this->createObstaclesTables();
-}
-*/
+//    } else if ( !status->obstaclesTablesCreated() )
+//        // this is just for the first run
+//        this->createObstaclesTables();
+//}
 

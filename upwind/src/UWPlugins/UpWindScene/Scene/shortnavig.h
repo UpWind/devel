@@ -32,10 +32,11 @@
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
-//#include "libpq-fe.h"
+#include "/usr/include/postgresql/libpq-fe.h"
 //#include "../settings/SettingsManager.h"
 //#include "../shared/uwstatus.h"
 #include "../shared/uwmath.h"
+#include "polardiagram.h"
 //#include <limits>
 
 /// point precision to print the WKT geometries
@@ -59,7 +60,7 @@ public:
     bool createObstaclesTables();
 
     void loadChartObjects(QVector<ChartObjectInterface*> cObjects);
-/*
+
     void processData( const QVector<QPointF> * geoRoute,
                       QPointF &geoBoatPos, float &twd, float &wspeed,
                       PolarDiagram * pd, QThread::Priority = QThread::InheritPriority);
@@ -75,14 +76,14 @@ public:
     bool publicCheckIntersection( const QString &layerName, const QPointF &point );
 
 
-protected:
-   void run();
+//protected:
+//   void run();
 
-signals:
-    void finishedProcessing( QPointF geoDestinyPos, QPointF destinyPos,
-                             QVector<QPointF> * pLeftPath, QVector<QPointF> * pRightPath,
-                             float layLinesAngle );
-*/
+//signals:
+//    void finishedProcessing( QPointF geoDestinyPos, QPointF destinyPos,
+//                             QVector<QPointF> * pLeftPath, QVector<QPointF> * pRightPath,
+//                             float layLinesAngle );
+
 
 
 private:
@@ -96,7 +97,7 @@ private:
     QVector<ChartObjectInterface*> chartObjects;
 
 
-  /*
+
     bool checkGeometriesIntersection( const QString &object1, const QString &object2 );
     bool checkIntersection( const QString &layerName, const QString &object, QString shape );
     bool checkIntersection( const QString &layerName, const QPolygonF &triangle, const QPolygonF &rhomboid );
@@ -118,13 +119,14 @@ private:
     void updateCheckPoint();
     void updateLayLines();
 
+    PGresult *res;
+    PGconn *conn;
 
-
-    bool debug, new_data;
+    bool debug, new_data, obstaclesTablesCreated;
     //SettingsManager * settingsManager;
     //UwStatus * status;
-    QMutex uws_mutex;
-    QByteArray driver;
+//    QMutex uws_mutex;
+//    QByteArray driver;
 
     // values coming from the settings
     float ACCU_OFFSET, MAX_TURNING_POINTS;
@@ -140,7 +142,7 @@ private:
     QPointF geoDestinyPos, destinyPos;
     float layLinesAngle;
 
-    */
+
 
 };
 
