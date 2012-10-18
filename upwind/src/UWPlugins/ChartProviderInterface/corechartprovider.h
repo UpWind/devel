@@ -10,7 +10,10 @@ class CoreChartProvider : public QObject, public ChartProviderInterface
     Q_INTERFACES(ChartProviderInterface UWPluginInterface)
 
 public:
-    explicit CoreChartProvider(QObject *parent = 0){}
+    explicit CoreChartProvider(QObject *parent = 0)
+    {
+        (void)parent;
+    }
 
 signals:
     void modelChanged();
