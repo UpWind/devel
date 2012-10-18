@@ -29,27 +29,29 @@
 #include <QLineF>
 #include <QVector>
 #include <QThread>
-#include "polardiagram.h"
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
-#include "/usr/include/postgresql/libpq-fe.h"
+//#include "libpq-fe.h"
 //#include "../settings/SettingsManager.h"
-#include "../shared/uwstatus.h"
-//#include "../shared/uwmath.h"
+//#include "../shared/uwstatus.h"
+#include "../shared/uwmath.h"
 //#include <limits>
 
 /// point precision to print the WKT geometries
 #define WKT_P 13
 
-class ShortNavigation : public QThread
+//class ShortNavigation : public QThread
+//{
+//    Q_OBJECT
+class ShortNavigation
 {
-    Q_OBJECT
-
 public:
-    ShortNavigation(QObject * parent = 0);
+    static ShortNavigation* getInstance();  //Singleton class
+    ShortNavigation();//ShortNavigation(QObject * parent = 0);
     ~ShortNavigation();
-     static ShortNavigation* getInstance();  //Singleton class
+
+     void clear();
 
     /**
     * Generate the obstacles tables, without them the class does not work
@@ -57,7 +59,7 @@ public:
     bool createObstaclesTables();
 
     void loadChartObjects(QVector<ChartObjectInterface*> cObjects);
-
+/*
     void processData( const QVector<QPointF> * geoRoute,
                       QPointF &geoBoatPos, float &twd, float &wspeed,
                       PolarDiagram * pd, QThread::Priority = QThread::InheritPriority);
@@ -80,9 +82,21 @@ signals:
     void finishedProcessing( QPointF geoDestinyPos, QPointF destinyPos,
                              QVector<QPointF> * pLeftPath, QVector<QPointF> * pRightPath,
                              float layLinesAngle );
+*/
+
 
 private:
 
+    static ShortNavigation *instance;
+
+    // local values for uws
+    QVector<QPolygonF > polyObstacles;
+    QVector<QPointF > pointObstacles;
+    QVector<QLineF > lineObstacles;
+    QVector<ChartObjectInterface*> chartObjects;
+
+
+  /*
     bool checkGeometriesIntersection( const QString &object1, const QString &object2 );
     bool checkIntersection( const QString &layerName, const QString &object, QString shape );
     bool checkIntersection( const QString &layerName, const QPolygonF &triangle, const QPolygonF &rhomboid );
@@ -104,20 +118,12 @@ private:
     void updateCheckPoint();
     void updateLayLines();
 
-    // local values for uws
-    QVector<QPolygonF > polyObstacles;
-    QVector<QPointF > pointObstacles;
-    QVector<QLineF > lineObstacles;
-    QVector<ChartObjectInterface*> chartObjects;
-     static ShortNavigation *instance;
 
-     PGresult *res;
-     PGconn *conn;
 
     bool debug, new_data;
     //SettingsManager * settingsManager;
-    UwStatus * status;
-    //QMutex uws_mutex;
+    //UwStatus * status;
+    QMutex uws_mutex;
     QByteArray driver;
 
     // values coming from the settings
@@ -133,6 +139,8 @@ private:
     QVector<QPointF> * pLeftPath, * pRightPath;
     QPointF geoDestinyPos, destinyPos;
     float layLinesAngle;
+
+    */
 
 };
 
