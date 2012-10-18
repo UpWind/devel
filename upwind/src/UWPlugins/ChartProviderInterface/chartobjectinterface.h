@@ -20,7 +20,13 @@ public:
         Polygon
     } typedef ChartObjectType;
 
-    explicit ChartObjectInterface(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinateData, OGRLayer* feat, QString tabName){}
+    explicit ChartObjectInterface(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinateData, OGRLayer* feat, QString tabName)
+    {
+        (void)geomPixelData;
+        (void)geomCoordinateData;
+        (void)feat;
+        (void)tabName;
+    }
     virtual ChartObjectType getType() const = 0;
     virtual QVector<QPolygonF> getPixelGeometry() const = 0;
     virtual QVector<QPolygonF> getCoordinateGeometry() const = 0;
