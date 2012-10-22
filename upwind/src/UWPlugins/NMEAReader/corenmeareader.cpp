@@ -349,7 +349,10 @@ void CoreNMEAReader::run() {}
 QString CoreNMEAReader::getName(){
     return QString("CoreNMEAReader");
 }
-void CoreNMEAReader::addPluginSettingsToLayout(QLayout *layout){}
+void CoreNMEAReader::addPluginSettingsToLayout(QLayout *layout)
+{
+	(void)layout;
+}
 
 Settings* CoreNMEAReader::getSettings(){
     return settings;

@@ -19,7 +19,10 @@ void CoreViewRenderer::paint()
 {
 }
 
-void CoreViewRenderer::addPluginSettingsToLayout(QLayout *layout){}
+void CoreViewRenderer::addPluginSettingsToLayout(QLayout *layout)
+{
+	(void)layout;
+}
 
 Settings* CoreViewRenderer::getSettings() {
     return settings;

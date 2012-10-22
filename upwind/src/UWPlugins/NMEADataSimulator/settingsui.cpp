@@ -130,6 +130,7 @@ void SettingsUI::readData(const QString & data){
 }
 
 void SettingsUI::on_horizontalSlider_velocity_valueChanged(int value){
+	(void)value;
     this->updateSettings();
 }
 

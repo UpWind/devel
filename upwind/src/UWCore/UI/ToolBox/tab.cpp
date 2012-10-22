@@ -16,6 +16,8 @@ Tab::Tab(QWidget * parent)
 
 bool Tab::add_profile(QString * profile_name, QString * image_path, QWidget * parent){
 
+	(void)parent;
+
     bool add_profile = false;
 
     if(get_count()<MAX_PROFILE){

@@ -253,19 +253,40 @@ void PluginSelect::newPluginSelected(const QString &pluginName){
     this->saveSettings();
 }
 
-void PluginSelect::on_rendererBox_textChanged(QString pluginName){}
+void PluginSelect::on_rendererBox_textChanged(QString pluginName)
+{
+    (void)pluginName;
+}
 
-void PluginSelect::on_nmeaReaderBox_textChanged(QString pluginName){}
+void PluginSelect::on_nmeaReaderBox_textChanged(QString pluginName)
+{
+    (void)pluginName;
+}
 
-void PluginSelect::on_chartProviderBox_textChanged(QString pluginName){}
+void PluginSelect::on_chartProviderBox_textChanged(QString pluginName)
+{
+    (void)pluginName;
+}
 
-void PluginSelect::on_upwindSceneBox_textChanged(QString pluginName){}
+void PluginSelect::on_upwindSceneBox_textChanged(QString pluginName)
+{
+    (void)pluginName;
+}
 
-void PluginSelect::on_loggerBox_textChanged(QString pluginName){}
+void PluginSelect::on_loggerBox_textChanged(QString pluginName)
+{
+    (void)pluginName;
+}
 
-void PluginSelect::on_routeManagerBox_textChanged(QString pluginName){}
+void PluginSelect::on_routeManagerBox_textChanged(QString pluginName)
+{
+    (void)pluginName;
+}
 
-void PluginSelect::on_nmeaReaderBox_currentIndexChanged(QString pluginName){}
+void PluginSelect::on_nmeaReaderBox_currentIndexChanged(QString pluginName)
+{
+    (void)pluginName;
+}
 
 void PluginSelect::on_nmeaReaderBox_activated(QString pluginName){
     UWPluginInterface* nmeaReader = UWCore::getInstance()->getPluginManager()->getPlugin(pluginName);
@@ -304,6 +325,9 @@ void PluginSelect::on_routeManagerBox_activated(QString pluginName){
 }
 
 void PluginSelect::on_treeWidget_itemDoubleClicked(QTreeWidgetItem* item, int column){
+
+	(void)column;
+
     QString pluginName = item->text(0);
 
     if(item->parent() != 0){
