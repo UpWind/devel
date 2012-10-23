@@ -132,7 +132,10 @@ OGRLayer* PostgreChartProvider::getLayerLevel(QString layerNameString, int layer
     // Layer's levelnumber to QString
     QString layerNumberStr = QString::number(layerNumber);
 
-    layerNameString = layerNameString + "_level" + layerNumberStr;
+    if(layerNameString.at(layerNameString.size()-1) != 'p')
+        layerNameString = layerNameString + "_level" + layerNumberStr;
+    else
+        layerNameString = layerNameString;
 
     // Convert to const char*
     const char* layerName = layerNameString.toStdString().c_str();
