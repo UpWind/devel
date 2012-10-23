@@ -1104,6 +1104,7 @@ void ToolBox::loadPolarDiagramList( int to_load) {
 
 void ToolBox::on_polarDiagramNamesComboBox_currentIndexChanged(int index)
 {
+	(void)index;
     //status->setUsePolarDiagram( index);
 }
 

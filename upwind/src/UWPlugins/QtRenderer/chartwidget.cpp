@@ -41,6 +41,10 @@ QRectF ChartWidget::boundingRect() const {
 }
 
 void ChartWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
+	(void)option;
+	(void)widget;
+
     qDebug()<<Q_FUNC_INFO;
     painter->setRenderHint(QPainter::Antialiasing, false);
 
@@ -141,6 +145,9 @@ void ChartWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void ChartWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+
+	(void)event;
+
     qDebug() << Q_FUNC_INFO << "mouseMoveEvent";
 
 

@@ -67,6 +67,9 @@ QString Clock::getName(){
     return "ClockWidget";
 }
 
-void Clock::parseNMEAString(const QString & text){}
+void Clock::parseNMEAString(const QString & text)
+{
+	(void)text;
+}
 
 Q_EXPORT_PLUGIN2(Clock, Clock)

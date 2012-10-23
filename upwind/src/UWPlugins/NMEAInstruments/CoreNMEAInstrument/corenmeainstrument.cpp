@@ -45,13 +45,19 @@ QStringList CoreNMEAInstrument::getParsedNMEAValues(){
     return this->parsedNMEAValues;
 }
 
-void CoreNMEAInstrument::mouseDoubleClickEvent (QMouseEvent *event){}
+void CoreNMEAInstrument::mouseDoubleClickEvent (QMouseEvent *event)
+{
+	(void)event;
+}
 
 void CoreNMEAInstrument::mousePressEvent(QMouseEvent *event){
     handlingPoint= event->globalPos();
 }
 
-void CoreNMEAInstrument::addPluginSettingsToLayout(QLayout *layout) {}
+void CoreNMEAInstrument::addPluginSettingsToLayout(QLayout *layout) 
+{
+	(void)layout;
+}
 
 Settings* CoreNMEAInstrument::getSettings() {
     return this->settings;

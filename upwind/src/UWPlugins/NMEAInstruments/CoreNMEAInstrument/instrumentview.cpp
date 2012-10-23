@@ -26,4 +26,5 @@ void InstrumentView::mousePressEvent(QMouseEvent *event){
 
 void InstrumentView::mouseReleaseEvent (QMouseEvent *event){
     m_handling = false;
+	(void)event;
 }

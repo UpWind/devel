@@ -23,6 +23,9 @@ QStringList* UWParser::parseNMEAString(const QString &nmeaString){
 }
 
 QStringList* UWParser::parseCompassString(const QString &nmeaString){
+
+	(void)nmeaString;
+
     //do parsing here
     QStringList *parsedNMEAString = 0;
     return parsedNMEAString;

@@ -945,6 +945,9 @@ int Route::nearestNode( QPointF point){
 
 void Route::addStaticWeather(double angleWind,double speedWind){ //this method is currently commeted out since there is a new version of weather simulation coming.
 
+	(void)angleWind;
+	(void)speedWind;
+
  /*   QTime time1;
     QTime time1;
 >>>>>>> Tomi

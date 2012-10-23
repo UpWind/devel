@@ -54,6 +54,11 @@ QPointF* RouteWidget::pixelToGeoPoint(QPointF* pixelPoint){
 }
 
 void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+
+	(void)option;
+	(void)widget;
+
+
     qDebug()<<Q_FUNC_INFO;
 
     painter->setPen(longroute_pen);
