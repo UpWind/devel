@@ -284,11 +284,11 @@ void PostgreChartProvider::setAreaFilter(QRectF area){
         } else if(baseName == "wreck_p") {
            obj = new Wreck(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
         } else if(baseName == "navaid_p") {
-           obj = new NavaId(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
+           //obj = new NavaId(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
         } else if(baseName == "depthcont_l") {
            obj = new DepthContour(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
         } else if(baseName == "signsound_p") {
-           obj = new SignSound(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
+           //obj = new SignSound(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
         } else {
            qDebug() << Q_FUNC_INFO << "object in unknown layer: " << baseName;
         }

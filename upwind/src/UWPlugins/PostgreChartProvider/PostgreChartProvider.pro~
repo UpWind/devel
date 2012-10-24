@@ -25,8 +25,6 @@ HEADERS += \
     ../ChartProviderInterface/objects/transmline.h \
     ../ChartProviderInterface/objects/bridge.h \
     ../ChartProviderInterface/objects/depthcontour.h \
-    ../ChartProviderInterface/objects/signsound.h \
-    ../ChartProviderInterface/objects/navaid.h
 
 SOURCES += \
     postgrechartprovider.cpp \
@@ -42,9 +40,7 @@ SOURCES += \
     ../ChartProviderInterface/objects/navigline.cpp \
     ../ChartProviderInterface/objects/transmline.cpp \
     ../ChartProviderInterface/objects/bridge.cpp \
-    ../ChartProviderInterface/objects/depthcontour.cpp \
-    ../ChartProviderInterface/objects/signsound.cpp \
-    ../ChartProviderInterface/objects/navaid.cpp
+    ../ChartProviderInterface/objects/depthcontour.cpp
 
 
 FORMS += settingsui.ui
@@ -70,4 +66,3 @@ win32 {
     INCLUDEPATH += "C:\\Program Files (x86)\\PostgreSQL\\8.4\\include"
     LIBS += "C:\\Program Files (x86)\\PostgreSQL\\8.4\\bin\\libpq.dll"
 }
-
