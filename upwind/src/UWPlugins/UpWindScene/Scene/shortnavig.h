@@ -95,6 +95,11 @@ private:
     QVector<QPointF > pointObstacles;
     QVector<QLineF > lineObstacles;
     QVector<ChartObjectInterface*> chartObjects;
+    QVector<QPolygonF> rock;
+    QVector<QPolygonF> wreck;
+    QVector<QPolygonF> signsound;
+    QVector<QPolygonF> offset;
+    QList<QPoint> listqpoint;
 
 
 
@@ -122,7 +127,7 @@ private:
     PGresult *res;
     PGconn *conn;
 
-    bool debug, new_data, obstaclesTablesCreated;
+    bool debug, new_data, obstaclesTablesCreated, status;
     //SettingsManager * settingsManager;
     //UwStatus * status;
 //    QMutex uws_mutex;
