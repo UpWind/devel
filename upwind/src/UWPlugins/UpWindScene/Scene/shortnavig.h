@@ -100,6 +100,8 @@ private:
     QVector<QPolygonF> signsound;
     QVector<QPolygonF> offset;
     QList<QPoint> listqpoint;
+    QPointF boatPosition;
+    QPointF boatGeoPosition;
 
 
 

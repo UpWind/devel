@@ -90,10 +90,11 @@ void ShortNavigation::loadChartObjects(QVector<ChartObjectInterface*> cObjects) 
     createObstaclesTables();
 
 
-    // builds
+    // builds and run, need route, boat position etc
     this->updateCheckPoint();
-    // builds and run but wount get needed data > futureTrueWindAngle = nan
-    //   this->updateLayLines();
+
+    // builds and run until futureTrueWindAngle = nan
+//    this->updateLayLines();
 
 }
 
@@ -106,15 +107,7 @@ bool ShortNavigation::createObstaclesTables()
         qDebug()<<"chartobjects size is" << chartObjects.size();
         for (int i = 0 ; i < this->chartObjects.size(); i++) {
             qDebug() << "chartobjects vector table name is" << chartObjects.value(i)->getTableName();
-            //        qDebug() << "jotain tietoa" << chartObjects.value(i)->getFeatureData();
-            //        qDebug() << "CoordinateGeometry" << chartObjects.value(i)->getCoordinateGeometry();
-            //        qDebug() << "getType is" << chartObjects.value(i)->getType();
-            //        qDebug() << "getPen is" << chartObjects.value(i)->getPen();
-            //        qDebug() << "getBrush is" << chartObjects.value(i)->getBrush();
-            //        qDebug() << "getPixelGeometry is" << chartObjects.value(i)->getPixelGeometry();
-            //        layer = this->chartObjects.at(i)->getFeatureData();
-            //        qDebug() << " layer " << layer ;
-            //        layer->ResetReading() ;
+
         }
 
         /// POINT_OFFSET is the area around the obstacle,
@@ -207,22 +200,17 @@ bool ShortNavigation::createObstaclesTables()
 
                 qDebug() << "qpoint size " << qpoint.size();
                     for(int n = 0; n < qpoint.size(); n++){
-                           qDebug() << "for in" ;
-//                           qDebug() << "single value from " << qpoint.value(n).toList();
                            qDebug() << "listpoint size is " << listqpoint.size();
                            listqpoint = qpoint.value(n).toList();
-//                           qDebug() << "listpoint" << listqpoint;
                            qDebug() << "listpoint size is " << listqpoint.size();
                     }
-                    qDebug() << "for out" ;
 
                 layer = this->chartObjects.at(i)->getFeatureData();
                 qDebug() << "Signsound layer is " << layer;
-
                 layer->ResetReading();
 
-                QString sql("SELECT * FROM *"); //FIX THIS! //sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
-                qDebug() << "sql" << sql;
+//                QString sql("SELECT * FROM *"); //FIX THIS! //sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
+//                qDebug() << "sql" << sql;
                 for(int m= 0; m < layer->GetFeatureCount();m++ ) {
 //                    qDebug() << "GetFeatureCount" << m;
                     poFDefn = layer->GetLayerDefn();
@@ -233,7 +221,7 @@ bool ShortNavigation::createObstaclesTables()
                         if(str.contains("depth") == true) {
 //                               qDebug() << "value of Qstring str is " << str;
 
-                               if (poFeature->GetFieldAsDouble(j) > SIGNSOUND_THRESHOLD) { //parse out depths above signsound threshold as since they are not obstacles
+                               if (poFeature->GetFieldAsDouble(j) < SIGNSOUND_THRESHOLD) { //parse out depths above signsound threshold as since they are not obstacles
 //                                   qDebug() << "poFeature->GetFieldAsDouble(j)" << poFeature->GetFieldAsDouble(j);
 //                                   qDebug() << "pointObstacles.size()" << pointObstacles.size();
 
@@ -385,9 +373,9 @@ bool ShortNavigation::createObstaclesTables()
 
 
                 //  for loop for testing
-                for (int s=0; s<pointObstacles.size();s++){
-                    qDebug() << " index: " << s << "point x" << pointObstacles.at(s).x() << "y" << pointObstacles.at(s).y();
-                }
+//                for (int s=0; s<pointObstacles.size();s++){
+//                    qDebug() << " index: " << s << "point x" << pointObstacles.at(s).x() << "y" << pointObstacles.at(s).y();
+//                }
 
                 //status->setObstaclesTablesCreated( true); //uwstatus
 
@@ -626,12 +614,13 @@ bool ShortNavigation::checkGeometriesIntersection( const QString &object1, const
 bool ShortNavigation::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() ) {
 
     qDebug() << "bool ShortNavigation::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() )";
-    qDebug() << "layerName.length " << layerName.length();
-    qDebug() << "layerName is" << layerName;
-    qDebug() << "layerName.constData()" << layerName.constData();
-    qDebug() << " object.size " << object.size();
-    qDebug() << "object is " << object;
-    qDebug() << " shape " << shape;
+//    qDebug() << "layerName.length " << layerName.length();
+//    qDebug() << "layerName is" << layerName;
+//    qDebug() << "layerName.constData()" << layerName;
+//    qDebug() << " object.size " << object.size();
+//    qDebug() << " object" << object;
+//    qDebug() << "object is " << object;
+//    qDebug() << " shape " << shape;
     //    QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
     //    sql.append( object);
     //    sql.append( ") AS result FROM ");
@@ -865,9 +854,11 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
 
     qDebug() << "Q PointF Shortnavigation::getNextPoint";
+//    qDebug() << "route.size()" << route.size();
 
     qDebug() << "getNextPoint boatPos.x" << boatPos.x() << "and boatPos.Y" << boatPos.y();
-    qDebug() << "getNextPoint offset"  << offset ;
+    qDebug() << "getNextPoint offset"  << offset;
+
     qDebug() << " boatPos " << boatPos;
     //input should be in GEOGRAPHICAL format
 
@@ -1134,15 +1125,29 @@ void ShortNavigation::updateCheckPoint()
 
     // Route has been updated by user or method
     // It is set in Conformal Inverted coordenates (Qt scene)
-    // this->geoRoute = UwMath::fromConformalInverted( (const QList<QPointF>)this->route);
+//    qDebug() <<"updateCheckPoint() geoRoute" << geoRoute;
+//    this->geoRoute = UwMath::fromConformalInverted( (const QList<QPointF>)this->route);
+
+    boatGeoPosition = this->geoBoatPos.toPoint();
+    qDebug() << "before";
+    qDebug() << "updateCheckPoint() boatGeoPosition " << boatGeoPosition;
+    qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
+    qDebug() << "updateCheckPoint() ACCU_OFFSET is" << ACCU_OFFSET;
+    qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
 
     // Let's find out which is the next point in our route
-
     // find the destiny check point in geographical format
-    geoDestinyPos = this->getNextPoint( *pGeoRoute, geoBoatPos, ACCU_OFFSET);
-    // and set it for Qt scene as well
-    destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
 
+    geoDestinyPos = this->getNextPoint( *pGeoRoute, geoBoatPos, ACCU_OFFSET);
+    qDebug() << "after";
+    qDebug() << "updateCheckPoint() boatGeoPosition " << boatGeoPosition;
+    qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
+    qDebug() << "updateCheckPoint() ACCU_OFFSET is" << ACCU_OFFSET;
+    qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
+    // and set it for Qt scene as well
+    qDebug() << "updateCheckPoint() before destinyPos" << destinyPos;
+    destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
+    qDebug() << "updateCheckPoint() after destinyPos " << destinyPos;
     if (debug) qDebug() << "updateCheckPoint(): ended: ok";
 
 }
@@ -1153,9 +1158,19 @@ void ShortNavigation::updateLayLines()
 
     // layLines are not calculated with the actual TWA,
     // but the TWA that we will have when heading towards our destiny
+    qDebug() << " updateLayLines geoBoatPos " << geoBoatPos;
+    qDebug() << " updateLayLines geoDestinyPos" << geoDestinyPos;
+    qDebug() << " updateLayLines trueWindDirection" << trueWindDirection;
+
+
     float futureTrueWindAngle = UwMath::getTWA( geoBoatPos, geoDestinyPos, trueWindDirection );
+    qDebug() << " updateLayLines geoBoatPos " << geoBoatPos;
+    qDebug() << " updateLayLines geoDestinyPos" << geoDestinyPos;
+    qDebug() << " updateLayLines trueWindDirection" << trueWindDirection;
     qDebug() << "futureTrueWindAngle" << futureTrueWindAngle;
+
     layLinesAngle = pPolarDiagram->getAngle( windSpeed, futureTrueWindAngle);
+
     qDebug() << "layLinesAngle" << layLinesAngle;
     // new paths...
     pLeftPath = new QVector<QPointF>;
