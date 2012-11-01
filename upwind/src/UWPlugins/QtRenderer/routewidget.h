@@ -46,10 +46,12 @@ private:
     QPolygonF routepoints;
     //QVector<QPolygonF> navcorrected;
     Route *route;
+    ShortNavigation *routeShort;
     QVector<QPointF> path;
 
     QPen longroute_pen;
     QBrush longroute_brush;
+    QString something;
 
     bool zoomMode;
 };

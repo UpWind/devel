@@ -38,6 +38,7 @@
 #include "../shared/uwmath.h"
 #include "polardiagram.h"
 //#include <limits>
+#include "../../UWCore/pluginmanager.h"
 
 /// point precision to print the WKT geometries
 #define WKT_P 13
@@ -57,9 +58,10 @@ public:
     /**
     * Generate the obstacles tables, without them the class does not work
     */
-    bool createObstaclesTables();
 
     void loadChartObjects(QVector<ChartObjectInterface*> cObjects);
+
+    bool startCalc(QPolygonF routepoints); //called from RouteWidget when layLine data is asked from *this
 
     void processData( const QVector<QPointF> * geoRoute,
                       QPointF &geoBoatPos, float &twd, float &wspeed,
@@ -120,6 +122,7 @@ private:
                   const QPointF &boatPos, const QPointF &destinyPos,
                   const QPolygonF &obstacles_shape, QVector<QPointF> &Path);
     QPointF getNextPoint( const QVector<QPointF> &route, const QPointF &position, const float &offset);
+    bool createObstaclesTables();
 
     void updateCheckPoint();
     void updateLayLines();
@@ -146,6 +149,7 @@ private:
     QVector<QPointF> * pLeftPath, * pRightPath;
     QPointF geoDestinyPos, destinyPos;
     float layLinesAngle;
+    QPolygonF pathPoints;
 
 
 

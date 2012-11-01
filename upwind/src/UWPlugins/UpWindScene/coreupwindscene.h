@@ -46,8 +46,10 @@ public:
     Settings* getSettings();
     Boat* getBoat();
     Route* getRoute();
+    ShortNavigation* getShortNavigation();
     void initializeSettings();
     Route *route;
+    ShortNavigation *shortNavigation;
     void setBoat(Boat *boat);
 
 private:
@@ -58,7 +60,7 @@ private:
     QVector<ChartObjectInterface*> chartObjects;
     Boat *boat;
 
-    ShortNavigation *shortnavig;
+    //ShortNavigation *shortnavig;
     SettingsUI *settingsUI;
     Settings *settings;
 

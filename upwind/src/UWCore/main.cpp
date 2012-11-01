@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]){
 
-    QApplication::setGraphicsSystem("opengl");
+ //   QApplication::setGraphicsSystem("opengl");
     QApplication a(argc, argv);
 
     UWCore::getInstance()->initialize();

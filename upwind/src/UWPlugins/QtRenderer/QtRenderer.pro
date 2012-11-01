@@ -35,6 +35,7 @@ HEADERS += \
     #../ChartProviderInterface/objects/limit.h \
 HEADERS += ../UpWindScene/Scene/naviglineinfo.h \
            ../UpWindScene/Scene/route.h \
+           ../UpWindScene/Scene/shortnavig.h \
     ../UpWindScene/Scene/polardiagram.h
 
 
@@ -54,6 +55,7 @@ SOURCES += \
     #../ChartProviderInterface/objects/limit.cpp \
 SOURCES +=  ../UpWindScene/Scene/naviglineinfo.cpp \
            ../UpWindScene/Scene/route.cpp \
+           ../UpWindScene/Scene/shortnavig.cpp \
         ../UpWindScene/Scene/polardiagram.cpp
 
 

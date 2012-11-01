@@ -5,5 +5,5 @@ SUBDIRS = \
         upwind/src/UWCore \
         upwind/src/UWLibrary \
         upwind/src/UWPlugins \
-        UpWindNMEASources/PluginSystem/PluginBuilder \
+    #    UpWindNMEASources/PluginSystem/PluginBuilder \
         UpWindNMEASources/UpWindNMEA/PluginController

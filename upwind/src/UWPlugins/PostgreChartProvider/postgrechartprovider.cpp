@@ -333,7 +333,7 @@ void PostgreChartProvider::initializeSettings(){
     else{
         //construct the default settings
         settings->setSetting("User", "postgres");
-        settings->setSetting("Password", "newPass");
+        settings->setSetting("Password", "upwind");
         settings->setSetting("Port", "5432");
         settings->setSetting("Host", "localhost");
         settings->setSetting("DBName", "none");

@@ -91,10 +91,18 @@ void ShortNavigation::loadChartObjects(QVector<ChartObjectInterface*> cObjects) 
 
 
     // builds
-    this->updateCheckPoint();
+    //this->updateCheckPoint();
     // builds and run but wount get needed data > futureTrueWindAngle = nan
-    //   this->updateLayLines();
+    //this->updateLayLines();
 
+}
+
+bool ShortNavigation::startCalc(QPolygonF routepoints){
+    this->pathPoints = routepoints;
+    qDebug()<<"RoutePoints: " << routepoints;
+    this->updateCheckPoint();
+    this->updateLayLines();
+    return true;
 }
 
 

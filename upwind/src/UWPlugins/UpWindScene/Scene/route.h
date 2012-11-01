@@ -5,6 +5,7 @@
 #include <QPointF>
 #include <QLineF>
 #include <QPainterPath>
+#include <QThread>
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 #include "naviglineinfo.h"

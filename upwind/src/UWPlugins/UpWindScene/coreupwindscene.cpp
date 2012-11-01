@@ -11,7 +11,7 @@ CoreUpWindScene::CoreUpWindScene(){
 
     settingsUI = new SettingsUI();
     settingsUI->setupSettings(settings);
-    this->shortnavig = ShortNavigation::getInstance();//new ShortNavigation();
+    this->shortNavigation = ShortNavigation::getInstance();//new ShortNavigation();
     this->route = Route::getInstance();
 }
 
@@ -25,7 +25,7 @@ void CoreUpWindScene::setChartObjects(CoreChartProvider* model){
 void CoreUpWindScene::fetchChartObjects() {
     chartObjects = model->getChartObjects();
     this->route->loadChartObjects(chartObjects);
-    this->shortnavig->loadChartObjects(chartObjects);
+    this->shortNavigation->loadChartObjects(chartObjects);
 
 }
 
@@ -59,6 +59,10 @@ Boat* CoreUpWindScene::getBoat(){
 
 Route* CoreUpWindScene::getRoute(){
     return route;
+}
+
+ShortNavigation* CoreUpWindScene::getShortNavigation(){
+    return shortNavigation;
 }
 
 QString CoreUpWindScene::getName(){
