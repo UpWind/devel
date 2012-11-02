@@ -143,7 +143,7 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     routepoints = QPolygonF(path);
     //something = routeShort->getSomething("jotain hyv");
     qDebug() << "send routepoints to shortnavig " << routepoints;
-
+    // Pass route and boat information to shortnavigation
     something = routeShort->startCalc(routepoints, start);
     qDebug()<<"ShortNavig palautti: "<<something;
     this->update(boundingRect());
