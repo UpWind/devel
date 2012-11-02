@@ -14,6 +14,7 @@
 #include "../ChartProviderInterface/chartproviderinterface.h"
 
 class Route;
+class ShortNavigation;
 
 class CoreUpWindScene: public QObject, public UpWindSceneInterface
 {
@@ -74,3 +75,4 @@ signals:
 };
 
 #endif // COREUPWINDSCENE_H
+
