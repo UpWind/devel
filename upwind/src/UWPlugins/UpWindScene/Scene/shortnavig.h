@@ -61,7 +61,7 @@ public:
 
     void loadChartObjects(QVector<ChartObjectInterface*> cObjects);
 
-    bool startCalc(QPolygonF routepoints); //called from RouteWidget when layLine data is asked from *this
+    bool startCalc(QPolygonF routepoints, QPointF start); //called from RouteWidget when layLine data is asked from *this
 
     void processData( const QVector<QPointF> * geoRoute,
                       QPointF &geoBoatPos, float &twd, float &wspeed,

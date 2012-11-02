@@ -97,9 +97,20 @@ void ShortNavigation::loadChartObjects(QVector<ChartObjectInterface*> cObjects) 
 
 }
 
-bool ShortNavigation::startCalc(QPolygonF routepoints){
+bool ShortNavigation::startCalc(QPolygonF routepoints, QPointF start){
+//    this->boatGeoPosition = start;
+    this->geoBoatPos = start;
+//   qDebug()<<"startCalc" <<  boatGeoPosition;
+    qDebug()<<"startCalc geoBoatPos" <<  geoBoatPos;
+    qDebug() << "paatin sijainti" << start;
+
     this->pathPoints = routepoints;
-    qDebug()<<"RoutePoints: " << routepoints;
+
+
+
+
+    qDebug()<<"Shortnavig RoutePoints: " << routepoints;
+
     this->updateCheckPoint();
     this->updateLayLines();
     return true;
@@ -178,7 +189,6 @@ bool ShortNavigation::createObstaclesTables()
                 for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) { //need to check how vectors are written from DB. is getfeaturecount = polygonvector.size ?
                     for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
                         this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
-                        qDebug()<<"rock_p "<<pointObstacles.size();
                     }
                 }
             }
@@ -188,8 +198,7 @@ bool ShortNavigation::createObstaclesTables()
                 for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
                     for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
                         this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
-                        qDebug()<<"wreck_p "<<pointObstacles.size();
-                    }
+                                            }
                 }
             }
             if(this->chartObjects.at(i)->getTableName() == "navaid_p") {
@@ -197,7 +206,7 @@ bool ShortNavigation::createObstaclesTables()
                 for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
                     for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
                         this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
-                        qDebug()<<"navaid_p "<<pointObstacles.size();
+
                     }
                 }
             }
@@ -1148,7 +1157,7 @@ void ShortNavigation::updateCheckPoint()
 //    qDebug() <<"updateCheckPoint() geoRoute" << geoRoute;
 //    this->geoRoute = UwMath::fromConformalInverted( (const QList<QPointF>)this->route);
 
-    boatGeoPosition = this->geoBoatPos.toPoint();
+
     qDebug() << "before";
     qDebug() << "updateCheckPoint() boatGeoPosition " << boatGeoPosition;
     qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
@@ -1159,7 +1168,11 @@ void ShortNavigation::updateCheckPoint()
     // find the destiny check point in geographical format
 
     // find the destiny check point in geographical format
+
+//    qDebug << "pGeoRoute to list " << pGeoRoute->toList();
+
     geoDestinyPos = this->getNextPoint( *pGeoRoute, geoBoatPos, ACCU_OFFSET);
+
     qDebug() << "after";
     qDebug() << "updateCheckPoint() boatGeoPosition " << boatGeoPosition;
     qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
