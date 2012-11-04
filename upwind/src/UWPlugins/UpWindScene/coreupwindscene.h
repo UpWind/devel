@@ -11,10 +11,12 @@
 #include "../ChartProviderInterface/corechartprovider.h"
 #include "Scene/route.h"
 #include "Scene/shortnavig.h"
+#include "Scene/polardiagram.h"
 #include "../ChartProviderInterface/chartproviderinterface.h"
 
 class Route;
 class ShortNavigation;
+class PolarDiagram;
 
 class CoreUpWindScene: public QObject, public UpWindSceneInterface
 {
@@ -48,10 +50,12 @@ public:
     Boat* getBoat();
     Route* getRoute();
     ShortNavigation* getShortNavigation();
+    PolarDiagram* getPolarDiagram();
     void initializeSettings();
     Route *route;
     ShortNavigation *shortNavigation;
     void setBoat(Boat *boat);
+    PolarDiagram *pDiagram;
 
 private:
 

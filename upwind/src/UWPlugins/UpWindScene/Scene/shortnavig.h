@@ -61,7 +61,7 @@ public:
 
     void loadChartObjects(QVector<ChartObjectInterface*> cObjects);
 
-    bool startCalc(QPolygonF routepoints, QPointF start); //called from RouteWidget when layLine data is asked from *this
+    QVector<QPointF> startCalc(QPolygonF routepoints, QPointF start); //called from RouteWidget when layLine data is asked from *this
 
     void processData( const QVector<QPointF> * geoRoute,
                       QPointF &geoBoatPos, float &twd, float &wspeed,
@@ -74,6 +74,7 @@ public:
     static QString buildWKTPolygon( const QPointF &point, const float &offset );
     static QString buildWKTLine( const QPointF &p1, const QPointF &p2 );
     static QString buildWKTPoint( const QPointF &p1 );
+    void setPolarDiagram(PolarDiagram *diagram);
 
     bool publicCheckIntersection( const QString &layerName, const QPointF &point );
 

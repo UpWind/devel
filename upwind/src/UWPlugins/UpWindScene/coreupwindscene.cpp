@@ -13,6 +13,7 @@ CoreUpWindScene::CoreUpWindScene(){
     settingsUI->setupSettings(settings);
     this->shortNavigation = ShortNavigation::getInstance();//new ShortNavigation();
     this->route = Route::getInstance();
+    this->pDiagram = PolarDiagram::getInstance();
 }
 
 void CoreUpWindScene::setChartObjects(CoreChartProvider* model){
@@ -63,6 +64,10 @@ Route* CoreUpWindScene::getRoute(){
 
 ShortNavigation* CoreUpWindScene::getShortNavigation(){
     return shortNavigation;
+}
+
+PolarDiagram* CoreUpWindScene::getPolarDiagram(){
+    return pDiagram;
 }
 
 QString CoreUpWindScene::getName(){

@@ -47,11 +47,12 @@ private:
     //QVector<QPolygonF> navcorrected;
     Route *route;
     ShortNavigation *routeShort;
+    PolarDiagram *diagram;
     QVector<QPointF> path;
 
     QPen longroute_pen;
     QBrush longroute_brush;
-    QString something;
+    QVector<QPointF> something;
 
     bool zoomMode;
 };

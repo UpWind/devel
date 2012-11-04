@@ -29,6 +29,9 @@ enum UP_ERROR { ERROR_NONE, /**< no errors. */
 #include <QMap>
 #include "../../shared/uwmath.h"
 #include <QDebug>
+#include "../../UWCore/pluginmanager.h"
+#include <QThread>
+
 
 /// for debugging the class
 #define DEBUGPOLARDIAGRAM 0
@@ -53,14 +56,15 @@ class PolarDiagram
 {
 public:
 
-
+     static PolarDiagram* getInstance();  //Singleton class
     PolarDiagram();
     PolarDiagram( const PolarDiagram &);
+    ~PolarDiagram();
 
     /**
       * Fills a PolarDiagram with example valid data.
       */
-    PolarDiagram& populate();
+    void populate();
 
      /**
       * Clears a a polar diagram, by clearing the name and the Diagram
@@ -199,12 +203,14 @@ public:
 
     int operator==( PolarDiagram &);
     int operator!=( PolarDiagram &);
-    PolarDiagram & operator=( PolarDiagram);
+  //  PolarDiagram & operator=( PolarDiagram);
 
     //Velocity of a certain TWS and TWA. Returned in knots
     float getVelocity( const float & speed, const float & angle);
 
 private:
+
+    static PolarDiagram *instance;
     // name: of this polar diagram
     // TWA: if true data is in TWA, else is AWA
     // diagram: QMap< float, QMap< float, float>>

@@ -97,7 +97,11 @@ void ShortNavigation::loadChartObjects(QVector<ChartObjectInterface*> cObjects) 
 
 }
 
-bool ShortNavigation::startCalc(QPolygonF routepoints, QPointF start){
+void ShortNavigation::setPolarDiagram(PolarDiagram *diagram){
+    this->pPolarDiagram = diagram;
+}
+
+QVector<QPointF> ShortNavigation::startCalc(QPolygonF routepoints, QPointF start){
 //    this->boatGeoPosition = start;
     this->geoBoatPos = start;
 //   qDebug()<<"startCalc" <<  boatGeoPosition;
@@ -113,7 +117,10 @@ bool ShortNavigation::startCalc(QPolygonF routepoints, QPointF start){
 
     this->updateCheckPoint();
     this->updateLayLines();
-    return true;
+    QVector<QPointF> path;
+    path = *pLeftPath;
+
+    return path;
 }
 
 
@@ -122,9 +129,9 @@ bool ShortNavigation::createObstaclesTables()
     OGRLayer* layer;
     status = true;
 //    if ( !status==true ) {
-        qDebug()<<"chartobjects size is" << chartObjects.size();
+     //   qDebug()<<"chartobjects size is" << chartObjects.size();
         for (int i = 0 ; i < this->chartObjects.size(); i++) {
-            qDebug() << "chartobjects vector table name is" << chartObjects.value(i)->getTableName();
+          //  qDebug() << "chartobjects vector table name is" << chartObjects.value(i)->getTableName();
             //        qDebug() << "jotain tietoa" << chartObjects.value(i)->getFeatureData();
             //        qDebug() << "CoordinateGeometry" << chartObjects.value(i)->getCoordinateGeometry();
             //        qDebug() << "getType is" << chartObjects.value(i)->getType();
@@ -168,24 +175,24 @@ bool ShortNavigation::createObstaclesTables()
         //####################################################
 
         //if (!this->obstacles.isEmpty()) this->obstacles.resize(0);
-        qDebug() << "chartObjects size" << chartObjects.size();
+   //     qDebug() << "chartObjects size" << chartObjects.size();
         for (int i = 0 ; i < this->chartObjects.size(); i++) {
             //        qDebug() << "chartObjects size" << chartObjects.size();
 
             if(this->chartObjects.at(i)->getTableName() == "generarea_r") {
-                qDebug()<<"chartobjects table should be generarea_l"<< chartObjects.at(i)->getTableName();
+   //             qDebug()<<"chartobjects table should be generarea_l"<< chartObjects.at(i)->getTableName();
                 for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
                     this->polyObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j));
                 }
             }
             if(this->chartObjects.at(i)->getTableName() == "depthcont_l") {
-                qDebug()<<"chartobjects table should be depthcont_l"<< chartObjects.at(i)->getTableName();
+   //             qDebug()<<"chartobjects table should be depthcont_l"<< chartObjects.at(i)->getTableName();
                 for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) { //TODO: parse line from polygon
                     //this->lineObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j));
                 }
             }
             if(this->chartObjects.at(i)->getTableName() == "rock_p") {
-                qDebug()<<"chartobjects table should be rock_p"<< chartObjects.at(i)->getTableName();
+   //             qDebug()<<"chartobjects table should be rock_p"<< chartObjects.at(i)->getTableName();
                 for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) { //need to check how vectors are written from DB. is getfeaturecount = polygonvector.size ?
                     for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
                         this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
@@ -194,7 +201,7 @@ bool ShortNavigation::createObstaclesTables()
             }
             //        if(this->chartObjects.value(i)->getTableName()== "wreck_p") {
             if(this->chartObjects.at(i)->getTableName() == "wreck_p") {
-                qDebug()<<"chartobjects table should be wreck_p"<< chartObjects.at(i)->getTableName();
+   //             qDebug()<<"chartobjects table should be wreck_p"<< chartObjects.at(i)->getTableName();
                 for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
                     for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
                         this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
@@ -202,7 +209,7 @@ bool ShortNavigation::createObstaclesTables()
                 }
             }
             if(this->chartObjects.at(i)->getTableName() == "navaid_p") {
-                qDebug()<<"chartobjects table should be navaid_p"<< chartObjects.at(i)->getTableName();
+     //           qDebug()<<"chartobjects table should be navaid_p"<< chartObjects.at(i)->getTableName();
                 for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
                     for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
                         this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
@@ -211,18 +218,18 @@ bool ShortNavigation::createObstaclesTables()
                 }
             }
             if(this->chartObjects.at(i)->getTableName() == "signsound_p") {
-                qDebug()<<"chartobjects table should be signsound_p"<< chartObjects.at(i)->getTableName();
+          //      qDebug()<<"chartobjects table should be signsound_p"<< chartObjects.at(i)->getTableName();
 
                 QVector<QPolygonF> qpoint;
                 QList<QPointF> listqpoint;
                 OGRLayer* layer;
                 OGRFeatureDefn *poFDefn;
                 OGRFeature *poFeature;
-                qDebug() << "qpoint size before adding" << qpoint.size();
+          //      qDebug() << "qpoint size before adding" << qpoint.size();
                 qpoint = this->chartObjects.at(i)->getCoordinateGeometry();
 
 
-                qDebug() << "qpoint size " << qpoint.size();
+         //       qDebug() << "qpoint size " << qpoint.size();
                     for(int n = 0; n < qpoint.size(); n++){
                            qDebug() << "for in" ;
 //                           qDebug() << "single value from " << qpoint.value(n).toList();
@@ -231,10 +238,10 @@ bool ShortNavigation::createObstaclesTables()
 //                           qDebug() << "listpoint" << listqpoint;
                            qDebug() << "listpoint size is " << listqpoint.size();
                     }
-                    qDebug() << "for out" ;
+        //            qDebug() << "for out" ;
 
                 layer = this->chartObjects.at(i)->getFeatureData();
-                qDebug() << "Signsound layer is " << layer;
+       //        qDebug() << "Signsound layer is " << layer;
 
                 layer->ResetReading();
 
@@ -1188,6 +1195,7 @@ void ShortNavigation::updateCheckPoint()
 
 void ShortNavigation::updateLayLines()
 {
+    pPolarDiagram->populate();
     if (debug) qDebug() << "updateLayLines(): started";
 
     // layLines are not calculated with the actual TWA,

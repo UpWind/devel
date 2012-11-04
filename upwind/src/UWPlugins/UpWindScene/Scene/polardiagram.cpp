@@ -1,5 +1,15 @@
 #include "polardiagram.h"
 
+PolarDiagram* PolarDiagram::instance = NULL;
+
+PolarDiagram* PolarDiagram::getInstance(){
+        if(instance == NULL) {
+                instance = new PolarDiagram();
+                return instance;
+        } else
+                return instance;
+}
+
 PolarDiagram::PolarDiagram(){
     debug = DEBUGPOLARDIAGRAM;
 
@@ -13,10 +23,17 @@ PolarDiagram::PolarDiagram( const PolarDiagram &other){
     debug=DEBUGPOLARDIAGRAM;
 }
 
-PolarDiagram & PolarDiagram::populate(){
+PolarDiagram::~PolarDiagram(){
+    if ( instance != NULL ){
+        clear();
+        instance=NULL;
+    }
+}
+
+ void PolarDiagram::populate(){
     // FAIL SAFE POLAR DIAGRAM
-    this->name = "generic";
-    this->TWA = true;
+    this->setName("generic");
+    this->setTWA(true);
     this->diagram.clear();
     this->diagram[6].insert( 45.0, 1100.0);
     this->diagram[6].insert( 145.0, 1000.0);
@@ -186,7 +203,7 @@ bool PolarDiagram::contains( const float &speed){
 float PolarDiagram::getGybeAngle( const float & speed){
     if ( !contains( speed) ) {
 
-        if (debug) qDebug() << QString("PolarDiagram::getGybeAngle(%1): speed not found").arg(QString::number( speed));
+       /* if (debug) */qDebug() << QString("PolarDiagram::getGybeAngle(%1): speed not found").arg(QString::number( speed));
 
         int i = 0;
         // List of all the speeds available in the diagram
@@ -416,13 +433,13 @@ void PolarDiagram::addLine( const float &speed, const float &angle, const float 
     setAngles( speed, aux);
 }
 
-PolarDiagram & PolarDiagram::operator = ( PolarDiagram other){
-    name = other.name;
-    TWA = other.TWA;
-    diagram = other.diagram;
+//PolarDiagram & PolarDiagram::operator = ( PolarDiagram other){
+//    name = other.name;
+//    TWA = other.TWA;
+//    diagram = other.diagram;
 
-    return *this;
-}
+//    return *this;
+//}
 
 float PolarDiagram::interpolation( float x1,float x2,float y1, float y2, float x){
 

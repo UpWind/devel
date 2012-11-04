@@ -134,6 +134,8 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
    Route* route = uwScene->getRoute();
    ShortNavigation* routeShort = uwScene->getShortNavigation();
+   PolarDiagram *diagram = uwScene->getPolarDiagram();
+   routeShort->setPolarDiagram(diagram);
    path = route->path(start, end, 0);
 
    for (int i = 0; i < path.size(); i++) {
