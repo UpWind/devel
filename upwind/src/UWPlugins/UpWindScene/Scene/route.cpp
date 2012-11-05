@@ -944,43 +944,39 @@ int Route::nearestNode( QPointF point){
 
 //NO function call to this in this piece of software!
 //void Route::addStaticWeather(double angleWind,double speedWind){ //this method is currently commeted out since there is a new version of weather simulation coming.
-//	(void)angleWind;
-//	(void)speedWind;
+//    (void)angleWind;
+//    (void)speedWind;
+//}
+void Route::addStaticWeather(double angleWind,double speedWind)
+{ //this method is currently commeted out since there is a new version of weather simulation coming.
 
-void Route::addStaticWeather(double angleWind,double speedWind){ //this method is currently commeted out since there is a new version of weather simulation coming.
+    QTime time1;
+    QTime time2;
+    if(debug)time1=time1.currentTime();
 
-//    QTime time1;
-//    QTime time2;
-//    if(debug)time1=time1.currentTime();
+    PolarDiagram pDiagram;
+    pDiagram.populate();
+    qDebug()<<"Add static weather called";
 
-//    PolarDiagram pDiagram;
-//    pDiagram.populate();
-//    qDebug()<<"Add static weather called";
+    for(int i=0;i<adMatrix.size();i++){
+        for(int j=0;j<adMatrix.size();j++){
+            if(i!=j && !adMatrix[i][j].empty()){
 
-//    for(int i=0;i<adMatrix.size();i++){
-//        for(int j=0;j<adMatrix.size();j++){
-//            if(i!=j && !adMatrix[i][j].empty()){
+                double twa=UwMath::getTWA(QPointF(Projection::merc_lon(nodes[i].x()),Projection::merc_lat(nodes[i].y())),QPointF(Projection::merc_lon(nodes[j].x()),Projection::merc_lat(nodes[j].y())),angleWind);
 
-//                double twa=UwMath::getTWA(QPointF(Projection::merc_lon(nodes[i].x()),Projection::merc_lat(nodes[i].y())),QPointF(Projection::merc_lon(nodes[j].x()),Projection::merc_lat(nodes[j].y())),angleWind);
+                if(twa<=pDiagram.getBeatAngle(speedWind)){
+                    //Beating
+                    QPointF tack=getTackPoint(nodes[i],nodes[j],angleWind,pDiagram.getBeatAngle(speedWind));
+                    double auxtemp=distanceHaversine(nodes[i],tack)/(pDiagram.getVelocity(speedWind,pDiagram.getBeatAngle(speedWind))*0.5144);
+                    auxtemp+=distanceHaversine(tack,nodes[j])/(pDiagram.getVelocity(speedWind,pDiagram.getBeatAngle(speedWind))*0.5144);
+                    adMatrix[i][j].setTime(auxtemp);
 
-//                if(twa<=pDiagram.getBeatAngle(speedWind)){
-//                    //Beating
-//                    QPointF tack=getTackPoint(nodes[i],nodes[j],angleWind,pDiagram.getBeatAngle(speedWind));
-//                    double auxtemp=distanceHaversine(nodes[i],tack)/(pDiagram.getVelocity(speedWind,pDiagram.getBeatAngle(speedWind))*0.5144);
-//                    auxtemp+=distanceHaversine(tack,nodes[j])/(pDiagram.getVelocity(speedWind,pDiagram.getBeatAngle(speedWind))*0.5144);
-//                    adMatrix[i][j].setTime(auxtemp);
-
-//                }else if(twa>=pDiagram.getGybeAngle(speedWind)){
-//                    //Gybing
-//                     QPointF tack=getTackPoint(nodes[i],nodes[j],angleWind,pDiagram.getGybeAngle(speedWind));
-//                    double auxtemp=distanceHaversine(nodes[i],tack)/(pDiagram.getVelocity(speedWind,pDiagram.getGybeAngle(speedWind))*0.5144);
-//                    auxtemp+=distanceHaversine(tack,nodes[j])/(pDiagram.getVelocity(speedWind,pDiagram.getGybeAngle(speedWind))*0.5144);
-//                    adMatrix[i][j].setTime(auxtemp);
-//                }else{
-//                    //Reaching
-//                    adMatrix[i][j].setTime(distanceHaversine(nodes[i],nodes[j])/(pDiagram.getVelocity(speedWind,twa)*0.5144));
-
-//                }
+                }else if(twa>=pDiagram.getGybeAngle(speedWind)){
+                    //Gybing
+                     QPointF tack=getTackPoint(nodes[i],nodes[j],angleWind,pDiagram.getGybeAngle(speedWind));
+                    double auxtemp=distanceHaversine(nodes[i],tack)/(pDiagram.getVelocity(speedWind,pDiagram.getGybeAngle(speedWind))*0.5144);
+                    auxtemp+=distanceHaversine(tack,nodes[j])/(pDiagram.getVelocity(speedWind,pDiagram.getGybeAngle(speedWind))*0.5144);
+                    adMatrix[i][j].setTime(auxtemp);
 
                 }else if(twa>=pDiagram.getGybeAngle(speedWind)){
                     //Gybing
@@ -991,23 +987,18 @@ void Route::addStaticWeather(double angleWind,double speedWind){ //this method i
                 }else{
                     //Reaching
                     adMatrix[i][j].setTime(distanceHaversine(nodes[i],nodes[j])/(pDiagram.getVelocity(speedWind,twa)*0.5144));
-
-//            }
-//        }
-//    }
+                }
+            }
+        }
+    }
 //    if(debug)time2=time2.currentTime();
 //    if(debug)qDebug() << QString("Route::addStaticWeather:: Time to add Static Weather %2, %3 knots: %1 ms ").arg( QString::number(time1.msecsTo(time2),10),QString::number(angleWind,'f',2),QString::number(speedWind,'f',2));
-//}
+}
 
-//QPointF Route::getTackPoint(QPointF p1,QPointF p2,double twd,double angle){
+QPointF Route::getTackPoint(QPointF p1,QPointF p2,double twd,double angle)
+{
 
-//    double qtchange=fmod(270-twd,360);
-
-//    QLineF line1(p1,p2);
-//    line1.setAngle(fmod(qtchange+angle,360));
-
-//    QLineF line2(p2,p1);
-//    line2.setAngle(fmod(qtchange-angle,360));
+    double qtchange=fmod(270-twd,360);
 
     QLineF line1(p1,p2);
     line1.setAngle(fmod(qtchange+angle,360));
@@ -1019,4 +1010,3 @@ void Route::addStaticWeather(double angleWind,double speedWind){ //this method i
     line1.intersect(line2,&pointaux);
     return pointaux;
 }
-

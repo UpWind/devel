@@ -30,7 +30,7 @@ PolarDiagram::~PolarDiagram(){
     }
 }
 
- void PolarDiagram::populate(){
+void PolarDiagram::populate(){
     // FAIL SAFE POLAR DIAGRAM
     this->setName("generic");
     this->setTWA(true);
@@ -41,7 +41,7 @@ PolarDiagram::~PolarDiagram(){
     this->diagram[10].insert( 150.0, 700.0);
     this->diagram[16].insert( 41.0, 800.0);
     this->diagram[16].insert( 175.0, 500.0);
-    return *this;
+//    return *this;
 }
 
 void PolarDiagram::clear(){
@@ -49,11 +49,11 @@ void PolarDiagram::clear(){
     diagram.clear();
 }
 
-QString PolarDiagram::getName() const{
-    if (debug) qDebug() << "PolarDiagram::getName()";
-
-    return name;
-}
+//QString PolarDiagram::getName() const{
+//    if (debug) qDebug() << "PolarDiagram::getName()";
+//
+//    return name;
+//}
 
 void PolarDiagram::setName( const QString &ename){
     if (debug) qDebug() << "PolarDiagram::setName()";
