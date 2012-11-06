@@ -102,9 +102,11 @@ void ShortNavigation::setPolarDiagram(PolarDiagram *diagram){
 }
 
 QVector<QPointF> ShortNavigation::startCalc(QPolygonF routepoints, QPointF start){
-//    this->boatGeoPosition = start;
+
+    // ACCU_OFFSET value is 1, for function testing,  -Teemu
+    ACCU_OFFSET = 1;
+
     this->geoBoatPos = start;
-//   qDebug()<<"startCalc" <<  boatGeoPosition;
     qDebug()<<"startCalc geoBoatPos" <<  geoBoatPos;
     qDebug() << "paatin sijainti" << start;
 
@@ -117,9 +119,11 @@ QVector<QPointF> ShortNavigation::startCalc(QPolygonF routepoints, QPointF start
 
     this->updateCheckPoint();
     this->updateLayLines();
-    QVector<QPointF> path;
-    path = *pLeftPath;
 
+    QVector<QPointF> path;
+
+    path = *pLeftPath;
+    qDebug() <<"ShortNavigation::startCalc path.toList() "<< path.toList() ;
     return path;
 }
 
@@ -673,8 +677,11 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QString
     //    sql.append( " WHERE result = TRUE");
 
     //    res = PQexec(conn, sql.toAscii() );
-    bool intersection = -1; //( PQntuples(res) > 0 );
 
+    /* Change  intersection value if needed, true gives obstacles, false not */
+
+//    bool intersection = -1; // true //( PQntuples(res) > 0 );
+    bool intersection = 0; //false
     //    PQclear(res);
 
     qDebug() << "intersection" << intersection;
@@ -894,8 +901,9 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
     qDebug() << "getNextPoint boatPos.x" << boatPos.x() << "and boatPos.Y" << boatPos.y();
     qDebug() << "getNextPoint offset"  << offset;
-
     qDebug() << " boatPos " << boatPos;
+
+
     //input should be in GEOGRAPHICAL format
 
     if ( checkIntersection( "obstacles_r", boatPos ) ) {
@@ -909,6 +917,8 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
     // we receive a route here, a list of points
     // let's see at what point of the route we are ...
     double distance = std::numeric_limits<double>::max();
+
+    qDebug() <<"Q PointF Shortnavigation::getNextPoint distance is"<< distance;
     int nearest_point = 0;
     qDebug() << "Q PointF Shortnavigation::getNextPoint route size is" << route.size();
     for ( int i = 0; i < route.size(); i++) {
@@ -1161,41 +1171,45 @@ void ShortNavigation::updateCheckPoint()
 
     // Route has been updated by user or method
     // It is set in Conformal Inverted coordenates (Qt scene)
-//    qDebug() <<"updateCheckPoint() geoRoute" << geoRoute;
-//    this->geoRoute = UwMath::fromConformalInverted( (const QList<QPointF>)this->route);
 
+    /* Check if needed*/
+    // this->geoRoute = UwMath::fromConformalInverted( (const QList<QPointF>)this->route);
 
-    qDebug() << "before";
-    qDebug() << "updateCheckPoint() boatGeoPosition " << boatGeoPosition;
-    qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
-    qDebug() << "updateCheckPoint() ACCU_OFFSET is" << ACCU_OFFSET;
-    qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
+    if (debug) qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
+    if (debug) qDebug() << "updateCheckPoint() ACCU_OFFSET is" << ACCU_OFFSET;
+    if (debug) qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
 
     // Let's find out which is the next point in our route
     // find the destiny check point in geographical format
 
-    // find the destiny check point in geographical format
+      /* orginal version */
+//    geoDestinyPos = this->getNextPoint( *pGeoRoute, geoBoatPos, ACCU_OFFSET);
+    /* pathpoints from routewidget
+    // line 681 effects results from getNextPoint
+    // true = obstacles builds and runs
+    // false = builds, but crash in somepoint */
 
-//    qDebug << "pGeoRoute to list " << pGeoRoute->toList();
+    geoDestinyPos = this->getNextPoint( pathPoints, geoBoatPos, ACCU_OFFSET);
 
-    geoDestinyPos = this->getNextPoint( *pGeoRoute, geoBoatPos, ACCU_OFFSET);
+    if (debug) qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
+    if (debug)   qDebug() << "updateCheckPoint() ACCU_OFFSET is" << ACCU_OFFSET;
+    if (debug)qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
 
-    qDebug() << "after";
-    qDebug() << "updateCheckPoint() boatGeoPosition " << boatGeoPosition;
-    qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
-    qDebug() << "updateCheckPoint() ACCU_OFFSET is" << ACCU_OFFSET;
-    qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
     // and set it for Qt scene as well
-    qDebug() << "updateCheckPoint() before destinyPos" << destinyPos;
+
+    if (debug) qDebug() << "updateCheckPoint() before destinyPos" << destinyPos;
     destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
-    qDebug() << "updateCheckPoint() after destinyPos " << destinyPos;
+    if (debug) qDebug() << "updateCheckPoint() after destinyPos " << destinyPos;
     if (debug) qDebug() << "updateCheckPoint(): ended: ok";
 
 }
 
 void ShortNavigation::updateLayLines()
 {
+    if (debug)qDebug() << " pPolarDiagram->getName()" << pPolarDiagram->getName();
     pPolarDiagram->populate();
+    if (debug) qDebug() << "pPolarDiagram populate() " << pPolarDiagram;
+
     if (debug) qDebug() << "updateLayLines(): started";
 
     // layLines are not calculated with the actual TWA,
@@ -1206,7 +1220,7 @@ void ShortNavigation::updateLayLines()
 
 
     float futureTrueWindAngle = UwMath::getTWA( geoBoatPos, geoDestinyPos, trueWindDirection );
-    qDebug() << " updateLayLines geoBoatPos " << geoBoatPos;
+//    qDebug() << " updateLayLines geoBoatPos " << geoBoatPos;
     qDebug() << " updateLayLines geoDestinyPos" << geoDestinyPos;
     qDebug() << " updateLayLines trueWindDirection" << trueWindDirection;
     qDebug() << "futureTrueWindAngle" << futureTrueWindAngle;
