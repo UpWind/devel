@@ -32,6 +32,7 @@ PolarDiagram::~PolarDiagram(){
 
 void PolarDiagram::populate(){
     // FAIL SAFE POLAR DIAGRAM
+    qDebug() << "void PolarDiagram::populate()";
     this->setName("generic");
     this->setTWA(true);
     this->diagram.clear();
@@ -384,16 +385,24 @@ float PolarDiagram::getTA( const float & speed, const float & angle){
 }
 
 float PolarDiagram::getAngle( const float & trueWindSpeed, const float & trueWindAngle){
+
+    qDebug() << "float PolarDiagram::getAngle(const float & trueWindSpeed, const float & trueWindAngle)";
+    qDebug() << "trueWindSpeed: " << trueWindSpeed;
+    qDebug() << "trueWindAngle: " << trueWindAngle;
+
     if (debug) qDebug() << QString("PolarDiagram::getAngle( %1, %2)").arg(QString::number( trueWindSpeed),QString::number( trueWindAngle));
 
     float TWA = fabs( trueWindAngle);
     char side = ( trueWindAngle < 0 ) ? 'L' : 'R' ;
     float angle;
 
+    qDebug() << "TWA: " << TWA;
+
     // BEATING
     if ( TWA <= 90 && TWA >= 0 ) {
 
         angle = getBeatAngle( trueWindSpeed);
+        qDebug() << "(beat)angle: " << angle;
 
         if ( TWA > angle ) {
             if (debug) qDebug() << QString("[UPWIND] TWA: %1 %2 Wind speed: %3 Output: %4").arg(QString::number( TWA),QString::number( side),QString::number( trueWindSpeed),"reach");
@@ -407,6 +416,7 @@ float PolarDiagram::getAngle( const float & trueWindSpeed, const float & trueWin
     } else if ( TWA > 90 && TWA <= 180 ) {
 
         angle = getGybeAngle( trueWindSpeed);
+        qDebug() << "(gybe)angle: " << angle;
 
         if ( TWA < angle ) {
             if (debug) qDebug() << QString("[DOWNWIND] TWA: %1 %2 Wind speed: %3 Output: %4").arg(QString::number( TWA),QString::number( side),QString::number( trueWindSpeed),"reach");
