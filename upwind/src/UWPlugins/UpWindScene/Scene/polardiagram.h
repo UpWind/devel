@@ -30,7 +30,6 @@ enum UP_ERROR { ERROR_NONE, /**< no errors. */
 #include "../../shared/uwmath.h"
 #include <QDebug>
 #include "../../UWCore/pluginmanager.h"
-#include <QThread>
 
 
 /// for debugging the class

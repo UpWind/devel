@@ -119,12 +119,12 @@ void RouteWidget::drawRoute(bool activate)
 
 void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
-   QPointF start;
+   QPointF start, boatGeoPosition;
    QPointF end;
 
    //Boat position?
    QPointF *boatPosition = uwScene->getBoat()->getGeoPosition();
-   qDebug() << "boatPosition: " << boatPosition->x() << ", " << boatPosition->y();
+   qDebug() << "***********************boatPosition: " << boatPosition->x() << ", " << boatPosition->y();
    start = *boatPosition;
 
    end = event->pos();
@@ -134,20 +134,25 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
    Route* route = uwScene->getRoute();
    ShortNavigation* routeShort = uwScene->getShortNavigation();
+
    PolarDiagram *diagram = uwScene->getPolarDiagram();
    routeShort->setPolarDiagram(diagram);
    path = route->path(start, end, 0);
+
+   pixelToGeoPoint(&boatGeoPosition);
+   qDebug()<<"boatGeoPosition: "<<boatGeoPosition;
+
+   this->leftPath = routeShort->startCalc(path, boatGeoPosition);
+   qDebug()<<"ShortNavig palautti: "<<leftPath;
 
    for (int i = 0; i < path.size(); i++) {
        geoPointToPixel(&path[i]);
    }
 
     routepoints = QPolygonF(path);
-    //something = routeShort->getSomething("jotain hyv");
-    qDebug() << "send routepoints to shortnavig " << routepoints;
+    //qDebug() << "send routepoints to shortnavig " << routepoints;
     // Pass route and boat information to shortnavigation
-    something = routeShort->startCalc(routepoints, start);
-    qDebug()<<"ShortNavig palautti: "<<something;
+
     this->update(boundingRect());
 
     /*if(simMode)

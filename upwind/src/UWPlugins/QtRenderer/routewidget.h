@@ -52,7 +52,7 @@ private:
 
     QPen longroute_pen;
     QBrush longroute_brush;
-    QVector<QPointF> something;
+    QVector<QPointF> leftPath; //Modify so that both paths can be put into the same variable
 
     bool zoomMode;
 };

@@ -28,7 +28,6 @@
 #include <QString>
 #include <QLineF>
 #include <QVector>
-#include <QThread>
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
@@ -152,7 +151,7 @@ private:
     QVector<QPointF> * pLeftPath, * pRightPath;
     QPointF geoDestinyPos, destinyPos;
     float layLinesAngle;
-    QPolygonF pathPoints;
+    QVector<QPointF> pathPoints;
 
 
 
