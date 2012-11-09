@@ -26,6 +26,12 @@ RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chart
     longroute_pen.setWidthF(6);
     longroute_brush.setColor(Qt::blue);
 
+    //091112: Set pen and brush for shortnav drawing
+    shortroute_pen.setColor(Qt::red);
+    shortroute_pen.setWidthF(4);
+    shortroute_pen.setStyle(Qt::DotLine);
+    shortroute_brush.setColor(Qt::red);
+
 }
 
 RouteWidget::~RouteWidget(){}
@@ -69,6 +75,14 @@ void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->rotate(rotateAngle);
 
     painter->drawPolyline(routepoints);
+
+    //091112: Drawing of shortnav starts
+    painter->setPen(shortroute_pen);
+    painter->setBrush(shortroute_brush);
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->scale(zoomFactor, zoomFactor);
+    painter->rotate(rotateAngle);
+    painter->drawPolyline(/*leftPath.data(), leftPath.size()*/shortroutepoints);
 
 
 }
@@ -149,11 +163,21 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
        geoPointToPixel(&path[i]);
    }
 
-    routepoints = QPolygonF(path);
-    //qDebug() << "send routepoints to shortnavig " << routepoints;
-    // Pass route and boat information to shortnavigation
+   routepoints = QPolygonF(path);
 
-    this->update(boundingRect());
+   //091112: leftPath data to pixeldata for drawing
+   for (int i = 0; i < leftPath.size(); i++) {
+       qDebug() << "leftPath[i]: " << i << " " << &leftPath[i];
+       geoPointToPixel(&leftPath[i]);
+   }
+   shortroutepoints = QPolygonF(leftPath);
+
+   //09112: print out both route pixels for testing purposes
+   qDebug() << "ROUTEPOINTS: " << routepoints;
+   qDebug() << "SHORTROUTEPOINTS: " << shortroutepoints;
+
+
+   this->update(boundingRect());
 
     /*if(simMode)
     {

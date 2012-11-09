@@ -44,6 +44,7 @@ private:
     bool simMode;
     bool drawMode;
     QPolygonF routepoints;
+    QPolygonF shortroutepoints;
     //QVector<QPolygonF> navcorrected;
     Route *route;
     ShortNavigation *routeShort;
@@ -51,7 +52,9 @@ private:
     QVector<QPointF> path;
 
     QPen longroute_pen;
+    QPen shortroute_pen;
     QBrush longroute_brush;
+    QBrush shortroute_brush;
     QVector<QPointF> leftPath; //Modify so that both paths can be put into the same variable
 
     bool zoomMode;
