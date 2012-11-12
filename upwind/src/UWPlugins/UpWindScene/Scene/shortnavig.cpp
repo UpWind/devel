@@ -41,10 +41,23 @@ ShortNavigation* ShortNavigation::getInstance(){
 }
 ShortNavigation::ShortNavigation(){
 
+    qDebug() << __PRETTY_FUNCTION__;
     //something todo
     const char *connInfo = "";
-    conn = PQconnectStart(connInfo);
-    //conn = PQconnectdb("user=postgres password=upwind dbname=chart57 host=localhost port=5432");
+   // conn = PQconnectStart(connInfo);
+
+    /*
+PGconn *PQsetdbLogin(const char *pghost,
+                     const char *pgport,
+                     const char *pgoptions,
+                     const char *pgtty,
+                     const char *dbName,
+                     const char *login,
+                     const char *pwd);
+
+    */
+
+    conn = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
 
     if (PQstatus(conn) != CONNECTION_OK){
         qDebug() << "Connection not ok: " << PQerrorMessage(conn);
@@ -549,6 +562,9 @@ bool ShortNavigation::checkGeometriesIntersection( const QString &object1, const
 }
 
 bool ShortNavigation::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() ) {
+
+
+    qDebug() << "Object" <<object << "Shape" << shape;
 
     qDebug() << "bool ShortNavigation::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() )";
 
