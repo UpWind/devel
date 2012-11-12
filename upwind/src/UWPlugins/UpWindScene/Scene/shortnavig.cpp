@@ -40,9 +40,16 @@ ShortNavigation* ShortNavigation::getInstance(){
         return instance;
 }
 ShortNavigation::ShortNavigation(){
+
     //something todo
     const char *connInfo = "";
     conn = PQconnectStart(connInfo);
+    //conn = PQconnectdb("user=postgres password=upwind dbname=chart57 host=localhost port=5432");
+
+    if (PQstatus(conn) != CONNECTION_OK){
+        qDebug() << "Connection not ok: " << PQerrorMessage(conn);
+    }
+
 }
 
 ShortNavigation::~ShortNavigation()
@@ -544,6 +551,7 @@ bool ShortNavigation::checkGeometriesIntersection( const QString &object1, const
 bool ShortNavigation::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() ) {
 
     qDebug() << "bool ShortNavigation::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() )";
+
     qDebug() << "layerName.length " << layerName.length();
     qDebug() << "layerName is" << layerName;
     qDebug() << "layerName.constData()" << layerName;
@@ -551,7 +559,8 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QString
     qDebug() << " object" << object;
     qDebug() << "object is " << object;
     qDebug() << " shape " << shape;
-    QString sql("SELECT * ( SELECT DISTINCT Intersects( wkb_geometry, ");
+
+    QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
     sql.append( object);
     sql.append( ") AS result FROM ");
     // if shape is empty string, then there is no area of rectriction
@@ -566,10 +575,16 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QString
     }
     sql.append( " WHERE result = TRUE");
 
-    sql = "SELECT DISTINCT Intersects( wkb_geometry, 'POINT(0.2511030137539 0.6501500010490)'";
+    //sql = "SELECT DISTINCT Intersects( wkb_geometry, 'POINT(0.2511030137539 0.6501500010490)'";
+    qDebug() << "SQL: " << sql;
     res = PQexec(conn, sql.toAscii() );
+    qDebug() << PQerrorMessage(conn);
 
+    qDebug() << "PQresStatus(PQresultStatus(res)): "  << PQresStatus(PQresultStatus(res));
+    qDebug() << "PQresultErrorMessage(res): " << PQresultErrorMessage(res);
+    qDebug() << "PQntuples(res): " << PQntuples(res);
     bool intersection = ( PQntuples(res) > 0 );
+    qDebug() << "intersection: " << intersection;
     PQclear(res);
 
     return intersection;
@@ -580,7 +595,9 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QPolygo
     qDebug() << "bool ShortNavigation::checkIntersection( const QString &layerName, const QPolygonF &triangle, const QPolygonF &rhomboid )";
 
     QString WKTTriangle = buildWKTPolygon( triangle );
+    qDebug() << "WKTTriangle: " << WKTTriangle;
     QString WKTPolygon = buildWKTPolygon( rhomboid );
+    qDebug() << "WKTPolygon" << WKTPolygon;
 
     return checkIntersection( layerName, WKTTriangle, WKTPolygon);
 
@@ -1076,20 +1093,16 @@ void ShortNavigation::updateLayLines()
 
     //************HARDCODED VALUE FOR futureTrueWindAngle*************
     float futureTrueWindAngle = 5;//= UwMath::getTWA( geoBoatPos, geoDestinyPos, trueWindDirection );
-    //        qDebug() << " updateLayLines geoBoatPos " << geoBoatPos;
-    //        qDebug() << " updateLayLines geoDestinyPos" << geoDestinyPos;
-    //        qDebug() << " updateLayLines trueWindDirection" << trueWindDirection;
-    qDebug() << "futureTrueWindAngle" << futureTrueWindAngle;
-    qDebug() << "wind corenmeareader.h" << windSpeed;
-
     //************HARDCODED VALUE FOR windSpeed*************
     windSpeed = 10;
+
     layLinesAngle = pPolarDiagram->getAngle( windSpeed, futureTrueWindAngle);
 
     qDebug() << "layLinesAngle" << layLinesAngle;
     // new paths...
     pLeftPath = new QVector<QPointF>;
     pRightPath = new QVector<QPointF>;
+
     if ( layLinesAngle != 0 ) {
 
         // THEN WE ARE NOT REACHING
@@ -1127,7 +1140,7 @@ void ShortNavigation::updateLayLines()
 
         if ( checkIntersection( "obstacles_r", rhomboid, rhomboid ) ||
              checkIntersection( "obstacles_l", rhomboid, rhomboid) ) {
-            //            qDebug() << "updateLayLines checkIntersection";
+            qDebug() << "UPDATELAYLINES CHECKINTERSECTION";
             // if we have polygon obstacles in the area
             // OR we have line obstacles in the area
 
@@ -1147,6 +1160,7 @@ void ShortNavigation::updateLayLines()
 
             // if we don't have any obstacle in our area
             // use master turning points for the path
+            qDebug() << "UPDATELAYLINES NO OBSTACLES";
 
             pRightPath->append( geoBoatPos);
             pRightPath->append( TPright );
