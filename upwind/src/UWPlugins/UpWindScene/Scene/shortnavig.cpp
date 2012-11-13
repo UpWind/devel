@@ -236,8 +236,7 @@ bool ShortNavigation::createObstaclesTables()
                 res = PQexec(conn, sql.toAscii() );
                 PQclear(res);
 
-
-                // INSERT POINT LAYERS WITH OFFSET
+                qDebug() << "for in 1";            // INSERT POINT LAYERS WITH OFFSET
                 for ( int i = 0; i < point_layers.size(); i++ ) {
                     bool signsound = ( point_layers[i] == "signsound_p" );
                     sql = "SELECT X(wkb_geometry),Y(wkb_geometry)";
@@ -268,45 +267,13 @@ bool ShortNavigation::createObstaclesTables()
                         sql.append( ", '");
                         sql.append( point_layers[i]);
                         sql.append( "'); ");
-                        QString rock;
-                        QString wreck;
-                        QString signsound;
-                        QString offset;
 
-                        for (int i = 0; i <this->pointObstacles.size();i++){
-                            if ( point_layers[i] == "rock_p"){
-                                rock.append(buildWKTPolygon(point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK));
-                                qDebug() << "ROCK";
-                            }else if ( point_layers[i] == "wreck_p" ){
-                                wreck.append( buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
-                                qDebug() << "WRECK";
-                            }else if ( signsound.length() > 0){
-                                signsound.append( buildWKTPolygon( point, POINT_OFFSET / ( QString( PQgetvalue( res, j, 2)).toDouble() / POINT_OFFSET_FACTOR_SIGNSOUND ) ));
-                                qDebug() << "SIGNSOUND";
-                            }else{
-                                offset.append( buildWKTPolygon( point, POINT_OFFSET));
-                                qDebug() << "OFFSET";
-                            }
-
-                            for (int l = 0; l < this->pointObstacles.size();l++) {
-                                if ( point_layers[i] == "rock_p")
-                                    sql.append( buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
-                                else if ( point_layers[i] == "wreck_p" )
-                                    sql.append( buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
-                                else if ( signsound.length() > 0)
-                                    // for signsound POINT_OFFSET = POINT_OFFSET / ( depth of signsound / factor )
-                                    // the bigger the signsound is, the bigger the point offset gets
-                                    sql.append( buildWKTPolygon( point, POINT_OFFSET / ( QString( PQgetvalue( res, j, 2)).toDouble() / POINT_OFFSET_FACTOR_SIGNSOUND ) ));
-                                else
-                                    sql.append( buildWKTPolygon( point, POINT_OFFSET));
-                            }
-
-                        }
-                        PQclear(res);
-
-                        res = PQexec( conn, sql.toAscii());
-                        PQclear(res);
                     }
+                    PQclear(res);
+
+                    res = PQexec( conn, sql.toAscii());
+                    PQclear(res);
+
 
                     //INSERT LINE LAYERS
                     sql.clear();
