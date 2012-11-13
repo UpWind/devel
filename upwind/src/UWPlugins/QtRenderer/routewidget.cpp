@@ -29,7 +29,6 @@ RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chart
     //091112: Set pen and brush for shortnav drawing
     shortroute_pen.setColor(Qt::red);
     shortroute_pen.setWidthF(4);
-    shortroute_pen.setStyle(Qt::DotLine);
     shortroute_brush.setColor(Qt::red);
 
 }
@@ -153,10 +152,7 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
    routeShort->setPolarDiagram(diagram);
    path = route->path(start, end, 0);
 
-   pixelToGeoPoint(&boatGeoPosition);
-   qDebug()<<"boatGeoPosition: "<<boatGeoPosition;
-
-   this->leftPath = routeShort->startCalc(path, boatGeoPosition);
+   this->leftPath = routeShort->startCalc(path, start);
    qDebug()<<"ShortNavig palautti: "<<leftPath;
 
    for (int i = 0; i < path.size(); i++) {
