@@ -25,7 +25,7 @@
 #include "shortnavig.h"
 #include <ogrsf_frmts.h>
 #include <QDebug>
-
+#include <QVectorIterator>
 /// Offset value factor aplied to this obstacles:
 #define POINT_OFFSET_FACTOR_ROCK 10
 #define POINT_OFFSET_FACTOR_SIGNSOUND 15
@@ -91,17 +91,46 @@ void ShortNavigation::setPolarDiagram(PolarDiagram *diagram){
 QVector<QPointF> ShortNavigation::startCalc(QPolygonF routepoints, QPointF start){
     //    this->boatGeoPosition = start;
     this->ACCU_OFFSET = 1;
-    this->MAX_TURNING_POINTS = 3;
+    this->MAX_TURNING_POINTS = 5;
     this->geoBoatPos = start;
 
     this->pathPoints = routepoints;
 
     this->updateCheckPoint();
     this->updateLayLines();
-    QVector<QPointF> path;
-    path = *pLeftPath;
 
-    return path;
+
+    QVector<QPointF> ready;
+    QVector<QPointF> rightpath;
+    QVector<QPointF> leftpath;
+    qDebug() << "rightpath shortnavigation startCalc" << *pRightPath;
+    qDebug() << "leftpath shortnavigation startCalc" << *pLeftPath;
+    rightpath = *pRightPath;
+    leftpath = *pLeftPath;
+    for(int i = 0; i < rightpath.size(); i++){
+        ready.append(rightpath.at(i));
+        qDebug() << "rightpath for loop" << rightpath.at(i);
+    }
+    qDebug() << "ready size after rightpath" << ready.size();
+    for(int i = 0; i < leftpath.size(); i++){
+        ready.append(leftpath.at(i));
+        qDebug() << "leftpath for loop" << leftpath.at(i);
+    }
+    qDebug() << "ready size after leftpath: " << ready.size();
+    return ready;
+
+      //****leftpath reverse for drawing purposes ****testing
+//    int j = leftpath.size();
+//    for(int i = 0; i<leftpath.size(); i++){
+//    ready.append(leftpath.at((j-1)-i));
+////         qDebug() << "reverse leftpath for loop" << leftpath.at((j-1)-i);
+//    }
+//    //*****just for testing what is inside of ready ****
+//    qDebug() << "ready size " << ready.size();
+//    for(int i = 0 ; i<ready.size(); i++){
+//        qDebug() << "Ready vector contains points:" << ready.at(i);
+//    }
+//    return ready;
 }
 
 
@@ -778,16 +807,16 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
     //    qDebug() << "route.size()" << route.size();
 
     qDebug() << "getNextPoint boatPos.x" << boatPos.x() << "and boatPos.Y" << boatPos.y();
-    qDebug() << "getNextPoint offset"  << offset;
+//    qDebug() << "getNextPoint offset"  << offset;
 
-    qDebug() << " boatPos " << boatPos;
+//    qDebug() << " boatPos " << boatPos;
     //input should be in GEOGRAPHICAL format
 
     if ( checkIntersection( "obstacles_r", boatPos ) ) {
         // if we are inside an obstacle, don't even try
 
         if (debug) qDebug() << "getNextPoint(): WARNING! YOU ARE INSIDE AN OBSTACLE AREA!";
-        qDebug() << " boatPos " << boatPos;
+//        qDebug() << " boatPos " << boatPos;
         return boatPos;
     }
 
