@@ -350,8 +350,6 @@ bool ShortNavigation::createObstaclesTables()
 
 QString ShortNavigation::buildWKTPolygon( const QPointF &epoint, const float &offset ) {
 
-    qDebug() << "QString ShortNavigation::buildWKTPolygon( const QPointF &epoint, const float &offset )";
-
     QPointF point = epoint;
     UwMath::toConformal( point);
     double moffset = offset / ( cos( UwMath::toRadians(point.y())) * 6378000.0 );
@@ -397,7 +395,6 @@ QPointF ShortNavigation::getFromWKTPoint( QString wkt_geometry)
 
 QString ShortNavigation::buildWKTPolygon( const QPolygonF &rhomboid ) {
 
-    qDebug() << "QString ShortNavigation::buildWKTPolygon( const QPolygonF &rhomboid ) ";
 
     QString WKTPolygon = "'POLYGON((";
     for ( int i = 0; i < rhomboid.size(); i++ ) {
@@ -511,8 +508,6 @@ QString ShortNavigation::buildWKTPolygon( const QPolygonF &epolygon, const QPoin
 
 QString ShortNavigation::buildWKTLine( const QPointF &p1, const QPointF &p2 ) {
 
-    qDebug() << "QString ShortNavigation::buildWKTLine( const QPointF &p1, const QPointF &p2 )";
-
     QString WKTLine = "'LINESTRING(";
     WKTLine.append( QString::number( p1.x(), 'f', WKT_P));
     WKTLine.append( " ");
@@ -528,7 +523,6 @@ QString ShortNavigation::buildWKTLine( const QPointF &p1, const QPointF &p2 ) {
 
 QString ShortNavigation::buildWKTPoint( const QPointF &p1 ) {
 
-    qDebug() << "QString ShortNavigation::buildWKTPoint( const QPointF &p1 )";
 
     QString WKTPoint = "'POINT(";
     WKTPoint.append( QString::number( p1.x(), 'f', WKT_P));
@@ -541,7 +535,6 @@ QString ShortNavigation::buildWKTPoint( const QPointF &p1 ) {
 
 bool ShortNavigation::checkGeometriesIntersection( const QString &object1, const QString &object2 ) {
 
-    qDebug() << "bool ShortNavigation::checkGeometriesIntersection( const QString &object1, const QString &object2 )";
 
     QString sql("SELECT * FROM;// ( SELECT DISTINCT Intersects( "); //Try to Fix this, Where is Intersect table in database?
     sql.append( object1);
@@ -560,18 +553,6 @@ bool ShortNavigation::checkGeometriesIntersection( const QString &object1, const
 bool ShortNavigation::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() ) {
 
 
-    qDebug() << "Object" <<object << "Shape" << shape;
-
-    qDebug() << "bool ShortNavigation::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() )";
-
-    qDebug() << "layerName.length " << layerName.length();
-    qDebug() << "layerName is" << layerName;
-    qDebug() << "layerName.constData()" << layerName;
-    qDebug() << " object.size " << object.size();
-    qDebug() << " object" << object;
-    qDebug() << "object is " << object;
-    qDebug() << " shape " << shape;
-
     QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
     sql.append( object);
     sql.append( ") AS result FROM ");
@@ -588,15 +569,9 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QString
     sql.append( " WHERE result = TRUE");
 
     //sql = "SELECT DISTINCT Intersects( wkb_geometry, 'POINT(0.2511030137539 0.6501500010490)'";
-    qDebug() << "SQL: " << sql;
     res = PQexec(conn, sql.toAscii() );
-    qDebug() << PQerrorMessage(conn);
 
-    qDebug() << "PQresStatus(PQresultStatus(res)): "  << PQresStatus(PQresultStatus(res));
-    qDebug() << "PQresultErrorMessage(res): " << PQresultErrorMessage(res);
-    qDebug() << "PQntuples(res): " << PQntuples(res);
     bool intersection = ( PQntuples(res) > 0 );
-    qDebug() << "intersection: " << intersection;
     PQclear(res);
 
     return intersection;
@@ -604,20 +579,15 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QString
 
 bool ShortNavigation::checkIntersection( const QString &layerName, const QPolygonF &triangle, const QPolygonF &rhomboid ) {
 
-    qDebug() << "bool ShortNavigation::checkIntersection( const QString &layerName, const QPolygonF &triangle, const QPolygonF &rhomboid )";
 
     QString WKTTriangle = buildWKTPolygon( triangle );
-    qDebug() << "WKTTriangle: " << WKTTriangle;
     QString WKTPolygon = buildWKTPolygon( rhomboid );
-    qDebug() << "WKTPolygon" << WKTPolygon;
 
     return checkIntersection( layerName, WKTTriangle, WKTPolygon);
 
 }
 
 bool ShortNavigation::checkIntersection( const QString &layerName, const QPointF &point ) {
-
-    qDebug() << "bool ShortNavigation::checkIntersection( const QString &layerName, const QPointF &point )";
 
     QString WKTPoint = buildWKTPoint( point );
 
@@ -627,7 +597,6 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QPointF
 
 bool ShortNavigation::publicCheckIntersection( const QString &layerName, const QPointF &point ) {
 
-    qDebug() << "bool ShortNavigation::publicCheckIntersection( const QString &layerName, const QPointF &point )";
 
     if (obstaclesTablesCreated )
         this->createObstaclesTables();
@@ -640,7 +609,6 @@ bool ShortNavigation::publicCheckIntersection( const QString &layerName, const Q
 
 bool ShortNavigation::checkIntersection( const QString &layerName, const QLineF &heading, const QPolygonF &rhomboid ) {
 
-    qDebug() << "bool ShortNavigation::checkIntersection( const QString &layerName, const QLineF &heading, const QPolygonF &rhomboid )";
     QString WKTLine = buildWKTLine( heading.p1(), heading.p2() );
     QString WKTPolygon = buildWKTPolygon( rhomboid );
 
@@ -650,8 +618,6 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QLineF 
 
 bool ShortNavigation::checkIntersection( const QString &layerName, const QLineF &heading ) {
 
-    qDebug() << "bool ShortNavigation::checkIntersection( const QString &layerName, const QLineF &heading )" ;
-
     QString WKTLine = buildWKTLine( heading.p1(), heading.p2() );
 
     return checkIntersection( layerName, WKTLine);
@@ -659,8 +625,6 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QLineF 
 }
 
 bool ShortNavigation::checkIntersection( const QLineF &line1, const QLineF &line2 ) {
-
-    qDebug() << "bool ShortNavigation::checkIntersection( const QLineF &line1, const QLineF &line2 )";
 
     QString WKTLine1 = buildWKTLine( line1.p1(), line1.p2() );
     QString WKTLine2 = buildWKTLine( line2.p1(), line2.p2() );
@@ -671,35 +635,25 @@ bool ShortNavigation::checkIntersection( const QLineF &line1, const QLineF &line
 
 bool ShortNavigation::checkOffset( const QPolygonF &last_triangle, const QPolygonF &present_triangle, const QPointF &destiny, const float &offset ) {
 
-    qDebug() << "bool ShortNavigation::checkOffset( const QPolygonF &last_triangle, const QPolygonF &present_triangle, const QPointF &destiny, const float &offset )";
-
     double diff = UwMath::getDistance(last_triangle.at( 2), present_triangle.at( 2));
     double scale = ( UwMath::getDistance(present_triangle.at( 0), destiny) +
                      UwMath::getDistance(present_triangle.at( 0), present_triangle.at( 1)) ) / 2 ;
     double criteria = ( abs(scale) == 0 ) ? offset : offset * scale;
-
-    //std::cout << "Diff: " << diff << " / scale: " << scale << " criteria: " << criteria << std::endl;
 
     return diff < criteria;
 }
 
 bool ShortNavigation::checkOffset_OnePointVersion( const QPolygonF &last_triangle, const QPolygonF &present_triangle, const float &offset ) {
 
-    qDebug() << "bool ShortNavigation::checkOffset_OnePointVersion( const QPolygonF &last_triangle, const QPolygonF &present_triangle, const float &offset )";
-
     double diff = UwMath::getDistance(last_triangle.at( 2), present_triangle.at( 2));
     double scale = ( UwMath::getDistance(present_triangle.at( 0), present_triangle.at( 2)) +
                      UwMath::getDistance(present_triangle.at( 0), present_triangle.at( 1)) ) / 2 ;
     double criteria = ( abs(scale) == 0 ) ? offset : offset * scale;
 
-    //std::cout << "OnePointsVersion Diff: " << diff << " / scale: " << scale << " criteria: " << criteria << std::endl;
-
     return diff < criteria;
 }
 
 bool ShortNavigation::checkOffset( const QLineF &l1, const QLineF &l2, const float &offset ) {
-
-    qDebug() << "bool ShortNavigation::checkOffset( const QLineF &l1, const QLineF &l2, const float &offset )";
 
     double diff = UwMath::getDistance(l1.p2(), l2.p2());
     double scale = ( UwMath::getDistance(l1.p1(), l1.p2()) +
@@ -715,8 +669,6 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
                                const QPolygonF &obstacles_shape, QVector<QPointF> &Path )
 {
     //input has to be Geographical data cause we check against PostGIS
-
-    qDebug() << "void ShortNavigation::getPath";
 
     QPointF TPleft, TPright;
     bool sideRight = side;
@@ -797,26 +749,17 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
         // we continue in the other side
         sideRight = (!sideRight);
     }
-    qDebug()<<"Path: " << Path;
 }
 
 QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPointF &boatPos, const float &offset) {
 
 
-    qDebug() << "Q PointF Shortnavigation::getNextPoint";
-    //    qDebug() << "route.size()" << route.size();
-
-    qDebug() << "getNextPoint boatPos.x" << boatPos.x() << "and boatPos.Y" << boatPos.y();
-//    qDebug() << "getNextPoint offset"  << offset;
-
-//    qDebug() << " boatPos " << boatPos;
-    //input should be in GEOGRAPHICAL format
+      //input should be in GEOGRAPHICAL format
 
     if ( checkIntersection( "obstacles_r", boatPos ) ) {
         // if we are inside an obstacle, don't even try
 
         if (debug) qDebug() << "getNextPoint(): WARNING! YOU ARE INSIDE AN OBSTACLE AREA!";
-//        qDebug() << " boatPos " << boatPos;
         return boatPos;
     }
 
@@ -1202,4 +1145,5 @@ void ShortNavigation::updateLayLines()
 
 
 }
+
 
