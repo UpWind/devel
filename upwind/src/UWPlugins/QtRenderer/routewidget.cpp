@@ -184,6 +184,9 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
    QPointF startPath = leftPath.at(0);
    bool startFound = false;
 
+   pathLeft.clear();
+   pathRight.clear();
+
    for (int i = 0; i < leftPath.size(); i++) {
        if((leftPath.at(i)!=startPath || i==0) && !startFound){
             pathRight.append(leftPath.at(i));
