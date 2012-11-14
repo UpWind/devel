@@ -24,7 +24,8 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     this->zoomFactor = 1.0f;
     updateBoatPosition();
 
-    this->setHeading(3.14);
+    //141112: Rotate boat, should rotate automatically depending on the laylines??
+    this->setHeading(90);
 }
 
 QGraphicsSvgItem *Boat::getBoatImage()
@@ -55,8 +56,9 @@ void Boat::updateBoatPosition()
 {
     this->boatScenePosition = geoPointToPixel(this->boatGeoPosition);
 
-    float offsetx = (IMAGE_WIDTH * boatScale) / 2;
-    float offsety = (IMAGE_HEIGHT * boatScale)/2;
+    //141112: Adjust the position so that the laylines start from the tip of the boat
+    float offsetx = 0;//(IMAGE_WIDTH * boatScale) / 2;
+    float offsety = -10;//(IMAGE_HEIGHT * boatScale) /2;
     boatImage->setPos(boatScenePosition->x() + offsetx, boatScenePosition->y() + offsety);
 }
 

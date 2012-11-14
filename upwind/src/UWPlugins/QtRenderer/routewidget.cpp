@@ -28,7 +28,7 @@ RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chart
 
     //091112: Set pen and brush for shortnav drawing
     shortroute_pen.setColor(Qt::red);
-    shortroute_pen.setWidthF(4);
+    shortroute_pen.setWidthF(3);
     shortroute_brush.setColor(Qt::red);
 
 }
@@ -69,10 +69,8 @@ void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->setPen(longroute_pen);
     painter->setBrush(longroute_brush);
     painter->setRenderHint(QPainter::Antialiasing, true);
-
     painter->scale(zoomFactor, zoomFactor);
     painter->rotate(rotateAngle);
-
     painter->drawPolyline(routepoints);
 
     //091112: Drawing of shortnav starts
@@ -83,6 +81,11 @@ void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->rotate(rotateAngle);
     painter->drawPolyline(/*leftPath.data(), leftPath.size()*/shortroutepoints);
 
+    //141112: Paint the starting point (& boat position) for testing how
+    //the boat image is positioned related to that point
+    QPen myPen(Qt::green, 4, Qt::SolidLine);
+    painter->setPen(myPen);
+    painter->drawPoint(755.319, 703.672);
 
 }
 
