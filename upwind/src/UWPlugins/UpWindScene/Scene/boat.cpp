@@ -6,12 +6,14 @@
 Boat::Boat(QSize size, QRectF chartBoundaries){
 
     this->boatImage = new QGraphicsSvgItem(":sailboat2.svg");
-    this->boatImage->setPos(10, 10);
+    this->boatImage->setPos(0, 0);
     this->boatScale = 0.2f;
     this->boatImage->setTransform(QTransform().scale(boatScale, boatScale));
     this->boatName = "The Flying Dutchman";
+    this->boatImage->setOpacity(0.7);
 
-    this->boatGeoPosition = new QPointF(25.109253, 65.013026);   // initial position Oulu
+    //this->boatGeoPosition = new QPointF(25.109253, 65.013026);   // initial position Oulu
+    this->boatGeoPosition = new QPointF(25.1516, 65.0146);
 
     if(boatImage != NULL)
     {
@@ -25,7 +27,7 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     updateBoatPosition();
 
     //141112: Rotate boat, should rotate automatically depending on the laylines??
-    this->setHeading(90);
+    this->setHeading(290);
 }
 
 QGraphicsSvgItem *Boat::getBoatImage()
@@ -57,9 +59,15 @@ void Boat::updateBoatPosition()
     this->boatScenePosition = geoPointToPixel(this->boatGeoPosition);
 
     //141112: Adjust the position so that the laylines start from the tip of the boat
-    float offsetx = 0;//(IMAGE_WIDTH * boatScale) / 2;
-    float offsety = -10;//(IMAGE_HEIGHT * boatScale) /2;
-    boatImage->setPos(boatScenePosition->x() + offsetx, boatScenePosition->y() + offsety);
+
+    qDebug() << "BOATSCENEPOSITION->X " << boatScenePosition->x();
+    qDebug() << "BOATSCENEPOSITION->Y " << boatScenePosition->y();
+    float offsetx = 20;//(IMAGE_WIDTH * boatScale) / 2;
+    float offsety = 0;//(IMAGE_HEIGHT * boatScale) /2;
+    qDebug() << "OFFSETX " << offsetx;
+    qDebug() << "OFFSETY " << offsety;
+
+    boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
 }
 
 void Boat::setHeading(float hdg)
