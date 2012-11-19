@@ -114,6 +114,7 @@ public:
                                 const double &lon1, const double &lat1);
     static void getAnotherPoint(QPointF &back, const float &wAngle, const QPointF &point);
     static QPointF getProjectionPoint(const QPointF &a, const QPointF &b, const QPointF &c);
+    static bool checkIfBetweenCoordinates(QPointF a, QPointF b, QPointF c);
 };
 
 #endif // UWMATH_H

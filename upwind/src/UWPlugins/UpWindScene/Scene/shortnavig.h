@@ -55,7 +55,7 @@ public:
      void clear();
 
     /**
-    * Generate the obstacles tables, without them the class does not work
+    * Generate the obstacle tables, without them the class does not work
     */
 
     void loadChartObjects(QVector<ChartObjectInterface*> cObjects);
@@ -124,6 +124,8 @@ private:
                   const QPointF &boatPos, const QPointF &destinyPos,
                   const QPolygonF &obstacles_shape, QVector<QPointF> &Path);
     QPointF getNextPoint( const QVector<QPointF> &route, const QPointF &position, const float &offset);
+    int getNearestPoint( const QVector<QPointF> &route, const QPointF &boatPos);
+
     bool createObstaclesTables();
 
     void updateCheckPoint();

@@ -693,3 +693,13 @@ QPointF UwMath::getProjectionPoint(const QPointF &a, const QPointF &b, const QPo
 
     return projection_point;
 }
+
+bool UwMath::checkIfBetweenCoordinates(QPointF a, QPointF b, QPointF c){
+
+
+    if ((b.y()-a.y())/(b.x()-a.x())==(c.y()-b.y())/(c.x()-b.x()))
+        return true;
+    else
+        return false;
+
+}
