@@ -51,6 +51,7 @@ void ChartWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->scale(zoomFactor, zoomFactor);
     painter->rotate(rotateAngle);
     foreach(ChartObjectInterface *object, chartObjects){
+
         QPen pen = object->getPen();
         pen.setWidthF(pen.widthF()/zoomFactor);
         painter->setPen(pen);
@@ -59,23 +60,28 @@ void ChartWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
         switch(object->getType()){
         case ChartObjectInterface::Point:
-//            qDebug() << Q_FUNC_INFO << "Drawing points";
-            foreach(QPolygonF poly, geometry)
-                foreach(QPointF point, poly)
-                    painter->drawEllipse(point, 4, 4);
+            //qDebug() << Q_FUNC_INFO << "Drawing points";
+            if(object->getTableName() != "signsound_p"){
+                //qDebug() << object->getTableName();
+                foreach(QPolygonF poly, geometry){
+                    foreach(QPointF point, poly){
+                        painter->drawEllipse(point, 4, 4);
+                    }
+                }
+            }
             break;
         case ChartObjectInterface::Line:
-//            qDebug() << Q_FUNC_INFO << "Drawing lines";
+            //qDebug() << Q_FUNC_INFO << "Drawing lines";
             foreach(QPolygonF poly, geometry)
                 painter->drawPolyline(poly);
             break;
         case ChartObjectInterface::Polygon:
-//            qDebug() << Q_FUNC_INFO << "Drawing polygons";
+            //qDebug() << Q_FUNC_INFO << "Drawing polygons";
             foreach(QPolygonF poly, geometry)
                 painter->drawPolygon(poly);
             break;
         default:
-            qDebug() << Q_FUNC_INFO << "ChartObject not found.";
+            //qDebug() << Q_FUNC_INFO << "ChartObject not found.";
             break;
         }
     }

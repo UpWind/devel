@@ -13,9 +13,9 @@ SignSound::SignSound(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCo
 SignSound::~SignSound(){}
 
 void SignSound::setupGraphicProperties() {
-    pen.setColor(Qt::transparent);
+    pen.setColor(Qt::darkRed);
     pen.setWidthF(2);
-    brush.setColor(Qt::transparent);
+    brush.setColor(Qt::black);
 }
 
 ChartObjectInterface::ChartObjectType SignSound::getType() const {
