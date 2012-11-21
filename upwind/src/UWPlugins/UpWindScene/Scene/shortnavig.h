@@ -124,7 +124,7 @@ private:
                   const QPointF &boatPos, const QPointF &destinyPos,
                   const QPolygonF &obstacles_shape, QVector<QPointF> &Path);
     QPointF getNextPoint( const QVector<QPointF> &route, const QPointF &position, const float &offset);
-    int getNearestPoint( const QVector<QPointF> &route, const QPointF &boatPos);
+    QPointF getNearestPoint( const QVector<QPointF> &route, const QPointF &boatPos);
 
     bool createObstaclesTables();
 
