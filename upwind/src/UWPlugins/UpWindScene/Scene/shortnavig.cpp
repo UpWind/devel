@@ -34,6 +34,8 @@ One second of longitude =  15.50 m  or  50.85 ft
 
 */
 
+//HOX!! MUISTA KÄYDÄ KOMMENTOIMASSA COREUPWINSCENE:CPP/PARSENMEA STRINGI TAKAISIN KÄYTTÖÖN!!!
+
 #include "shortnavig.h"
 #include <ogrsf_frmts.h>
 #include <QDebug>
@@ -56,7 +58,7 @@ ShortNavigation::ShortNavigation(){
     qDebug() << __PRETTY_FUNCTION__;
     //something todo
     const char *connInfo = "";
-   // conn = PQconnectStart(connInfo);
+    // conn = PQconnectStart(connInfo);
 
     /*
 PGconn *PQsetdbLogin(const char *pghost,
@@ -102,15 +104,16 @@ void ShortNavigation::setPolarDiagram(PolarDiagram *diagram){
 
 QVector<QPointF> ShortNavigation::startCalc(QPolygonF routepoints, QPointF start){
     //    this->boatGeoPosition = start;
-    this->ACCU_OFFSET = 0.001;
+    this->ACCU_OFFSET = 1;
     this->MAX_TURNING_POINTS = 5;
     this->geoBoatPos = start;
 
     this->pathPoints = routepoints;
 
+    qDebug() << "ROUTEPOINTS: " << routepoints;
+
     this->updateCheckPoint();
     this->updateLayLines();
-
 
     QVector<QPointF> ready;
     QVector<QPointF> rightpath;
@@ -121,28 +124,26 @@ QVector<QPointF> ShortNavigation::startCalc(QPolygonF routepoints, QPointF start
     leftpath = *pLeftPath;
     for(int i = 0; i < rightpath.size(); i++){
         ready.append(rightpath.at(i));
-        qDebug() << "rightpath for loop" << rightpath.at(i);
     }
     qDebug() << "ready size after rightpath" << ready.size();
     for(int i = 0; i < leftpath.size(); i++){
         ready.append(leftpath.at(i));
-        qDebug() << "leftpath for loop" << leftpath.at(i);
     }
     qDebug() << "ready size after leftpath: " << ready.size();
     return ready;
 
-      //****leftpath reverse for drawing purposes ****testing
-//    int j = leftpath.size();
-//    for(int i = 0; i<leftpath.size(); i++){
-//    ready.append(leftpath.at((j-1)-i));
-////         qDebug() << "reverse leftpath for loop" << leftpath.at((j-1)-i);
-//    }
-//    //*****just for testing what is inside of ready ****
-//    qDebug() << "ready size " << ready.size();
-//    for(int i = 0 ; i<ready.size(); i++){
-//        qDebug() << "Ready vector contains points:" << ready.at(i);
-//    }
-//    return ready;
+    //****leftpath reverse for drawing purposes ****testing
+    //    int j = leftpath.size();
+    //    for(int i = 0; i<leftpath.size(); i++){
+    //    ready.append(leftpath.at((j-1)-i));
+    ////         qDebug() << "reverse leftpath for loop" << leftpath.at((j-1)-i);
+    //    }
+    //    //*****just for testing what is inside of ready ****
+    //    qDebug() << "ready size " << ready.size();
+    //    for(int i = 0 ; i<ready.size(); i++){
+    //        qDebug() << "Ready vector contains points:" << ready.at(i);
+    //    }
+    //    return ready;
 }
 
 
@@ -591,8 +592,7 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QString
 
 bool ShortNavigation::checkIntersection( const QString &layerName, const QPolygonF &triangle, const QPolygonF &rhomboid ) {
 
-
-    QString WKTTriangle = buildWKTPolygon( triangle );
+    QString WKTTriangle = buildWKTPolygon( triangle ); //Muunnetaan QPointF Stringiksi, jotta voidaan käyttää tietokantakyselyssä
     QString WKTPolygon = buildWKTPolygon( rhomboid );
 
     return checkIntersection( layerName, WKTTriangle, WKTPolygon);
@@ -647,10 +647,11 @@ bool ShortNavigation::checkIntersection( const QLineF &line1, const QLineF &line
 
 bool ShortNavigation::checkOffset( const QPolygonF &last_triangle, const QPolygonF &present_triangle, const QPointF &destiny, const float &offset ) {
 
-    double diff = UwMath::getDistance(last_triangle.at( 2), present_triangle.at( 2));
+    double diff = UwMath::getDistance(last_triangle.at( 2), present_triangle.at( 2)); // ALKUP CHECKPOINTIN  JA UUDEN CHECKPOINTIN ETÄISYYS
     double scale = ( UwMath::getDistance(present_triangle.at( 0), destiny) +
-                     UwMath::getDistance(present_triangle.at( 0), present_triangle.at( 1)) ) / 2 ;
-    double criteria = ( abs(scale) == 0 ) ? offset : offset * scale;
+                     UwMath::getDistance(present_triangle.at( 0), present_triangle.at( 1)) ) / 2 ; //SCALE: VENEEN JA CHECKPOINTIN ETÄISYYYS JAETTUNA VENEEN JA UUDEN CHECKPOINTIN ETÄISYYSDELLÄ
+
+    double criteria = ( abs(scale) == 0 ) ? offset : offset * scale; // JOS SCALE == 0 -> ALKUP CHECKPOINT JA UUSI CHECKPOINT TÄYSIN SAMA PISTE
 
     return diff < criteria;
 }
@@ -693,7 +694,6 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
     QPolygonF present_triangle;
     QPolygonF last_triangle;
 
-
     // while the last point in the path is not the destiny
     // AND we don't exceed the maximum turning points setting
     while ( Path.last() != destinyPos && count < max_turns ) {
@@ -714,7 +714,6 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
         present_triangle << destinyPos;
 
         // check for obstacles in the triangle
-        qDebug()<<"Get path, going to checkintersection";
         obs_r = checkIntersection( "obstacles_r", present_triangle, obstacles_shape );
         obs_l = checkIntersection( "obstacles_l", present_triangle, obstacles_shape );
 
@@ -767,6 +766,8 @@ int ShortNavigation::getNearestPoint( const QVector<QPointF> &route, const QPoin
 
 
     //input should be in GEOGRAPHICAL format
+
+
 
     // we receive a route here, a list of points
     // let's see at what point of the route we are ...
@@ -908,7 +909,6 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
             while ( !ready ) {
 
-
                 if ( ( hobs_r && checkIntersection( "obstacles_r", heading ) ) ||
                      ( hobs_l && checkIntersection( "obstacles_l", heading ) ) ) {
 
@@ -923,11 +923,10 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
                 }
             }
 
-            return heading.p2();
+            return heading.p2(); //Ei palauteteta veneen ja checkpointin vlistä pistettä seuraavana chckpointina long term routella...
 
         } else {
-
-            return heading.p2();
+            return heading.p2();  //Ei palauteteta veneen ja checkpointin vlistä pistettä seuraavana chckpointina long term routella...
         }
 
     } else if ( route.size() > 1 ) {
@@ -1001,7 +1000,6 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
         // END SPECIAL CHECK                                                     ##
         // ########################################################################
 
-
         bool obs_r = checkIntersection( "obstacles_r", triangle, triangle );
         bool obs_l = checkIntersection( "obstacles_l", triangle, triangle );
 
@@ -1011,7 +1009,6 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
             qDebug() << "Here we are!" << i;
             triangle.clear();
-            i++;
 
             triangle << boatPos;
             triangle << route.at( i);
@@ -1019,9 +1016,7 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
             obs_r = checkIntersection( "obstacles_r", triangle, triangle );
             obs_l = checkIntersection( "obstacles_l", triangle, triangle );
-        }
 
-        // FINETUNE CHECKPOINT
 
             // FINETUNE CHECKPOINT
 
@@ -1053,7 +1048,7 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
                     //Jos janan routen puoleiset pisteet samat, ei veneelle tilaa kartassa, voidaan lopettaa etsinnät
                     if(triangle.at(1) == triangle.at(2))
                         ready = true;
-         	   }
+                }
 
             }
             i++;
@@ -1089,7 +1084,7 @@ void ShortNavigation::updateCheckPoint()
     //    qDebug() << "updateCheckPoint() boatGeoPosition " << boatGeoPosition;
     //    qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
     //    qDebug() << "updateCheckPoint() ACCU_OFFSET is" << ACCU_OFFSET;
-    //    qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
+    qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
     // and set it for Qt scene as well
     destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
     if (debug) qDebug() << "updateCheckPoint(): ended: ok";
@@ -1112,7 +1107,8 @@ void ShortNavigation::updateLayLines()
     qDebug() << " updateLayLines trueWindDirection" << trueWindDirection;
 
     //************HARDCODED VALUE FOR futureTrueWindAngle*************
-    float futureTrueWindAngle = 5;//= UwMath::getTWA( geoBoatPos, geoDestinyPos, trueWindDirection );
+    this->trueWindDirection = 270.0;
+    float futureTrueWindAngle = UwMath::getTWA( geoBoatPos, geoDestinyPos, trueWindDirection );
     //************HARDCODED VALUE FOR windSpeed*************
     windSpeed = 10;
 
@@ -1207,7 +1203,6 @@ void ShortNavigation::updateLayLines()
     }
 
     if (debug) qDebug() << "updateLayLines(): ended ok";
-
 
 }
 

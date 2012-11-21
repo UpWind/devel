@@ -14,7 +14,7 @@
  * UwShort library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * GNU General Public License for more details. 
  *
  * You should have received a copy of the GNU General Public License
  * along with UwShort library.  If not, see <http://www.gnu.org/licenses/>.
@@ -55,7 +55,7 @@ public:
      void clear();
 
     /**
-    * Generate the obstacle tables, without them the class does not work
+    * Generate the obstacles tables, without them the class does not work
     */
 
     void loadChartObjects(QVector<ChartObjectInterface*> cObjects);
@@ -124,7 +124,7 @@ private:
                   const QPointF &boatPos, const QPointF &destinyPos,
                   const QPolygonF &obstacles_shape, QVector<QPointF> &Path);
     QPointF getNextPoint( const QVector<QPointF> &route, const QPointF &position, const float &offset);
-    QPointF getNearestPoint( const QVector<QPointF> &route, const QPointF &boatPos);
+    int getNearestPoint( const QVector<QPointF> &route, const QPointF &boatPos);
 
     bool createObstaclesTables();
 

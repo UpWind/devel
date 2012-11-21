@@ -215,18 +215,18 @@ QList<QPointF> UwMath::toConformalInverted(const QList<QPointF> &object){
 }
 
 QVector<QPointF> UwMath::toConformalInverted(const QVector<QPointF> &object){
-	QVector<QPointF> temp;
+    QVector<QPointF> temp;
 
-	for(int i = 0; i < object.size(); i++)
-		temp.append(UwMath::toConformalInverted(object.at(i)));
-	return temp;
+    for(int i = 0; i < object.size(); i++)
+        temp.append(UwMath::toConformalInverted(object.at(i)));
+    return temp;
 }
 
 void UwMath::toConformalInverted(QVector<QPointF> &object){
-	QPointF * data = object.data();
+    QPointF * data = object.data();
 
-	for(int i = 0; i < object.size(); i++)
-		data[i] = UwMath::toConformalInverted(object.at(i));
+    for(int i = 0; i < object.size(); i++)
+        data[i] = UwMath::toConformalInverted(object.at(i));
 }
 
 void UwMath::fromConformal( QPointF &object){
@@ -294,11 +294,11 @@ QList<QPointF> UwMath::fromConformalInverted(const QList<QPointF> &object){
 }
 
 QVector<QPointF> UwMath::fromConformalInverted(const QVector<QPointF> &object){
-	QVector<QPointF> temp;
+    QVector<QPointF> temp;
 
-	for(int i = 0; i < object.size(); i++)
-		temp.append(UwMath::fromConformalInverted(object.at(i)));
-	return temp;
+    for(int i = 0; i < object.size(); i++)
+        temp.append(UwMath::fromConformalInverted(object.at(i)));
+    return temp;
 }
 
 /** Calculate the angle between two points of coordinates in
@@ -330,14 +330,14 @@ double UwMath::getCartesianAngleWithDestiny(const double &elon1, const double &e
     // but we miss the direction since those are ABS values
     // supplementary angle because we go towards west
     if(((lon1 > 0 && lon2 > 0) && (lon1 > lon2)) ||
-       ((lon1 < 0 && lon2 < 0) && (lon1 > lon2)) ||
-       (((lon1 < 0 && lon2 > 0) || (lon1 > 0 && lon2 < 0)) && (lon1 > lon2)))
+            ((lon1 < 0 && lon2 < 0) && (lon1 > lon2)) ||
+            (((lon1 < 0 && lon2 > 0) || (lon1 > 0 && lon2 < 0)) && (lon1 > lon2)))
         angle = 180 - angle;
 
     // negative angle because we go towards south
     if(((lat1 > 0 && lat2 > 0) && (lat1 > lat2)) ||
-       ((lat1 < 0 && lat2 < 0) && (lat1 > lat2)) ||
-       (((lat1 < 0 && lat2 > 0) || (lat1 > 0 && lat2 < 0)) && (lat1 > lat2)))
+            ((lat1 < 0 && lat2 < 0) && (lat1 > lat2)) ||
+            (((lat1 < 0 && lat2 > 0) || (lat1 > 0 && lat2 < 0)) && (lat1 > lat2)))
         angle = angle * (-1);
     return angle;
 }
@@ -480,12 +480,12 @@ void UwMath::getTurningPoints(
 
     // navigation rhomboid interior angle from origin or destiny points
     double fullInAngle = (layLinesAngle > 90) ?
-                         (180.0 - layLinesAngle) * 2 : layLinesAngle * 2;
+                (180.0 - layLinesAngle) * 2 : layLinesAngle * 2;
 
     // the angle of the lay line left of the heading, in polar format
     double layLineLeftAngle = (layLinesAngle > 90) ?
-                              UwMath::mod(wAngle + layLinesAngle, 360.0) :
-                              UwMath::mod(wAngle - layLinesAngle, 360.0);
+                UwMath::mod(wAngle + layLinesAngle, 360.0) :
+                UwMath::mod(wAngle - layLinesAngle, 360.0);
 
     // triangle in the left half of the rhomboid
     double alpha = UwMath::getDiffPolars(layLineLeftAngle,
@@ -552,8 +552,8 @@ void UwMath::getTurningPoints(QPointF &leftTP, QPointF &rightTP,
     double rightTPlat;
 
     UwMath::getTurningPoints(leftTPlon, leftTPlat, rightTPlon, rightTPlat,
-                              wAngle, layLinesAngle,
-                              origin.x(), origin.y(), destiny.x(), destiny.y());
+                             wAngle, layLinesAngle,
+                             origin.x(), origin.y(), destiny.x(), destiny.y());
 
     leftTP.setY(leftTPlat);
     leftTP.setX(leftTPlon);
@@ -564,8 +564,8 @@ void UwMath::getTurningPoints(QPointF &leftTP, QPointF &rightTP,
 /* testing */
 
 void UwMath::getMiddlePoint(
-         double &lon, double &lat,
-         const double &lon1, const double &lat1, const double &lon2, const double &lat2)
+        double &lon, double &lat,
+        const double &lon1, const double &lat1, const double &lon2, const double &lat2)
 {
     double y1 = UwMath::toMercator(lat1);
     double y2 = UwMath::toMercator(lat2);
@@ -577,11 +577,11 @@ void UwMath::getMiddlePoint(
     double lonDist = fabs(x1 - x2);
     // put the middle point in geographical format
     lat = (y1 < y2) ?
-          UwMath::fromMercator(y1 + latDist / 2) :
-          UwMath::fromMercator(y2 + latDist / 2);
+                UwMath::fromMercator(y1 + latDist / 2) :
+                UwMath::fromMercator(y2 + latDist / 2);
     lon = (x1 < x2) ?
-          UwMath::toDegrees(x1 + lonDist / 2) :
-          UwMath::toDegrees(x2 + lonDist / 2);
+                UwMath::toDegrees(x1 + lonDist / 2) :
+                UwMath::toDegrees(x2 + lonDist / 2);
 }
 
 QPointF UwMath::getMiddlePoint(const QPointF &origin, const QPointF &destiny){
@@ -640,6 +640,7 @@ QLineF UwMath::lineToHalf(const QLineF &original){
 
 QLineF UwMath::avgLine(const QLineF &l1, const QLineF &l2){
     QLineF avgl(l1.p1(), UwMath::getMiddlePoint(l1.p2(), l2.p2()));
+
     return avgl;
 }
 
@@ -686,7 +687,7 @@ QPointF UwMath::getProjectionPoint(const QPointF &a, const QPointF &b, const QPo
     QPointF projection_point;
 
     double r = ((a.y() - c.y()) * (a.y() - b.y()) - (a.x() - c.x()) * (b.x() - a.x())) /
-               (pow(sqrt(pow((b.x() - a.x()), 2) + pow((b.y() - a.y()), 2)), 2));
+            (pow(sqrt(pow((b.x() - a.x()), 2) + pow((b.y() - a.y()), 2)), 2));
 
     projection_point.setX(a.x() + r * (b.x() - a.x()));
     projection_point.setY(a.y() + r * (b.y() - a.y()));
