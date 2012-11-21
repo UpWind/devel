@@ -768,13 +768,6 @@ int ShortNavigation::getNearestPoint( const QVector<QPointF> &route, const QPoin
 
     //input should be in GEOGRAPHICAL format
 
-    if ( checkIntersection( "obstacles_r", boatPos ) ) {
-        // if we are inside an obstacle, don't even try
-
-        if (debug) qDebug() << "getNextPoint(): WARNING! YOU ARE INSIDE AN OBSTACLE AREA!";
-        return boatPos;
-    }
-
     // we receive a route here, a list of points
     // let's see at what point of the route we are ...
     double distance = std::numeric_limits<double>::max();
