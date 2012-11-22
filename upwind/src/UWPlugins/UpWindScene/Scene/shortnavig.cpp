@@ -40,6 +40,7 @@ One second of longitude =  15.50 m  or  50.85 ft
 #include <ogrsf_frmts.h>
 #include <QDebug>
 #include <QVectorIterator>
+
 /// Offset value factor aplied to this obstacles:
 #define POINT_OFFSET_FACTOR_ROCK 10
 #define POINT_OFFSET_FACTOR_SIGNSOUND 15
@@ -105,7 +106,7 @@ void ShortNavigation::setPolarDiagram(PolarDiagram *diagram){
 QVector<QPointF> ShortNavigation::startCalc(QPolygonF routepoints, QPointF start){
     //    this->boatGeoPosition = start;
     this->ACCU_OFFSET = 1;
-    this->MAX_TURNING_POINTS = 5;
+    this->MAX_TURNING_POINTS = 3;
     this->geoBoatPos = start;
 
     this->pathPoints = routepoints;
@@ -1095,6 +1096,8 @@ void ShortNavigation::updateCheckPoint()
 
 void ShortNavigation::updateLayLines()
 {
+    QTime timeUpdateLayLines;
+    timeUpdateLayLines.start();
     qDebug()<<"void ShortNavigation::updateLayLines()";
     qDebug()<<"Max turning points: " <<this->MAX_TURNING_POINTS;
     pPolarDiagram->populate();
@@ -1201,7 +1204,7 @@ void ShortNavigation::updateLayLines()
         pLeftPath->append( geoDestinyPos);
 
     }
-
+    if (debug) qDebug() << QString("shortnavig:: updateLayLines: %1 ms ").arg( QString::number(timeUpdateLayLines.elapsed(), 10));
     if (debug) qDebug() << "updateLayLines(): ended ok";
 
 }
