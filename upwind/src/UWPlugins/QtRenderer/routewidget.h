@@ -52,15 +52,20 @@ private:
     ShortNavigation *routeShort;
     PolarDiagram *diagram;
     QVector<QPointF> path;
+    QPointF start;
+    QPointF compassStart;
+    QPointF compassEnd;
 
     QPen longroute_pen;
     QPen shortroute_pen;
     QPen right_pen;
     QPen left_pen;
+    QPen compass_pen;
     QBrush longroute_brush;
     QBrush shortroute_brush;
     QBrush right_brush;
     QBrush left_brush;
+    QBrush compass_brush;
     QVector<QPointF> leftPath; //Modify so that both paths can be put into the same variable
 
     QVector<QPointF> pathLeft;

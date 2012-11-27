@@ -34,6 +34,7 @@ public:
     QPointF *pixelToGeoPoint(QPointF* pixelPoint);
     void updateBoatPosition();
     void setHeading(float hdg);
+    float getHeading();
 
     void zoomIn();
     void zoomOut();

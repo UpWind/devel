@@ -101,6 +101,10 @@ void Boat::setHeading(float hdg)
     this->boatImage->setRotation(heading);
 }
 
+float Boat::getHeading(){
+    return this->heading;
+}
+
 QPointF* Boat::geoPointToPixel(QPointF *geoPoint){ //postgrechartprovider.cpp line 503
 
     QPointF *scenePos = new QPointF(geoPoint->x(), geoPoint->y());
