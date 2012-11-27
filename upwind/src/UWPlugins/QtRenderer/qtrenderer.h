@@ -7,6 +7,7 @@
 
 class ChartWidget;
 class RouteWidget;
+class BoatWidget;
 
 class QtRenderer : public CoreViewRenderer
 {

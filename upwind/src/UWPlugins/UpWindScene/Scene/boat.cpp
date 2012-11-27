@@ -52,11 +52,36 @@ void Boat::setGeoPosition(QPointF position)
     updateBoatPosition();
 }
 
+/* 26112012 gps positions of boat to produce line to where we go by gps -Teemu*/
+void Boat::setGPSPoints(){
 
+    boatPositionVector.push_front(QPointF( *boatGeoPosition));
+    qDebug() << " Boat::updateBoatPosition vector size is :" << boatPositionVector.size();
+    qDebug() << " Boat::updateBoatPosition vector have first QpointF:" << boatPositionVector.at(0);
+    if(boatPositionVector.size() >= 3){
+        while(boatPositionVector.size()>=3){
+            qDebug() << " Boat::updateBoatPosition vector size is :while" << boatPositionVector.size();
+            qDebug() << " first" << boatPositionVector.at(0);
+            qDebug() << " second" << boatPositionVector.at(1);
+            boatPositionVector.pop_back();
+        }
+    }
+    qDebug() << " Boat::updateBoatPosition vector size is : after" << boatPositionVector.size();
+    qDebug() << " Boat::updateBoatPosition vector to list " << boatPositionVector.toList();
+
+
+}
+
+/* 26112012 gps positions of boat to produce line to where we go by gps -Teemu*/
+QVector<QPointF> Boat::getGPSPoints(){
+    return this->boatPositionVector;
+}
 
 void Boat::updateBoatPosition()
 {
     this->boatScenePosition = geoPointToPixel(this->boatGeoPosition);
+
+    setGPSPoints();
 
     //141112: Adjust the position so that the laylines start from the tip of the boat
 

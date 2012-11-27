@@ -9,7 +9,8 @@
 
 QtRenderer::QtRenderer() :
     chartWidget(0),
-    routeWidget(0)
+    routeWidget(0),
+    boatWidget(0) //271112
 {}
 
 QtRenderer::~QtRenderer()
@@ -31,6 +32,9 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
 
     graphicsScene->addItem(chartWidget);
     graphicsScene->addItem(routeWidget);
+    //271112 Do we need this
+//    graphicsScene->addItem(boatWidget);
+
     Boat *boat = new Boat(frame->size(), chartBoundaries);
     scene->setBoat(boat);
 

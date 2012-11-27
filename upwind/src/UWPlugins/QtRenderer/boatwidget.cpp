@@ -1,4 +1,13 @@
+#include <QGraphicsProxyWidget>
+#include <QGraphicsScene>
+#include <QPainter>
+#include <QDebug>
+#include <QGraphicsSceneMouseEvent>
+
 #include "boatwidget.h"
+#include "../shared/uwmath.h"
+
+
 
 
 BoatWidget::BoatWidget(QSize size, UpWindSceneInterface *uwscene, QRectF chartBoundaries)
@@ -7,11 +16,50 @@ BoatWidget::BoatWidget(QSize size, UpWindSceneInterface *uwscene, QRectF chartBo
     uwScene = static_cast<CoreUpWindScene*>(uwscene); //ChartObjects not yet loaded to route.cpp
     this->chartBoundaries = chartBoundaries;
     this->size = size;
+    //271112
+    gps_pen.setColor(Qt::green);
+    gps_pen.setWidth(2);
+    gps_brush.setColor(Qt::green);
 
+
+}
+BoatWidget::~BoatWidget(){
+
+}
+
+QRectF BoatWidget::boundingRect() const {
+  //  qDebug() << Q_FUNC_INFO;
+
+    return QRectF(0,0, size.width()*zoomFactor, size.height()*zoomFactor);
+}
+
+
+/* 26112012 gps positions of boat to produce line to where we go by gps -Teemu*/
+
+void BoatWidget::paint(QPainter *painter,const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    (void)option;
+    (void)widget;
+
+    painter->setPen(gps_pen);
+    painter->setBrush(gps_brush);
+    painter->setRenderHint(QPainter::Antialiasing, true);
+//    painter->scale(zoomFactor, zoomFactor);
+    painter->rotate(rotateAngle);
+    painter->drawPolyline(gpsPoints);
+
+}
+void BoatWidget::updateBoatGPS(){
+
+    gpsPoints = this->getBoat()->getGPSPoints();
+    qDebug() << " BoatWidget::updateBoatGPS() toList: " << gpsPoints.toList();
+   // how to implement?
+  //this->update(boundingRect());
 }
 
 void BoatWidget::updateBoatPosition()
 {
+    qDebug() << "BoatWidget::updateBoatPosition()";
+    updateBoatGPS();
 //    QPointF *p = new QPointF(25.109253, 65.013026);
 //    QPointF *scenePos = geoPointToPixel(boat->getGeoPosition());
 //    qDebug() << Q_FUNC_INFO << "scenePos: " << scenePos->x() << ", " << scenePos->y();

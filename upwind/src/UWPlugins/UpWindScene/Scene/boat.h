@@ -18,6 +18,10 @@ class Boat: public QObject
 {
     Q_OBJECT
 public:
+
+    void setGPSPoints();
+    QVector<QPointF>getGPSPoints();
+
     Boat(QSize size, QRectF chartBoundaries);
     QGraphicsSvgItem *getBoatImage();
     QString getName();
@@ -40,6 +44,8 @@ private:
     QGraphicsSvgItem *boatImage;
     QString boatName;
     QPointF *boatScenePosition, *boatGeoPosition;
+    QVector<QPointF> boatPositionVector;
+
     float boatAngle;
     float boatScale;
     float heading;

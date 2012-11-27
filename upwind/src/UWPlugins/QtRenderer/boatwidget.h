@@ -10,6 +10,13 @@ class BoatWidget
 public:
     explicit BoatWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chartBoundaries);
 
+    //271112 for gps here
+    ~BoatWidget();
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+    QRectF boundingRect() const;
+    void updateBoatGPS();
+    //271112 to here
+
     void updateBoatPosition();
     void setBoat(Boat *boat);
     Boat *getBoat();
@@ -25,6 +32,14 @@ private:
     QRectF chartBoundaries;
     QSize size;
     Boat *boat;
+
+    //271112
+    qreal zoomFactor;
+    qreal rotateAngle;
+    QPen gps_pen;
+    QBrush gps_brush;
+    QVector<QPointF> gpsPoints;
+    //271112
 
 
 };
