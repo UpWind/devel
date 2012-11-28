@@ -13,7 +13,9 @@
 BoatWidget::BoatWidget(QSize size, UpWindSceneInterface *uwscene, QRectF chartBoundaries)
 {
     qDebug()<<Q_FUNC_INFO;
-    uwScene = static_cast<CoreUpWindScene*>(uwscene); //ChartObjects not yet loaded to route.cpp
+
+    //ChartObjects not yet loaded to route.cpp:
+    uwScene = static_cast<CoreUpWindScene*>(uwscene);
     this->chartBoundaries = chartBoundaries;
     this->size = size;
     //271112
@@ -34,10 +36,10 @@ QRectF BoatWidget::boundingRect() const {
 }
 
 
-/* 26112012 gps positions of boat to produce line to where we go by gps -Teemu*/
+/* 26112012 GPS positions of boat to produce line to where we go by GPS -Teemu*/
 
 void BoatWidget::paint(QPainter *painter,const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    (void)option;
+/*    (void)option;
     (void)widget;
 
     painter->setPen(gps_pen);
@@ -47,13 +49,26 @@ void BoatWidget::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,
     painter->rotate(rotateAngle);
     painter->drawPolyline(gpsPoints);
 
+    compass_pen.setColor(Qt::green);
+    compass_pen.setWidth(2);
+    compass_brush.setColor(Qt::green);
+    painter->setPen(compass_pen);
+    painter->setBrush(compass_brush);
+    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->rotate(rotateAngle);
+
+    //painter->drawLine(this->getBoat()->getGeoPosition()->x(), this->getBoat()->getGeoPosition()->y(), 0, 0 );
+
+    qDebug() << "#################################################";
+    painter->drawLine( 0, 0,500,500 );*/
+
 }
 void BoatWidget::updateBoatGPS(){
 
     gpsPoints = this->getBoat()->getGPSPoints();
     qDebug() << " BoatWidget::updateBoatGPS() toList: " << gpsPoints.toList();
-   // how to implement?
-  //this->update(boundingRect());
+    // We are still wondering how to implement the following:
+    //this->update(boundingRect());
 }
 
 void BoatWidget::updateBoatPosition()
@@ -76,17 +91,15 @@ Boat *BoatWidget::getBoat()
     return this->boat;
 }
 
+//Line copied from postgrechartprovider.cpp:
+QPointF* BoatWidget::geoPointToPixel(QPointF* geoPoint){
 
-QPointF* BoatWidget::geoPointToPixel(QPointF* geoPoint){ //postgrechartprovider.cpp line 503
-
-    // antti
     qDebug() << Q_FUNC_INFO << "geoPoint: "<< geoPoint->x() << ", " << geoPoint->y();
 
     UwMath::toConformalInverted(*geoPoint);
     geoPoint->setX((geoPoint->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width()));
     geoPoint->setY((geoPoint->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height()));
 
-    // antti
     qDebug() << Q_FUNC_INFO << "scenePoint: "<< geoPoint->x() << ", " << geoPoint->y();
 
     return geoPoint;

@@ -24,6 +24,7 @@ public:
 
     Boat(QSize size, QRectF chartBoundaries);
     QGraphicsSvgItem *getBoatImage();
+    QGraphicsLineItem *getBoatCompass();
     QString getName();
     void setGeoPosition(QPointF position);
     void setGeoPosition(float longitude, float latitude);
@@ -45,6 +46,8 @@ private:
     QGraphicsSvgItem *boatImage;
     QString boatName;
     QPointF *boatScenePosition, *boatGeoPosition;
+    QGraphicsLineItem *compass;
+    QPen compass_pen;
     QVector<QPointF> boatPositionVector;
 
     float boatAngle;

@@ -40,6 +40,8 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
 
 
     graphicsScene->addItem(scene->getBoat()->getBoatImage());    // put boat image on screen.
+    graphicsScene->addItem(scene->getBoat()->getBoatCompass());
+
     boatWidget->setBoat(scene->getBoat());
     boatWidget->updateBoatPosition();
 

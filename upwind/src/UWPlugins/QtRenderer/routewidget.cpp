@@ -1,5 +1,3 @@
-
-
 #include <QGraphicsProxyWidget>
 #include <QGraphicsScene>
 #include <QPainter>
@@ -95,6 +93,8 @@ void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->drawPolyline(/*leftPath.data(), leftPath.size()*/leftPathPoints);
 
     // 271112 Compass line
+    uwScene->getBoat()->updateBoatPosition();
+/*
     QPointF *boatPosition = uwScene->getBoat()->getGeoPosition();
     QPointF startPoint = *boatPosition;
     geoPointToPixel(&startPoint);
@@ -138,7 +138,7 @@ void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->setRenderHint(QPainter::Antialiasing, true);
     painter->rotate(rotateAngle);
     painter->drawLine(startPoint.x(), startPoint.y(), endx, endy );
-
+*/
 }
 
 void RouteWidget::zoomIn() {

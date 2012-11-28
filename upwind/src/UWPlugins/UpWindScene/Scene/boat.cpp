@@ -11,9 +11,15 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     this->boatImage->setTransform(QTransform().scale(boatScale, boatScale));
     this->boatName = "The Flying Dutchman";
     this->boatImage->setOpacity(0.7);
+    this->compass = new QGraphicsLineItem();
 
-    //this->boatGeoPosition = new QPointF(25.109253, 65.013026);   // initial position Oulu
-    this->boatGeoPosition = new QPointF(25.1516, 65.0146);
+   // compass->setLine(boatImage->x(),boatImage->y(),100,100);
+    compass_pen.setColor(Qt::green);
+    compass_pen.setWidth(4);
+    compass->setPen(compass_pen);
+
+    // Initial position Oulu:
+    this->boatGeoPosition = new QPointF(25.109253, 65.013026);
 
     if(boatImage != NULL)
     {
@@ -35,10 +41,18 @@ QGraphicsSvgItem *Boat::getBoatImage()
     return boatImage;
 }
 
+QGraphicsLineItem *Boat::getBoatCompass()
+{
+    return compass;
+}
+
 QString Boat::getName()
 {
     return boatName;
 }
+
+//The first setGeoPosition() updates them according to updated data.
+//the second one sets the hard-coded values for the position of the boat:
 
 void Boat::setGeoPosition(float longitude, float latitude)
 {
@@ -52,7 +66,7 @@ void Boat::setGeoPosition(QPointF position)
     updateBoatPosition();
 }
 
-/* 26112012 gps positions of boat to produce line to where we go by gps -Teemu*/
+/* 26112012 GPS positions of boat to produce line to where we go by GPS -Teemu*/
 void Boat::setGPSPoints(){
 
     boatPositionVector.push_front(QPointF( *boatGeoPosition));
@@ -72,7 +86,7 @@ void Boat::setGPSPoints(){
 
 }
 
-/* 26112012 gps positions of boat to produce line to where we go by gps -Teemu*/
+/* 26112012 GPS positions of boat to produce line to where we go by GPS -Teemu*/
 QVector<QPointF> Boat::getGPSPoints(){
     return this->boatPositionVector;
 }
@@ -83,7 +97,7 @@ void Boat::updateBoatPosition()
 
     setGPSPoints();
 
-    //141112: Adjust the position so that the laylines start from the tip of the boat
+    //141112: Adjust the position so that the laylines start from the tip of the boat:
 
     qDebug() << "BOATSCENEPOSITION->X " << boatScenePosition->x();
     qDebug() << "BOATSCENEPOSITION->Y " << boatScenePosition->y();
@@ -93,6 +107,49 @@ void Boat::updateBoatPosition()
     qDebug() << "OFFSETY " << offsety;
 
     boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    //compass->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+
+    QPointF startPoint(boatScenePosition->x(), boatScenePosition->y());
+
+    float angle = this->heading;
+    float endx = 0;
+    float endy = 0;
+    int lineLength=50;
+
+    // math to start from found at:
+    // http://mathhelpforum.com/geometry/86432-endpoint-based-length-angle.html
+    if (angle > 0 && angle < 90){
+        endx = startPoint.x() + (lineLength * cos(0-angle));
+        endy = startPoint.y() + (lineLength * sin(0-angle));
+    } else if (angle > 90 && angle < 180){
+        endx = startPoint.x() - (lineLength * cos(angle-180));
+        endy = startPoint.y() + (lineLength * sin(angle-180));
+    } else if (angle > 180 && angle < 270){
+        endx = startPoint.x() - (lineLength * sin(angle));
+        endy = startPoint.y() - (lineLength * cos(angle));
+    } else if (angle > 270 && angle < 360){
+        endx = startPoint.x() + (lineLength * sin(0-angle));
+        endy = startPoint.y() - (lineLength * cos(0-angle)) ;
+    } else if (angle == 0 || angle == 360) {
+        endx = startPoint.x();
+        endy = startPoint.y() - lineLength;
+    } else if (angle == 90){
+        endx = startPoint.x() + lineLength;
+        endy = startPoint.y();
+    } else if (angle == 180){
+        endx = startPoint.x();
+        endy = startPoint.y() + lineLength;
+    } else if (angle == 270){
+        endx = startPoint.x() - lineLength;
+        endy = startPoint.y();
+    }
+
+    compass_pen.setColor(Qt::green);
+    compass_pen.setWidth(4);
+    compass->setPen(compass_pen);
+
+    compass->setLine(startPoint.x(), startPoint.y(), endx, endy );
+
 }
 
 void Boat::setHeading(float hdg)
@@ -104,8 +161,8 @@ void Boat::setHeading(float hdg)
 float Boat::getHeading(){
     return this->heading;
 }
-
-QPointF* Boat::geoPointToPixel(QPointF *geoPoint){ //postgrechartprovider.cpp line 503
+//The following line is a copied from postgrechartprovider.cpp:
+QPointF* Boat::geoPointToPixel(QPointF *geoPoint){
 
     QPointF *scenePos = new QPointF(geoPoint->x(), geoPoint->y());
 //    QPointF *scenePos = geoPoint;

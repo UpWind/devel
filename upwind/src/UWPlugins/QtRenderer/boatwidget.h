@@ -41,7 +41,6 @@ private:
     QVector<QPointF> gpsPoints;
     //271112
 
-
 };
 
 #endif // BOATWIDGET_H
