@@ -253,7 +253,7 @@ bool ShortNavigation::createObstaclesTables()
                 }
 
 
-                //            // CREATE NEW TABLES
+                //Create new tables:
                 sql = "CREATE TABLE obstacles_r (ogc_fid serial);";
                 sql.append( "CREATE TABLE obstacles_l (ogc_fid serial);" );
                 sql.append( "SELECT AddGeometryColumn ('obstacles_r','wkb_geometry',-1,'POLYGON',2);" );
@@ -263,10 +263,10 @@ bool ShortNavigation::createObstaclesTables()
                 res = PQexec(conn, sql.toAscii() );
                 PQclear(res);
 
-                // INSERT POLYGON LAYERS
+                // Insert polygon layers:
                 sql.clear();
-                // DIRECT VERSION, WITHOUT ADDING THE OFFSET
 
+                // Direct version, without addinf the offset:
                 for ( int i = 0; i < polygon_layers.size(); i++ ) {
                     sql.append( "INSERT INTO obstacles_r( wkb_geometry, source_table) SELECT wkb_geometry, '");
                     sql.append( polygon_layers[i] );
@@ -279,7 +279,8 @@ bool ShortNavigation::createObstaclesTables()
                 res = PQexec(conn, sql.toAscii() );
                 PQclear(res);
 
-                qDebug() << "for in 1";            // INSERT POINT LAYERS WITH OFFSET
+                // Insert point layers with offset:
+                qDebug() << "for in 1";
                 for ( int i = 0; i < point_layers.size(); i++ ) {
                     bool signsound = ( point_layers[i] == "signsound_p" );
                     sql = "SELECT X(wkb_geometry),Y(wkb_geometry)";
@@ -318,7 +319,7 @@ bool ShortNavigation::createObstaclesTables()
                     PQclear(res);
 
 
-                    //INSERT LINE LAYERS
+                    //Insert line layers:
                     sql.clear();
                     for ( int i = 0; i < line_layers.size(); i++ ) {
                         sql.append( "INSERT INTO obstacles_l( wkb_geometry, source_table) SELECT wkb_geometry, '");
@@ -344,7 +345,7 @@ bool ShortNavigation::createObstaclesTables()
                     //                    qDebug() << " index: " << s << "point x" << pointObstacles.at(s).x() << "y" << pointObstacles.at(s).y();
                     //                }
 
-                    // tables are done
+                    // In the case tables are done:
                     this->obstaclesTablesCreated = true;
                     qDebug("createObstaclesTables() returns = true");
                     return true;
@@ -354,7 +355,7 @@ bool ShortNavigation::createObstaclesTables()
 
         }
     }else {
-        // tables are not done
+        // In the case tables are not done:
         this->obstaclesTablesCreated = false;
         return false;
 
@@ -398,7 +399,7 @@ QPointF ShortNavigation::getFromWKTPoint( QString wkt_geometry)
 {
     // POINT(25.0346075555951 65.2062704150903)
 
-    // remove the end and start
+    // Remove the end and start:
     wkt_geometry.remove( wkt_geometry.size() - 1, 1);
     wkt_geometry.remove( 0, 6);
 
