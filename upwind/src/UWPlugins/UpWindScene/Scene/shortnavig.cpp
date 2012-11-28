@@ -245,7 +245,7 @@ bool ShortNavigation::createObstaclesTables()
                         OGRFieldDefn *poFieldDefn = poFDefn->GetFieldDefn( j );
                         QString str = poFieldDefn->GetNameRef();
                         if(str.contains("depth") == true) {
-                            if (poFeature->GetFieldAsDouble(j) < SIGNSOUND_THRESHOLD) { //parse out depths above signsound threshold as since they are not obstacles
+                            if (poFeature->GetFieldAsDouble(j) < SIGNSOUND_THRESHOLD) { //parse out depths above signsound threshold since they are not obstacles
                                 pointObstacles.append(listqpoint.at(m));
                             }
                         }
@@ -428,8 +428,8 @@ QString ShortNavigation::buildWKTPolygon( const QPolygonF &rhomboid ) {
 QString ShortNavigation::buildWKTPolygon( const QPolygonF &epolygon, const QPointF &ecentroid,
                                           const double &perimeter, const float &offset )
 {
-    // THIS WAS INTENDED TO MAKE THE POLYGONS GROW, BY IS NOT AS SIMPLE...
-    // Take a look into skeletons to continue this way
+    // The intention of this was to make the polygons grow but it is not as simple as we thought.
+    // Take a look into skeletons to continue developing this way
 
     bool debug = 1;
 
@@ -593,7 +593,8 @@ bool ShortNavigation::checkIntersection( const QString &layerName, const QString
 
 bool ShortNavigation::checkIntersection( const QString &layerName, const QPolygonF &triangle, const QPolygonF &rhomboid ) {
 
-    QString WKTTriangle = buildWKTPolygon( triangle ); //Muunnetaan QPointF Stringiksi, jotta voidaan käyttää tietokantakyselyssä
+    //We'll convert QPointF into String so that we can use it in database queries.
+    QString WKTTriangle = buildWKTPolygon( triangle );
     QString WKTPolygon = buildWKTPolygon( rhomboid );
 
     return checkIntersection( layerName, WKTTriangle, WKTPolygon);
@@ -648,11 +649,16 @@ bool ShortNavigation::checkIntersection( const QLineF &line1, const QLineF &line
 
 bool ShortNavigation::checkOffset( const QPolygonF &last_triangle, const QPolygonF &present_triangle, const QPointF &destiny, const float &offset ) {
 
-    double diff = UwMath::getDistance(last_triangle.at( 2), present_triangle.at( 2)); // ALKUP CHECKPOINTIN  JA UUDEN CHECKPOINTIN ETÄISYYS
-    double scale = ( UwMath::getDistance(present_triangle.at( 0), destiny) +
-                     UwMath::getDistance(present_triangle.at( 0), present_triangle.at( 1)) ) / 2 ; //SCALE: VENEEN JA CHECKPOINTIN ETÄISYYYS JAETTUNA VENEEN JA UUDEN CHECKPOINTIN ETÄISYYSDELLÄ
+    //The distance between original chackpoint and new checkpoint:
+    double diff = UwMath::getDistance(last_triangle.at( 2), present_triangle.at( 2));
 
-    double criteria = ( abs(scale) == 0 ) ? offset : offset * scale; // JOS SCALE == 0 -> ALKUP CHECKPOINT JA UUSI CHECKPOINT TÄYSIN SAMA PISTE
+    //The distance between boat and the checkpoint divided by the distance between boat
+    //and new checkpoint:
+    double scale = ( UwMath::getDistance(present_triangle.at( 0), destiny) +
+                     UwMath::getDistance(present_triangle.at( 0), present_triangle.at( 1)) ) / 2 ;
+
+    //If scale == 0 it means that original checkpoint and new checkpoint are exactly the same point.
+    double criteria = ( abs(scale) == 0 ) ? offset : offset * scale;
 
     return diff < criteria;
 }
@@ -682,54 +688,54 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
                                const QPointF &boatPos, const QPointF &destinyPos,
                                const QPolygonF &obstacles_shape, QVector<QPointF> &Path )
 {
-    //input has to be Geographical data cause we check against PostGIS
+    //Input has to be Geographical data because we check against PostGIS
 
     QPointF TPleft, TPright;
     bool sideRight = side;
     bool ready, obs_r, obs_l = false;
     int count = 0;
-    // Path is returned by reference, clear
+    // Path is returned by reference, clear:
     Path.clear();
-    // first point in the path is the origin
+    // First point in the path is the origin:
     Path.append( boatPos);
     QPolygonF present_triangle;
     QPolygonF last_triangle;
 
-    // while the last point in the path is not the destiny
-    // AND we don't exceed the maximum turning points setting
+    // While the last point in the path is not the destiny
+    // AND we don't exceed the maximum turning points setting we'll execute following:
     while ( Path.last() != destinyPos && count < max_turns ) {
 
-        // clear triangle
+        // Clear triangle:
         present_triangle.clear();
 
-        // get the turning points between the last point and dest
-        // for the first run last point in the path is origin
+        // Get the turning points between the last point and dest.
+        // For the first run last point in the path is origin:
         UwMath::getTurningPoints( TPleft, TPright,
                                   windAngle, layLinesAngle,
                                   Path.last(), destinyPos);
 
-        // build a new triangle
+        // Build a new triangle
         present_triangle << Path.last();
         if (sideRight) present_triangle << TPright;
         else present_triangle << TPleft;
         present_triangle << destinyPos;
 
-        // check for obstacles in the triangle
+        // Check for obstacles in the triangle
         obs_r = checkIntersection( "obstacles_r", present_triangle, obstacles_shape );
         obs_l = checkIntersection( "obstacles_l", present_triangle, obstacles_shape );
 
         if ( obs_r || obs_l ) {
 
-            // Obstacles found: let's reduce the triangle until they disapear
+            // Obstacles found: let's reduce the triangle until they disapear:
             ready = false;
 
             last_triangle = present_triangle;
-            // reduce triangle to half
+            // Reduce triangle to half:
             present_triangle = UwMath::triangleToHalf( present_triangle );
 
             while ( !ready ) {
 
-                // check again, put booleans first and checkIntersection will not be even called
+                // Check again, put booleans first and checkIntersection won't even be called:
                 if ( ( obs_r && checkIntersection( "obstacles_r", present_triangle, obstacles_shape ) ) ||
                      ( obs_l && checkIntersection( "obstacles_l", present_triangle, obstacles_shape ) ) ) {
 
@@ -739,12 +745,12 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
 
                 } else {
 
-                    // No more obstacles
+                    // No more obstacles:
                     if (  checkOffset( last_triangle, present_triangle, destinyPos, offset ) ) {
-                        // the distance is acceptable, finetune done
+                        // The distance is acceptable, finetune done.
                         ready = true;
                     } else {
-                        // we are too far, let's increase a bit the triangle
+                        // We are too far, let's increase the triangle a bit:
                         present_triangle = UwMath::avgTriangle( present_triangle, last_triangle);
                     }
                 }
@@ -752,13 +758,13 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
             }
         }
 
-        // this triangle has no obstacles inside
+        // This triangle has no obstacles inside:
         Path.append( present_triangle.at( 1 ) );
         Path.append( present_triangle.at( 2 ) );
-        // add a turn
+        // Add a turn:
         count++;
 
-        // we continue in the other side
+        // We continue in the other side:
         sideRight = !sideRight;
     }
 }
@@ -766,17 +772,14 @@ void ShortNavigation::getPath( const bool &side, const float &offset, const int 
 int ShortNavigation::getNearestPoint( const QVector<QPointF> &route, const QPointF &boatPos){
 
 
-    //input should be in GEOGRAPHICAL format
-
-
-
-    // we receive a route here, a list of points
-    // let's see at what point of the route we are ...
+    // Input should be in GEOGRAPHICAL format.
+    // We receive a route here as a list of points.
+    // Let's see at what point of the route we are:
     double distance = std::numeric_limits<double>::max();
     int nearest_point = 0;
 
-    //1. Haetaan lyhin etäisyys veneeseen
-    //TÄSSÄ HAETAAN PISTE, JOLLA REITILLE "LIITYTÄÄN"
+    //1. We'll get the shortest distance to boat:
+    //Here we get a point where we "join" the route:
     for ( int i = 0; i < route.size(); i++) {
 
         double temp = UwMath::getDistance( boatPos, route.at(i));
@@ -812,14 +815,15 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
     // START SEARCH OF PROJECTION FOR FINETUNE
 
 
-    //2. haetaan projektiot routen eri pisteille
+    //2. We'll get projections to each point on the route:
     QPointF projection_point;
     QLineF route_line, projection_line;
     QPointF a, b, c;
     if ( route.size() >= 2 ) {
 
+        // If nearest is the last one:
         if ( route.size() - nearest_point == 1 ) {
-            // IF NEAREST IS THE LAST ONE
+
 
             a = UwMath::toConformal( route.at( nearest_point - 1 ) );
             b = UwMath::toConformal( route.at( nearest_point ) );
@@ -833,8 +837,9 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
             projection_line.setP1( boatPos);
             projection_line.setP2( projection_point);
 
+        // If nearest is the first one:
         } else if ( nearest_point == 0 ) {
-            // IF NEAREST IS THE FIRST ONE
+
 
             a = UwMath::toConformal( route.at( nearest_point) );
             b = UwMath::toConformal( route.at( nearest_point + 1) );
@@ -848,8 +853,9 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
             projection_line.setP1( boatPos);
             projection_line.setP2( projection_point);
 
+        // If nearest is not first or last one:
         } else {
-            // IF NEAREST IS NOT FIRST OR LAST ONE
+
 
             a = UwMath::toConformal( route.at( nearest_point) );
             b = UwMath::toConformal( route.at( nearest_point + 1) );
@@ -863,8 +869,8 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
             projection_line.setP1( boatPos);
             projection_line.setP2( projection_point);
 
-            // we must check if our position is between nearest and nearest + 1
-            // or between nearest - 1 and nearest
+            // We must check if our position is between nearest and nearest + 1
+            // or between nearest - 1 and nearest:
             if ( !checkIntersection( route_line, projection_line) ) {
                 a = UwMath::toConformal( route.at( nearest_point - 1 ) );
                 b = UwMath::toConformal( route.at( nearest_point ) );
@@ -882,26 +888,27 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
         qDebug() << "Route Line" << route_line;
         qDebug() << "Projection line: " << projection_line;
-        //projektio piste ei näyttäisi olevan reitillä
-        qDebug() << "Is projection line on route? " << UwMath::checkIfBetweenCoordinates(projection_point, route_line.p1(), route_line.p2());
+        //It seems that projection point is not on the route:
+        qDebug() << "Is projection line on the route? " << UwMath::checkIfBetweenCoordinates(projection_point, route_line.p1(), route_line.p2());
     }
 
 
-    // PROCESS TO FIND THE CHECKPOINT
-    //3. tarkistetaan onko projektoidussa kolmiossa esteitä
+    // Next we'll find the checkpoint:
+
+    //3. We'll check if there are obstacles in the projeted triangle:
     if ( route.size() < 1 ) {
 
         if (debug) qDebug() << "getNextPoint(): Fatal: route must have at least 1 point!";
 
     } else if ( route.size() == 1 ) {
 
-        // ROUTE TO PROCESS ONLY HAS ONE POINT
+        // Route to process only has one point:
         QLineF heading( boatPos, route.at( nearest_point));
 
         bool hobs_r = checkIntersection( "obstacles_r", heading );
         bool hobs_l = checkIntersection( "obstacles_l", heading );
 
-        // FINETUNE CHECKPOINT IN THE HEADING
+        // Finetune checkpoint in the heading:
         if ( hobs_r || hobs_l ) {
 
             bool ready = false;
@@ -923,30 +930,31 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
                         heading = UwMath::avgLine( heading, last_heading);
                 }
             }
-
-            return heading.p2(); //Ei palauteteta veneen ja checkpointin vlistä pistettä seuraavana chckpointina long term routella...
+            //We won't return the point between boat and checkpoint as the next checkpoint on long-term route:
+            return heading.p2();
 
         } else {
-            return heading.p2();  //Ei palauteteta veneen ja checkpointin vlistä pistettä seuraavana chckpointina long term routella...
+            //We won't return the point between boat and checkpoint as the next checkpoint on long-term route:
+            return heading.p2();
         }
 
     } else if ( route.size() > 1 ) {
 
-        // ROUTE TO PROCESS HAS MORE THAN 1 POINT
+        // Route to process has more than 1 point:
         int i = nearest_point;
 
         QPolygonF triangle;
-        // 1st POINT
+        // 1st point:
         triangle << boatPos;
 
-        // 2nd POINT
+        // 2nd point:
         if ( checkIntersection( route_line, projection_line) ) {
             triangle << projection_point;
         } else {
             triangle << route.at( nearest_point);
         }
 
-        // 3rd POINT
+        // 3rd point:
         if ( route.at( nearest_point) == route_line.p2() ) {
             triangle << route.at( nearest_point);
             i = nearest_point - 1;
@@ -1006,7 +1014,10 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
 
         qDebug() << "obs_r" << obs_r << "obs_l" << obs_l;
 
-        while ( !obs_r && !obs_l &&  i < (route.size()/* - 2*/ )) { //Tämä toimii väärin. tässä tyssää reitin haku heti kun löytyy esteitä reitiltä. Mitä jos löytyy estevapaa reitti seuraavalta routeväliltä?
+        //Note: This doesn't work correctly. Here the search for the route fails instantly when obstacles
+        //are found on the route. What if there is obstacle-free route on the next route interval:
+
+        while ( !obs_r && !obs_l &&  i < (route.size()/* - 2*/ )) {
 
             qDebug() << "Here we are!" << i;
             triangle.clear();
@@ -1019,7 +1030,7 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
             obs_l = checkIntersection( "obstacles_l", triangle, triangle );
 
 
-            // FINETUNE CHECKPOINT
+            // Finetune checkpoint:
 
             if ( obs_r || obs_l ) {
 
@@ -1046,7 +1057,8 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
                             triangle = UwMath::avgTriangle_OnePointVersion( triangle, last_triangle);
                         }
                     }
-                    //Jos janan routen puoleiset pisteet samat, ei veneelle tilaa kartassa, voidaan lopettaa etsinnät
+                    //If the points in the line segment on the side of the route there is no space for the boat in
+                    //the map anymore and we can quit the search:
                     if(triangle.at(1) == triangle.at(2))
                         ready = true;
                 }
@@ -1067,7 +1079,7 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
         return triangle.at( 2);
 
     }
-    // END PROCESS TO FIND THE CHECKPOINT
+    // End the process of searching for the checkpoints.
 
 }
 
@@ -1075,10 +1087,8 @@ void ShortNavigation::updateCheckPoint()
 {
     if (debug) qDebug() << "updateCheckPoint(): started";
 
-    // Let's find out which is the next point in our route
-    // find the destiny check point in geographical format
-
-    // find the destiny check point in geographical format
+    // Let's find out which is the next point in our route.
+    // Find the destiny check point in geographical format:
     geoDestinyPos = this->getNextPoint( this->pathPoints, geoBoatPos, ACCU_OFFSET);
 
     //    qDebug() << "after";
@@ -1103,8 +1113,8 @@ void ShortNavigation::updateLayLines()
     pPolarDiagram->populate();
     //    if (debug) qDebug() << "updateLayLines(): started";
 
-    // layLines are not calculated with the actual TWA,
-    //    // but the TWA that we will have when heading towards our destiny
+    // LayLines are not calculated with the actual TWA,
+    // but the TWA that we will have when heading towards our destiny.
     qDebug() << " updateLayLines geoBoatPos " << geoBoatPos;
     qDebug() << " updateLayLines geoDestinyPos" << geoDestinyPos;
     qDebug() << " updateLayLines trueWindDirection" << trueWindDirection;
@@ -1124,7 +1134,7 @@ void ShortNavigation::updateLayLines()
 
     if ( layLinesAngle != 0 ) {
 
-        // THEN WE ARE NOT REACHING
+        // Here we are not reaching:
 
         if (debug) {
             qDebug() << "updateLayLines(): TWD: " << trueWindDirection
@@ -1134,7 +1144,7 @@ void ShortNavigation::updateLayLines()
         }
 
         QPointF TPleft, TPright;
-        // get the turning point without taking care of obstacles
+        // Get the turning point without taking care of obstacles:
         UwMath::getTurningPoints( TPleft, TPright,
                                   trueWindDirection, layLinesAngle,
                                   geoBoatPos, geoDestinyPos);
@@ -1145,7 +1155,7 @@ void ShortNavigation::updateLayLines()
         }
 
         // ORDER IS VERY IMPORTANT!!
-        // this is our area of interest for obstacles checking
+        // This is our area of interest for obstacles checking
         QPolygonF rhomboid;
         rhomboid << geoBoatPos;
         rhomboid << TPleft;
@@ -1153,21 +1163,21 @@ void ShortNavigation::updateLayLines()
         rhomboid << TPright;
 
         // QLineF heading( geoBoatPos, geoDestinyPos );
-        // Checking of the heading is made when getting the checkpoint now
+        // Checking of the heading is made when getting the checkpoint here.
 
-        // Let's go for obstacles checking...
+        // Next we'll go for obstacles checking:
 
         if ( checkIntersection( "obstacles_r", rhomboid, rhomboid ) ||
              checkIntersection( "obstacles_l", rhomboid, rhomboid) ) {
             qDebug() << "UPDATELAYLINES CHECKINTERSECTION";
-            // if we have polygon obstacles in the area
-            // OR we have line obstacles in the area
+            // If we have polygon obstacles in the area
+            // OR we have line obstacles in the area:
 
-            // populate the right path
+            // Populate the right path:
             getPath( true, ACCU_OFFSET, MAX_TURNING_POINTS,
                      trueWindDirection, layLinesAngle,
                      geoBoatPos, geoDestinyPos, rhomboid, *pRightPath);
-            // populate the left path
+            // Populate the left path:
             getPath( false, ACCU_OFFSET, MAX_TURNING_POINTS,
                      trueWindDirection, layLinesAngle,
                      geoBoatPos, geoDestinyPos, rhomboid, *pLeftPath);
@@ -1177,8 +1187,8 @@ void ShortNavigation::updateLayLines()
 
         } else {
 
-            // if we don't have any obstacle in our area
-            // use master turning points for the path
+            // If we don't have any obstacle in our area
+            // use master turning points for the path:
             qDebug() << "UPDATELAYLINES NO OBSTACLES";
 
             pRightPath->append( geoBoatPos);
@@ -1190,12 +1200,12 @@ void ShortNavigation::updateLayLines()
             pLeftPath->append( geoDestinyPos);
         }
 
-        // end of checking
+        // End of checking
 
     } else {
 
-        // layLines angle = 0
-        // THEN WE ARE REACHING
+        // LayLines angle = 0
+        // Here we are reaching:
 
         pRightPath->append( geoBoatPos);
         pRightPath->append( geoDestinyPos);
