@@ -11,12 +11,19 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     this->boatImage->setTransform(QTransform().scale(boatScale, boatScale));
     this->boatName = "The Flying Dutchman";
     this->boatImage->setOpacity(0.7);
+    this->gps = new QGraphicsLineItem();
     this->compass = new QGraphicsLineItem();
 
    // compass->setLine(boatImage->x(),boatImage->y(),100,100);
     compass_pen.setColor(Qt::green);
     compass_pen.setWidth(4);
     compass->setPen(compass_pen);
+
+    //291112 gps-line pen and brush settings
+    gps_pen.setColor(Qt::magenta);
+    gps_pen.setWidth(6);
+    gps->setPen(gps_pen);
+    //gps_brush.setColor(Qt::magenta);
 
     // Initial position Oulu:
     this->boatGeoPosition = new QPointF(25.109253, 65.013026);
@@ -45,6 +52,10 @@ QGraphicsLineItem *Boat::getBoatCompass()
 {
     return compass;
 }
+QGraphicsLineItem *Boat::getBoatGPS()
+{
+    return gps;
+}
 
 QString Boat::getName()
 {
@@ -66,36 +77,48 @@ void Boat::setGeoPosition(QPointF position)
     updateBoatPosition();
 }
 
-/* 26112012 GPS positions of boat to produce line to where we go by GPS -Teemu*/
-void Boat::setGPSPoints(){
+void Boat::setGPSLine(){
 
-    boatPositionVector.push_front(QPointF( *boatGeoPosition));
-    qDebug() << " Boat::updateBoatPosition vector size is :" << boatPositionVector.size();
-    qDebug() << " Boat::updateBoatPosition vector have first QpointF:" << boatPositionVector.at(0);
-    if(boatPositionVector.size() >= 3){
-        while(boatPositionVector.size()>=3){
-            qDebug() << " Boat::updateBoatPosition vector size is :while" << boatPositionVector.size();
-            qDebug() << " first" << boatPositionVector.at(0);
-            qDebug() << " second" << boatPositionVector.at(1);
-            boatPositionVector.pop_back();
+    if(*boatGeoPosition != boatPositionVector.at(0)){
+
+        boatPositionVector.push_front(QPointF( *boatGeoPosition));
+        if(boatPositionVector.size() >= 3){
+            while(boatPositionVector.size()>=3){
+
+                qDebug() << " Boat::updateBoatPosition vector size is :while" << boatPositionVector.size();
+                qDebug() << " first" << boatPositionVector.at(0);
+                qDebug() << " second" << boatPositionVector.at(1);
+                boatPositionVector.pop_back();
+            }
         }
     }
-    qDebug() << " Boat::updateBoatPosition vector size is : after" << boatPositionVector.size();
-    qDebug() << " Boat::updateBoatPosition vector to list " << boatPositionVector.toList();
 
+    if(boatPositionVector.size() >= 2 ){
+        firstPoint = boatPositionVector.at(0);
+        secondPoint = boatPositionVector.at(1);
+       this->firstScenePosition = *geoPointToPixel(&firstPoint);
+       this->secondScenePosition = *geoPointToPixel(&secondPoint);
+        qDebug()<< "JEE JEE 1" << firstScenePosition;
+        qDebug()<< "JEE JEE 2" << secondScenePosition;
 
+        QLineF gpsLineGeoPointToPixel(firstScenePosition,secondScenePosition);
+        qDebug()<<"gpsLineGeoPointToPixel x1:"<<gpsLineGeoPointToPixel.x1();
+        qDebug()<<"gpsLineGeoPointToPixel y1:"<<gpsLineGeoPointToPixel.y1();
+        qDebug()<<"gpsLineGeoPointToPixel x2:"<<gpsLineGeoPointToPixel.x2();
+        qDebug()<<"gpsLineGeoPointToPixel y2:"<<gpsLineGeoPointToPixel.y2();
+        gps->setLine(gpsLineGeoPointToPixel);
+    }else{
+        //atm values are just for testing
+        gps->setLine(0,0,50,50);
+    }
 }
 
-/* 26112012 GPS positions of boat to produce line to where we go by GPS -Teemu*/
-QVector<QPointF> Boat::getGPSPoints(){
-    return this->boatPositionVector;
-}
 
 void Boat::updateBoatPosition()
 {
     this->boatScenePosition = geoPointToPixel(this->boatGeoPosition);
 
-    setGPSPoints();
+    setGPSLine();
 
     //141112: Adjust the position so that the laylines start from the tip of the boat:
 
@@ -144,14 +167,9 @@ void Boat::updateBoatPosition()
         endy = startPoint.y();
     }
 
-    compass_pen.setColor(Qt::green);
-    compass_pen.setWidth(4);
-    compass->setPen(compass_pen);
-
     compass->setLine(startPoint.x(), startPoint.y(), endx, endy );
 
 }
-
 void Boat::setHeading(float hdg)
 {
     this->heading = hdg;

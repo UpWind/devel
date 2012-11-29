@@ -18,10 +18,10 @@ BoatWidget::BoatWidget(QSize size, UpWindSceneInterface *uwscene, QRectF chartBo
     uwScene = static_cast<CoreUpWindScene*>(uwscene);
     this->chartBoundaries = chartBoundaries;
     this->size = size;
-    //271112
-    gps_pen.setColor(Qt::green);
-    gps_pen.setWidth(2);
-    gps_brush.setColor(Qt::green);
+//    //271112
+//    gps_pen.setColor(Qt::green);
+//    gps_pen.setWidth(2);
+//    gps_brush.setColor(Qt::green);
 
 
 }
@@ -63,18 +63,18 @@ void BoatWidget::paint(QPainter *painter,const QStyleOptionGraphicsItem *option,
     painter->drawLine( 0, 0,500,500 );*/
 
 }
-void BoatWidget::updateBoatGPS(){
+//void BoatWidget::updateBoatGPS(){
 
-    gpsPoints = this->getBoat()->getGPSPoints();
-    qDebug() << " BoatWidget::updateBoatGPS() toList: " << gpsPoints.toList();
-    // We are still wondering how to implement the following:
-    //this->update(boundingRect());
-}
+////    gpsPoints = this->getBoat()->getGPSPoints();
+//    qDebug() << " BoatWidget::updateBoatGPS() toList: " << gpsPoints.toList();
+//    // We are still wondering how to implement the following:
+//    //this->update(boundingRect());
+//}
 
 void BoatWidget::updateBoatPosition()
 {
     qDebug() << "BoatWidget::updateBoatPosition()";
-    updateBoatGPS();
+//    updateBoatGPS();
 //    QPointF *p = new QPointF(25.109253, 65.013026);
 //    QPointF *scenePos = geoPointToPixel(boat->getGeoPosition());
 //    qDebug() << Q_FUNC_INFO << "scenePos: " << scenePos->x() << ", " << scenePos->y();

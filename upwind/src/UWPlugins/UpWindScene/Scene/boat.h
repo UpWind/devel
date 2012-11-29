@@ -19,12 +19,13 @@ class Boat: public QObject
     Q_OBJECT
 public:
 
-    void setGPSPoints();
-    QVector<QPointF>getGPSPoints();
+    void setGPSLine();
+    QGraphicsLineItem getGPSLine();
 
     Boat(QSize size, QRectF chartBoundaries);
     QGraphicsSvgItem *getBoatImage();
     QGraphicsLineItem *getBoatCompass();
+    QGraphicsLineItem *getBoatGPS();
     QString getName();
     void setGeoPosition(QPointF position);
     void setGeoPosition(float longitude, float latitude);
@@ -46,8 +47,12 @@ private:
     QGraphicsSvgItem *boatImage;
     QString boatName;
     QPointF *boatScenePosition, *boatGeoPosition;
+    QPointF firstScenePosition, secondScenePosition;
+    QPointF firstPoint, secondPoint;
     QGraphicsLineItem *compass;
+    QGraphicsLineItem *gps;
     QPen compass_pen;
+    QPen gps_pen;
     QVector<QPointF> boatPositionVector;
 
     float boatAngle;
