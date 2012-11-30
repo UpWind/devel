@@ -19,11 +19,11 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     compass_pen.setWidth(4);
     compass->setPen(compass_pen);
 
-    //291112 gps-line pen and brush settings
+    //301112 gps-line pen and opacity settings
     gps_pen.setColor(Qt::magenta);
-    gps_pen.setWidth(6);
+    gps_pen.setWidth(4);
     gps->setPen(gps_pen);
-    //gps_brush.setColor(Qt::magenta);
+    gps->setOpacity(0.7);
 
     // Initial position Oulu:
     this->boatGeoPosition = new QPointF(25.109253, 65.013026);
@@ -102,10 +102,12 @@ void Boat::setGPSLine(){
         qDebug()<< "JEE JEE 2" << secondScenePosition;
 
         QLineF gpsLineGeoPointToPixel(firstScenePosition,secondScenePosition);
+        gpsLineGeoPointToPixel.setLength(50);
         qDebug()<<"gpsLineGeoPointToPixel x1:"<<gpsLineGeoPointToPixel.x1();
         qDebug()<<"gpsLineGeoPointToPixel y1:"<<gpsLineGeoPointToPixel.y1();
         qDebug()<<"gpsLineGeoPointToPixel x2:"<<gpsLineGeoPointToPixel.x2();
         qDebug()<<"gpsLineGeoPointToPixel y2:"<<gpsLineGeoPointToPixel.y2();
+
         gps->setLine(gpsLineGeoPointToPixel);
     }else{
         //atm values are just for testing
