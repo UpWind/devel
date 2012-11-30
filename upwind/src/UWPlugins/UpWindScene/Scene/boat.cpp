@@ -19,7 +19,7 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     compass_pen.setWidth(4);
     compass->setPen(compass_pen);
 
-    //301112 gps-line pen and opacity settings
+    //291112 gps-line pen and brush settings
     gps_pen.setColor(Qt::magenta);
     gps_pen.setWidth(4);
     gps->setPen(gps_pen);
@@ -92,6 +92,8 @@ void Boat::setGPSLine(){
             }
         }
     }
+    qDebug() << " Boat::updateBoatPosition vector size is : after" << boatPositionVector.size();
+    qDebug() << " Boat::updateBoatPosition vector to list " << boatPositionVector.toList();
 
     if(boatPositionVector.size() >= 2 ){
         firstPoint = boatPositionVector.at(0);
@@ -107,7 +109,6 @@ void Boat::setGPSLine(){
         qDebug()<<"gpsLineGeoPointToPixel y1:"<<gpsLineGeoPointToPixel.y1();
         qDebug()<<"gpsLineGeoPointToPixel x2:"<<gpsLineGeoPointToPixel.x2();
         qDebug()<<"gpsLineGeoPointToPixel y2:"<<gpsLineGeoPointToPixel.y2();
-
         gps->setLine(gpsLineGeoPointToPixel);
     }else{
         //atm values are just for testing
@@ -172,6 +173,7 @@ void Boat::updateBoatPosition()
     compass->setLine(startPoint.x(), startPoint.y(), endx, endy );
 
 }
+
 void Boat::setHeading(float hdg)
 {
     this->heading = hdg;

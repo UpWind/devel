@@ -1,3 +1,5 @@
+
+
 #include <QGraphicsProxyWidget>
 #include <QGraphicsScene>
 #include <QPainter>
@@ -31,10 +33,6 @@ RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chart
     left_pen.setColor(Qt::red);
     left_pen.setWidthF(2);
     left_brush.setColor(Qt::red);
-
-    compass_pen.setColor(Qt::magenta);
-    compass_pen.setWidth(2);
-    compass_brush.setColor(Qt::magenta);
 
 }
 
@@ -92,53 +90,7 @@ void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->rotate(rotateAngle);
     painter->drawPolyline(/*leftPath.data(), leftPath.size()*/leftPathPoints);
 
-    // 271112 Compass line
     uwScene->getBoat()->updateBoatPosition();
-/*
-    QPointF *boatPosition = uwScene->getBoat()->getGeoPosition();
-    QPointF startPoint = *boatPosition;
-    geoPointToPixel(&startPoint);
-
-    float angle = uwScene->getBoat()->getHeading();
-    qDebug() << "angle: " << angle;
-    float endx = 0;
-    float endy = 0;
-    int lineLength=50;
-
-    // math to start from found at:
-    // http://mathhelpforum.com/geometry/86432-endpoint-based-length-angle.html
-    if (angle > 0 && angle < 90){
-        endx = startPoint.x() + (lineLength * cos(0-angle));
-        endy = startPoint.y() + (lineLength * sin(0-angle));
-    } else if (angle > 90 && angle < 180){
-        endx = startPoint.x() - (lineLength * cos(angle-180));
-        endy = startPoint.y() + (lineLength * sin(angle-180));
-    } else if (angle > 180 && angle < 270){
-        endx = startPoint.x() - (lineLength * sin(angle));
-        endy = startPoint.y() - (lineLength * cos(angle));
-    } else if (angle > 270 && angle < 360){
-        endx = startPoint.x() + (lineLength * sin(0-angle));
-        endy = startPoint.y() - (lineLength * cos(0-angle)) ;
-    } else if (angle == 0 || angle == 360) {
-        endx = startPoint.x();
-        endy = startPoint.y() - lineLength;
-    } else if (angle == 90){
-        endx = startPoint.x() + lineLength;
-        endy = startPoint.y();
-    } else if (angle == 180){
-        endx = startPoint.x();
-        endy = startPoint.y() + lineLength;
-    } else if (angle == 270){
-        endx = startPoint.x() - lineLength;
-        endy = startPoint.y();
-    }
-
-    painter->setPen(compass_pen);
-    painter->setBrush(compass_brush);
-    painter->setRenderHint(QPainter::Antialiasing, true);
-    painter->rotate(rotateAngle);
-    painter->drawLine(startPoint.x(), startPoint.y(), endx, endy );
-*/
 }
 
 void RouteWidget::zoomIn() {
