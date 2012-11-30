@@ -550,7 +550,7 @@ QString ShortNavigation::buildWKTPoint( const QPointF &p1 ) {
 bool ShortNavigation::checkGeometriesIntersection( const QString &object1, const QString &object2 ) {
 
 
-    QString sql("SELECT * FROM;// ( SELECT DISTINCT Intersects( "); //Try to Fix this, Where is Intersect table in database?
+    QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( "); //Try to Fix this, Where is Intersect table in database?
     sql.append( object1);
     sql.append( ", ");
     sql.append( object2);
