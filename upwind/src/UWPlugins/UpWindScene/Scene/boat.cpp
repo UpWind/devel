@@ -40,7 +40,8 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     updateBoatPosition();
 
     //141112: Rotate boat, should rotate automatically depending on the laylines??
-    this->setHeading(290);
+//    this->setHeading(290);
+    this->setHeading(0);
 }
 
 QGraphicsSvgItem *Boat::getBoatImage()
@@ -111,8 +112,10 @@ void Boat::setGPSLine(){
         qDebug()<<"gpsLineGeoPointToPixel y2:"<<gpsLineGeoPointToPixel.y2();
         gps->setLine(gpsLineGeoPointToPixel);
     }else{
-        //atm values are just for testing
-        gps->setLine(0,0,50,50);
+        //atm line goes from boat to left upper corner, before boat have moved and get new boatGeoPositions
+        firstPoint = *boatGeoPosition;
+        this->firstScenePosition = *geoPointToPixel(&firstPoint);
+        gps->setLine(firstScenePosition.x(),firstScenePosition.y(),0,0);
     }
 }
 
@@ -127,7 +130,8 @@ void Boat::updateBoatPosition()
 
     qDebug() << "BOATSCENEPOSITION->X " << boatScenePosition->x();
     qDebug() << "BOATSCENEPOSITION->Y " << boatScenePosition->y();
-    float offsetx = 20;//(IMAGE_WIDTH * boatScale) / 2;
+//    float offsetx = 20;//(IMAGE_WIDTH * boatScale) / 2;
+     float offsetx = -10;//(IMAGE_WIDTH * boatScale) / 2;
     float offsety = 0;//(IMAGE_HEIGHT * boatScale) /2;
     qDebug() << "OFFSETX " << offsetx;
     qDebug() << "OFFSETY " << offsety;
@@ -142,32 +146,43 @@ void Boat::updateBoatPosition()
     float endy = 0;
     int lineLength=50;
 
+    //just for debugging purposes
+    qDebug() <<" angle" << angle;
+
     // math to start from found at:
     // http://mathhelpforum.com/geometry/86432-endpoint-based-length-angle.html
     if (angle > 0 && angle < 90){
-        endx = startPoint.x() + (lineLength * abs(cos(0-angle)));
-        endy = startPoint.y() + (lineLength * abs(sin(0-angle)));
+        endx = startPoint.x() + (lineLength * cos(0-angle));
+        endy = startPoint.y() + (lineLength * sin(0-angle));
+        qDebug() << "0 && angle < 90" << "X:" << endx << "Y:" << endy;
     } else if (angle > 90 && angle < 180){
-        endx = startPoint.x() - (lineLength * abs(cos(angle-180)));
-        endy = startPoint.y() + (lineLength * abs(sin(angle-180)));
+        endx = startPoint.x() - (lineLength * cos(angle-180));
+        endy = startPoint.y() + (lineLength * sin(angle-180));
+        qDebug() << "angle > 90 && angle < 180" << "X:" << endx << "Y:" << endy;
     } else if (angle > 180 && angle < 270){
-        endx = startPoint.x() - (lineLength * abs(sin(angle)));
-        endy = startPoint.y() - (lineLength * abs(cos(angle)));
+        endx = startPoint.x() - (lineLength * sin(angle));
+        endy = startPoint.y() - (lineLength * cos(angle));
+        qDebug() << "angle > 180 && angle < 270"<< "X:" << endx << "Y:" << endy;
     } else if (angle > 270 && angle < 360){
-        endx = startPoint.x() + (lineLength * abs(sin(0-angle)));
-        endy = startPoint.y() - (lineLength * abs(cos(0-angle))) ;
+        endx = startPoint.x() + (lineLength * sin(0-angle));
+        endy = startPoint.y() - (lineLength * cos(0-angle));
+        qDebug() << "angle > 270 && angle < 360" << "X:" << endx << "Y:" << endy;
     } else if (angle == 0 || angle == 360) {
         endx = startPoint.x();
         endy = startPoint.y() - lineLength;
+        qDebug() << "angle == 0 || angle == 360" << "X:" << endx << "Y:" << endy;
     } else if (angle == 90){
         endx = startPoint.x() + lineLength;
         endy = startPoint.y();
+        qDebug() <<"angle == 90" << "X:" << endx << "Y:" << endy;
     } else if (angle == 180){
         endx = startPoint.x();
         endy = startPoint.y() + lineLength;
+        qDebug() <<"angle == 180"<< "X:" << endx << "Y:" << endy;
     } else if (angle == 270){
         endx = startPoint.x() - lineLength;
         endy = startPoint.y();
+        qDebug() <<"angle == 270"<< "X:" << endx << "Y:" << endy;
     }
 
     compass->setLine(startPoint.x(), startPoint.y(), endx, endy );
