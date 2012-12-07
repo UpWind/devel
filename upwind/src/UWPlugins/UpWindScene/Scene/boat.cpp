@@ -14,7 +14,7 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     this->gps = new QGraphicsLineItem();
     this->compass = new QGraphicsLineItem();
 
-   // compass->setLine(boatImage->x(),boatImage->y(),100,100);
+    // compass->setLine(boatImage->x(),boatImage->y(),100,100);
     compass_pen.setColor(Qt::green);
     compass_pen.setWidth(4);
     compass->setPen(compass_pen);
@@ -40,8 +40,17 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     updateBoatPosition();
 
     //141112: Rotate boat, should rotate automatically depending on the laylines??
-//    this->setHeading(290);
-    this->setHeading(0);
+    //071212: values for setting boat image right place
+    this->setHeading(45);
+
+    //    this->setHeading(0);   //north offsetx = 10, offsety = 0
+    //    this->setHeading(90);  //east offsetx = 0 , offsety =-10
+    //    this->setHeading(180); //south offsetx =-10, offsety = 0
+    //    this->setHeading(270); //west offsetx = 0 , offsety = 10
+    //    this->setHeading(315)  //(10 sin 45, 10 cos 45)
+
+
+
 }
 
 QGraphicsSvgItem *Boat::getBoatImage()
@@ -99,8 +108,8 @@ void Boat::setGPSLine(){
     if(boatPositionVector.size() >= 2 ){
         firstPoint = boatPositionVector.at(0);
         secondPoint = boatPositionVector.at(1);
-       this->firstScenePosition = *geoPointToPixel(&firstPoint);
-       this->secondScenePosition = *geoPointToPixel(&secondPoint);
+        this->firstScenePosition = *geoPointToPixel(&firstPoint);
+        this->secondScenePosition = *geoPointToPixel(&secondPoint);
         qDebug()<< "JEE JEE 1" << firstScenePosition;
         qDebug()<< "JEE JEE 2" << secondScenePosition;
 
@@ -119,26 +128,77 @@ void Boat::setGPSLine(){
     }
 }
 
+void Boat::setOffSet(){
+    int a = 10;
+    float angle = (this->heading);
+    qDebug() << "angle "<< angle;
+    qDebug() << "cosini :" << cos(angle);
+    qDebug() << "sini :" <<sin (angle);
+    if (angle > 0 && angle < 90){
+        float offsetx = a*(cos(angle));
+        float offsety = a*(sin(-(angle)));
+        qDebug() << "OFFSETX " << offsetx;
+        qDebug() << "OFFSETY " << offsety;
+        boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    } else if (angle > 90 && angle < 180){
+        float offsetx = a*(cos(-(angle)));
+        float offsety = a*(sin(-(angle)));
+        qDebug() << "OFFSETX " << offsetx;
+        qDebug() << "OFFSETY " << offsety;
+        boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    } else if (angle > 180 && angle < 270){
+        float offsetx = -a*(cos(-(angle)));
+        float offsety = a*(sin(-(angle)));
+        qDebug() << "OFFSETX " << offsetx;
+        qDebug() << "OFFSETY " << offsety;
+        boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    } else if (angle > 270 && angle < 360){
+        float offsetx = a*(cos(angle));
+        float offsety = a*(sin(angle));
+        qDebug() << "OFFSETX " << offsetx;
+        qDebug() << "OFFSETY " << offsety;
+        boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    } else if (angle == 0 || angle == 360) {
+        float offsetx = 10;
+        float offsety = 0;
+        qDebug() << "OFFSETX " << offsetx;
+        qDebug() << "OFFSETY " << offsety;
+        boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    } else if (angle == 90){
+        float offsetx = 0;
+        float offsety = -10;
+        qDebug() << "OFFSETX " << offsetx;
+        qDebug() << "OFFSETY " << offsety;
+        boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    } else if (angle == 180){
+        float offsetx = -10;
+        float offsety = 0;
+        qDebug() << "OFFSETX " << offsetx;
+        qDebug() << "OFFSETY " << offsety;
+        boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    } else if (angle == 270){
+        float offsetx = 0;
+        float offsety = 10;
+        qDebug() << "OFFSETX " << offsetx;
+        qDebug() << "OFFSETY " << offsety;
+        boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    }
+
+}
+
 
 void Boat::updateBoatPosition()
 {
     this->boatScenePosition = geoPointToPixel(this->boatGeoPosition);
 
     setGPSLine();
-
+    setOffSet();
     //141112: Adjust the position so that the laylines start from the tip of the boat:
-
+    //071212: Updated boat position and its offset based on angle
     qDebug() << "BOATSCENEPOSITION->X " << boatScenePosition->x();
     qDebug() << "BOATSCENEPOSITION->Y " << boatScenePosition->y();
-//    float offsetx = 20;//(IMAGE_WIDTH * boatScale) / 2;
-     float offsetx = -10;//(IMAGE_WIDTH * boatScale) / 2;
-    float offsety = 0;//(IMAGE_HEIGHT * boatScale) /2;
-    qDebug() << "OFFSETX " << offsetx;
-    qDebug() << "OFFSETY " << offsety;
-
-    boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
+    //    boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
     //compass->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
-
     QPointF startPoint(boatScenePosition->x(), boatScenePosition->y());
 
     float angle = this->heading;
@@ -156,12 +216,12 @@ void Boat::updateBoatPosition()
         endy = startPoint.y() + (lineLength * sin(0-angle));
         qDebug() << "0 && angle < 90" << "X:" << endx << "Y:" << endy;
     } else if (angle > 90 && angle < 180){
-        endx = startPoint.x() - (lineLength * cos(angle-180));
-        endy = startPoint.y() + (lineLength * sin(angle-180));
+        endx = startPoint.x() + (lineLength * cos(angle-180));
+        endy = startPoint.y() - (lineLength * sin(angle-180));
         qDebug() << "angle > 90 && angle < 180" << "X:" << endx << "Y:" << endy;
     } else if (angle > 180 && angle < 270){
-        endx = startPoint.x() - (lineLength * sin(angle));
-        endy = startPoint.y() - (lineLength * cos(angle));
+        endx = startPoint.x() + (lineLength * sin(angle));
+        endy = startPoint.y() + (lineLength * cos(angle));
         qDebug() << "angle > 180 && angle < 270"<< "X:" << endx << "Y:" << endy;
     } else if (angle > 270 && angle < 360){
         endx = startPoint.x() + (lineLength * sin(0-angle));
@@ -202,7 +262,7 @@ float Boat::getHeading(){
 QPointF* Boat::geoPointToPixel(QPointF *geoPoint){
 
     QPointF *scenePos = new QPointF(geoPoint->x(), geoPoint->y());
-//    QPointF *scenePos = geoPoint;
+    //    QPointF *scenePos = geoPoint;
 
     UwMath::toConformalInverted(*scenePos);
     scenePos->setX((scenePos->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width() * zoomFactor));

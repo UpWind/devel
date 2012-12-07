@@ -20,6 +20,7 @@ class Boat: public QObject
 public:
 
     void setGPSLine();
+    void setOffSet();
     QGraphicsLineItem getGPSLine();
 
     Boat(QSize size, QRectF chartBoundaries);
@@ -49,6 +50,8 @@ private:
     QPointF *boatScenePosition, *boatGeoPosition;
     QPointF firstScenePosition, secondScenePosition;
     QPointF firstPoint, secondPoint;
+    QPointF endCompassPoint;
+    QPointF endSceneCompassPoint;
     QGraphicsLineItem *compass;
     QGraphicsLineItem *gps;
     QPen compass_pen;
