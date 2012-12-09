@@ -41,7 +41,7 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
 
     //141112: Rotate boat, should rotate automatically depending on the laylines??
     //071212: values for setting boat image right place
-    this->setHeading(190);
+    this->setHeading(270);
 
     //    this->setHeading(0);   //north offsetx = 10, offsety = 0
     //    this->setHeading(90);  //east offsetx = 0 , offsety =-10
@@ -167,7 +167,7 @@ void Boat::setOffSet(){
         qDebug() << "OFFSETY " << offsety;
         boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
     } else if (angle == 90){
-        float offsetx = 20;
+        float offsetx = -20;
         float offsety = -10;
         qDebug() << "OFFSETX " << offsetx;
         qDebug() << "OFFSETY " << offsety;
