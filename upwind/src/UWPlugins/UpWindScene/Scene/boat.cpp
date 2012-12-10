@@ -214,37 +214,29 @@ void Boat::updateBoatPosition()
     // math to start from found at:
     // http://mathhelpforum.com/geometry/86432-endpoint-based-length-angle.html
     if (angle > 0 && angle < 90){
-        endx = startPoint.x() + (lineLength * cos(0-angle));
-        endy = startPoint.y() + (lineLength * sin(0-angle));
-        qDebug() << "0 && angle < 90" << "X:" << endx << "Y:" << endy;
+        endx = startPoint.x() + (lineLength * cos((angle)/180*pi));
+        endy = startPoint.y() - (lineLength * sin((angle)/180*pi));
     } else if (angle > 90 && angle < 180){
-        endx = startPoint.x() + (lineLength * cos(angle-180));
-        endy = startPoint.y() - (lineLength * sin(angle-180));
-        qDebug() << "angle > 90 && angle < 180" << "X:" << endx << "Y:" << endy;
+        endx = startPoint.x() - (lineLength * cos((angle-90)/180*pi));
+        endy = startPoint.y() - (lineLength * sin((angle-90)/180*pi));
     } else if (angle > 180 && angle < 270){
-        endx = startPoint.x() + (lineLength * sin(angle));
-        endy = startPoint.y() + (lineLength * cos(angle));
-        qDebug() << "angle > 180 && angle < 270"<< "X:" << endx << "Y:" << endy;
+        endx = startPoint.x() - (lineLength * sin((angle-180)/180*pi));
+        endy = startPoint.y() + (lineLength * cos((angle-180)/180*pi));
     } else if (angle > 270 && angle < 360){
-        endx = startPoint.x() + (lineLength * sin(0-angle));
-        endy = startPoint.y() - (lineLength * cos(0-angle));
-        qDebug() << "angle > 270 && angle < 360" << "X:" << endx << "Y:" << endy;
+        endx = startPoint.x() + (lineLength * sin((angle-270)/180*pi));
+        endy = startPoint.y() + (lineLength * cos((angle-270)/180*pi)) ;
     } else if (angle == 0 || angle == 360) {
         endx = startPoint.x();
         endy = startPoint.y() - lineLength;
-        qDebug() << "angle == 0 || angle == 360" << "X:" << endx << "Y:" << endy;
     } else if (angle == 90){
         endx = startPoint.x() + lineLength;
         endy = startPoint.y();
-        qDebug() <<"angle == 90" << "X:" << endx << "Y:" << endy;
     } else if (angle == 180){
         endx = startPoint.x();
         endy = startPoint.y() + lineLength;
-        qDebug() <<"angle == 180"<< "X:" << endx << "Y:" << endy;
     } else if (angle == 270){
         endx = startPoint.x() - lineLength;
         endy = startPoint.y();
-        qDebug() <<"angle == 270"<< "X:" << endx << "Y:" << endy;
     }
 
 //    if (angle > 0 && angle < 90){
