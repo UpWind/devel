@@ -3,6 +3,7 @@
 #include "../UpWindScene/Scene/projection.h"
 
 
+
 Boat::Boat(QSize size, QRectF chartBoundaries){
 
     this->boatImage = new QGraphicsSvgItem(":sailboat2.svg");
@@ -41,7 +42,7 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
 
     //141112: Rotate boat, should rotate automatically depending on the laylines??
     //071212: values for setting boat image right place
-    this->setHeading(270);
+    this->setHeading(225);
 
     //    this->setHeading(0);   //north offsetx = 10, offsety = 0
     //    this->setHeading(90);  //east offsetx = 0 , offsety =-10
@@ -214,17 +215,17 @@ void Boat::updateBoatPosition()
     // math to start from found at:
     // http://mathhelpforum.com/geometry/86432-endpoint-based-length-angle.html
     if (angle > 0 && angle < 90){
-        endx = startPoint.x() + (lineLength * cos((angle)/180*pi));
-        endy = startPoint.y() - (lineLength * sin((angle)/180*pi));
+        endx = startPoint.x() + (lineLength * sin((angle)/180*M_PI));
+        endy = startPoint.y() - (lineLength * cos((angle)/180*M_PI));
     } else if (angle > 90 && angle < 180){
-        endx = startPoint.x() - (lineLength * cos((angle-90)/180*pi));
-        endy = startPoint.y() - (lineLength * sin((angle-90)/180*pi));
+        endx = startPoint.x() - (lineLength * sin((angle-180)/180*M_PI));
+        endy = startPoint.y() + (lineLength * cos((angle-180)/180*M_PI));
     } else if (angle > 180 && angle < 270){
-        endx = startPoint.x() - (lineLength * sin((angle-180)/180*pi));
-        endy = startPoint.y() + (lineLength * cos((angle-180)/180*pi));
+        endx = startPoint.x() - (lineLength * sin((angle-180)/180*M_PI));
+        endy = startPoint.y() + (lineLength * cos((angle-180)/180*M_PI));
     } else if (angle > 270 && angle < 360){
-        endx = startPoint.x() + (lineLength * sin((angle-270)/180*pi));
-        endy = startPoint.y() + (lineLength * cos((angle-270)/180*pi)) ;
+        endx = startPoint.x() + (lineLength * sin((angle)/180*M_PI));
+        endy = startPoint.y() - (lineLength * cos((angle)/180*M_PI)) ;
     } else if (angle == 0 || angle == 360) {
         endx = startPoint.x();
         endy = startPoint.y() - lineLength;
