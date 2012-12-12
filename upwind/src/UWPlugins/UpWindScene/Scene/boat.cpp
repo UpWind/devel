@@ -193,6 +193,9 @@ void Boat::updateBoatPosition()
 {
     this->boatScenePosition = geoPointToPixel(this->boatGeoPosition);
 
+    //Katja 12.12.12:
+    float pi = 3.14159;
+
     setGPSLine();
     setOffSet();
     //141112: Adjust the position so that the laylines start from the tip of the boat:
