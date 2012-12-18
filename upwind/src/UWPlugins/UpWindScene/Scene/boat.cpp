@@ -2,23 +2,18 @@
 #include "../../shared/uwmath.h"
 #include "../UpWindScene/Scene/projection.h"
 
-
-
 Boat::Boat(QSize size, QRectF chartBoundaries){
-
-    QTransform transformers;
-    qreal dx, dy;
 
     this->boatImage = new QGraphicsSvgItem(":sailboat2.svg");
     this->boatImage->setPos(0, 0);
     this->boatScale = 0.2f;
-    dx = this->boatImage->boundingRect().width() / 2;
-    dy = -10.0;
 
+    boatImage->setTransformOriginPoint(50,100);
     transformers.scale(boatScale, boatScale);
-    transformers.translate(dx, dy);
 
+    QRectF boatRect = boatImage->mapRectToScene(boatImage->boundingRect());
     this->boatImage->setTransform(transformers);
+    boatRect = boatImage->mapRectToScene(boatImage->boundingRect());
 
     // this->boatImage->setTransform(QTransform().scale(boatScale, boatScale), QTransform().translate(dx, dy));
 
@@ -26,8 +21,6 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     this->boatImage->setOpacity(0.7);
     this->gps = new QGraphicsLineItem();
     this->compass = new QGraphicsLineItem();
-
-
 
     // compass->setLine(boatImage->x(),boatImage->y(),100,100);
     compass_pen.setColor(Qt::green);
@@ -56,15 +49,13 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
 
     //141112: Rotate boat, should rotate automatically depending on the laylines??
     //071212: values for setting boat image right place
-    this->setHeading(130);
+    this->setHeading(222);
 
     //    this->setHeading(0);   //north offsetx = 10, offsety = 0
     //    this->setHeading(90);  //east offsetx = 0 , offsety =-10
     //    this->setHeading(180); //south offsetx =-10, offsety = 0
     //    this->setHeading(270); //west offsetx = 0 , offsety = 10
     //    this->setHeading(315)  //(10 sin 45, 10 cos 45)
-
-
 
 }
 
@@ -228,9 +219,8 @@ void Boat::setOffSet(){
 
 //    }
 
-     boatImage->setPos(boatScenePosition->x(), boatScenePosition->y());
+     boatImage->setPos(boatScenePosition->x() - 10, boatScenePosition->y() - 20);
 }
-
 
 void Boat::updateBoatPosition()
 {
@@ -240,6 +230,7 @@ void Boat::updateBoatPosition()
 
     setGPSLine();
     setOffSet();
+
     //141112: Adjust the position so that the laylines start from the tip of the boat:
     //071212: Updated boat position and its offset based on angle
     qDebug() << "BOATSCENEPOSITION->X " << boatScenePosition->x();
@@ -247,6 +238,8 @@ void Boat::updateBoatPosition()
     //    boatImage->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
     //compass->setPos(boatScenePosition->x() - offsetx, boatScenePosition->y() + offsety);
  //   QPointF startPoint(boatScenePosition->x(), boatScenePosition->y());
+//    boatImage->boundingRect().setCoords();
+
 
     QRectF boatRect = boatImage->mapRectToScene(boatImage->boundingRect());
     QPointF startPoint(boatRect.center().x(), boatRect.center().y());
@@ -286,40 +279,7 @@ void Boat::updateBoatPosition()
         endx = startPoint.x() - lineLength;
         endy = startPoint.y();
     }
-
-//    if (angle > 0 && angle < 90){
-//        endx = startPoint.x() + (lineLength * cos(0-angle));
-//        endy = startPoint.y() + (lineLength * sin(0-angle));
-//        qDebug() << "0 && angle < 90" << "X:" << endx << "Y:" << endy;
-//    } else if (angle > 90 && angle < 180){
-//        endx = startPoint.x() - (lineLength * cos(angle-180));
-//        endy = startPoint.y() + (lineLength * sin(angle-180));
-//        qDebug() << "angle > 90 && angle < 180" << "X:" << endx << "Y:" << endy;
-//    } else if (angle > 180 && angle < 270){
-//        endx = startPoint.x() - (lineLength * sin(angle));
-//        endy = startPoint.y() - (lineLength * cos(angle));
-//        qDebug() << "angle > 180 && angle < 270"<< "X:" << endx << "Y:" << endy;
-//    } else if (angle > 270 && angle < 360){
-//        endx = startPoint.x() + (lineLength * sin(0-angle));
-//        endy = startPoint.y() - (lineLength * cos(0-angle));
-//        qDebug() << "angle > 270 && angle < 360" << "X:" << endx << "Y:" << endy;
-//    } else if (angle == 0 || angle == 360) {
-//        endx = startPoint.x();
-//        endy = startPoint.y() - lineLength;
-//        qDebug() << "angle == 0 || angle == 360" << "X:" << endx << "Y:" << endy;
-//    } else if (angle == 90){
-//        endx = startPoint.x() + lineLength;
-//        endy = startPoint.y();
-//        qDebug() <<"angle == 90" << "X:" << endx << "Y:" << endy;
-//    } else if (angle == 180){
-//        endx = startPoint.x();
-//        endy = startPoint.y() + lineLength;
-//        qDebug() <<"angle == 180"<< "X:" << endx << "Y:" << endy;
-//    } else if (angle == 270){
-//        endx = startPoint.x() - lineLength;
-//        endy = startPoint.y();
-//        qDebug() <<"angle == 270"<< "X:" << endx << "Y:" << endy;
-//    }
+    qDebug() << "Boat position: " << *this->boatScenePosition << " ,boat rect center: " << boatRect.center() << " ,boat rect topleft: " << boatRect.topLeft() << " ,boat rect topright: " << boatRect.topRight() << " ,boat rect bottomleft: " << boatRect.bottomLeft()  << " ,boat rect bottomright: " << boatRect.bottomRight();
 
     compass->setLine(boatRect.center().x(), boatRect.center().y(), endx, endy );
 
