@@ -44,6 +44,7 @@ public:
 
 private:
 
+     QTransform transformers;
     QGraphicsView *view;
     QGraphicsSvgItem *boatImage;
     QString boatName;
@@ -67,3 +68,4 @@ private:
 };
 
 #endif // BOAT_H
+
