@@ -111,7 +111,6 @@ QVector<QPointF> ShortNavigation::startCalc(QPolygonF routepoints, QPointF start
 
     this->pathPoints = routepoints;
 
-    qDebug() << "ROUTEPOINTS: " << routepoints;
 
     this->updateCheckPoint();
     this->updateLayLines();
@@ -119,32 +118,16 @@ QVector<QPointF> ShortNavigation::startCalc(QPolygonF routepoints, QPointF start
     QVector<QPointF> ready;
     QVector<QPointF> rightpath;
     QVector<QPointF> leftpath;
-    qDebug() << "rightpath shortnavigation startCalc" << *pRightPath;
-    qDebug() << "leftpath shortnavigation startCalc" << *pLeftPath;
     rightpath = *pRightPath;
     leftpath = *pLeftPath;
     for(int i = 0; i < rightpath.size(); i++){
         ready.append(rightpath.at(i));
     }
-    qDebug() << "ready size after rightpath" << ready.size();
     for(int i = 0; i < leftpath.size(); i++){
         ready.append(leftpath.at(i));
     }
-    qDebug() << "ready size after leftpath: " << ready.size();
     return ready;
 
-    //****leftpath reverse for drawing purposes ****testing
-    //    int j = leftpath.size();
-    //    for(int i = 0; i<leftpath.size(); i++){
-    //    ready.append(leftpath.at((j-1)-i));
-    ////         qDebug() << "reverse leftpath for loop" << leftpath.at((j-1)-i);
-    //    }
-    //    //*****just for testing what is inside of ready ****
-    //    qDebug() << "ready size " << ready.size();
-    //    for(int i = 0 ; i<ready.size(); i++){
-    //        qDebug() << "Ready vector contains points:" << ready.at(i);
-    //    }
-    //    return ready;
 }
 
 
@@ -187,7 +170,6 @@ bool ShortNavigation::createObstaclesTables()
         //####################################################
 
         for (int i = 0 ; i < this->chartObjects.size(); i++) {
-            //        qDebug() << "chartObjects size" << chartObjects.size();
 
             if(this->chartObjects.at(i)->getTableName() == "generarea_r") {
                 for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
@@ -338,15 +320,9 @@ bool ShortNavigation::createObstaclesTables()
                         PQclear(res);
                     }
 
-
-                    //  for loop for testing
-                    //                for (int s=0; s<pointObstacles.size();s++){
-                    //                    qDebug() << " index: " << s << "point x" << pointObstacles.at(s).x() << "y" << pointObstacles.at(s).y();
-                    //                }
-
                     // tables are done
                     this->obstaclesTablesCreated = true;
-                    qDebug("createObstaclesTables() returns = true");
+
                     return true;
                 }
 
@@ -885,11 +861,6 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
                 projection_line.setP2( projection_point);
             }
         }
-
-        qDebug() << "Route Line" << route_line;
-        qDebug() << "Projection line: " << projection_line;
-        //It seems that projection point is not on the route:
-        qDebug() << "Is projection line on the route? " << UwMath::checkIfBetweenCoordinates(projection_point, route_line.p1(), route_line.p2());
     }
 
 
@@ -1012,14 +983,12 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
         bool obs_r = checkIntersection( "obstacles_r", triangle, triangle );
         bool obs_l = checkIntersection( "obstacles_l", triangle, triangle );
 
-        qDebug() << "obs_r" << obs_r << "obs_l" << obs_l;
 
         //Note: This doesn't work correctly. Here the search for the route fails instantly when obstacles
         //are found on the route. What if there is obstacle-free route on the next route interval:
 
         while ( !obs_r && !obs_l &&  i < (route.size()/* - 2*/ )) {
 
-            qDebug() << "Here we are!" << i;
             triangle.clear();
 
             triangle << boatPos;
@@ -1067,15 +1036,7 @@ QPointF ShortNavigation::getNextPoint( const QVector<QPointF> &route, const QPoi
             i++;
         }
 
-//        for(int j = 0; j <  route.size(); j++){
-//            if(triangle.at(2) == route.at(j)){
-//                qDebug() << "CheckPoint on piste: " << j << "routella, " << route.at(i);
-//                qDebug() << "Is geodestinypos on route: " << UwMath::checkIfBetweenCoordinates(triangle.at(2), route.at(i), route.at(i+1));
-//                qDebug() << "Is geodestinypos on route: " << UwMath::checkIfBetweenCoordinates(triangle.at(2), route.at(i-1), route.at(1));
-//            }
-//        }
 
-    qDebug() << "Triangle: " << triangle << " of which checkpoint is: " << triangle.at(2);
         return triangle.at( 2);
 
     }
@@ -1091,16 +1052,9 @@ void ShortNavigation::updateCheckPoint()
     // Find the destiny check point in geographical format:
     geoDestinyPos = this->getNextPoint( this->pathPoints, geoBoatPos, ACCU_OFFSET);
 
-    //    qDebug() << "after";
-    //    qDebug() << "updateCheckPoint() boatGeoPosition " << boatGeoPosition;
-    //    qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
-    //    qDebug() << "updateCheckPoint() ACCU_OFFSET is" << ACCU_OFFSET;
-    qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
     // and set it for Qt scene as well
     destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
     if (debug) qDebug() << "updateCheckPoint(): ended: ok";
-
-    qDebug() << "Resolved checkpoint: " << destinyPos;
 
 }
 
@@ -1108,16 +1062,12 @@ void ShortNavigation::updateLayLines()
 {
     QTime timeUpdateLayLines;
     timeUpdateLayLines.start();
-    qDebug()<<"void ShortNavigation::updateLayLines()";
-    qDebug()<<"Max turning points: " <<this->MAX_TURNING_POINTS;
+
     pPolarDiagram->populate();
     //    if (debug) qDebug() << "updateLayLines(): started";
 
     // LayLines are not calculated with the actual TWA,
     // but the TWA that we will have when heading towards our destiny.
-    qDebug() << " updateLayLines geoBoatPos " << geoBoatPos;
-    qDebug() << " updateLayLines geoDestinyPos" << geoDestinyPos;
-    qDebug() << " updateLayLines trueWindDirection" << trueWindDirection;
 
     //************HARDCODED VALUE FOR futureTrueWindAngle*************
     this->trueWindDirection = 270.0;
@@ -1127,7 +1077,6 @@ void ShortNavigation::updateLayLines()
 
     layLinesAngle = pPolarDiagram->getAngle( windSpeed, futureTrueWindAngle);
 
-    qDebug() << "layLinesAngle" << layLinesAngle;
     // new paths...
     pLeftPath = new QVector<QPointF>;
     pRightPath = new QVector<QPointF>;
@@ -1182,8 +1131,6 @@ void ShortNavigation::updateLayLines()
                      trueWindDirection, layLinesAngle,
                      geoBoatPos, geoDestinyPos, rhomboid, *pLeftPath);
 
-            qDebug()<<"Left: " << pLeftPath;
-            qDebug()<<"Right: " << pRightPath;
 
         } else {
 

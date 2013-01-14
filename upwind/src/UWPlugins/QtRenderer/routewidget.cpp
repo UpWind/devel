@@ -76,13 +76,14 @@ void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->rotate(rotateAngle);
     painter->drawPolyline(routepoints);
 
+    //Painter specifics for right side layline
     painter->setPen(right_pen);
     painter->setBrush(right_brush);
     painter->setRenderHint(QPainter::Antialiasing, true);
     //painter->scale(zoomFactor, zoomFactor);
     painter->rotate(rotateAngle);
     painter->drawPolyline(/*leftPath.data(), leftPath.size()*/rightPathPoints);
-
+    //Painter specifics for left side layline
     painter->setPen(left_pen);
     painter->setBrush(left_brush);
     painter->setRenderHint(QPainter::Antialiasing, true);
@@ -143,13 +144,13 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
    //Boat position?
    QPointF *boatPosition = uwScene->getBoat()->getGeoPosition();
-   qDebug() << "***********************boatPosition: " << boatPosition->x() << ", " << boatPosition->y();
    start = *boatPosition;
 
    end = event->pos();
+
    //geoPointToPixel(&start);
    pixelToGeoPoint(&end);
-
+  qDebug() << "Boat ui position " << end;
 
    Route* route = uwScene->getRoute();
    ShortNavigation* routeShort = uwScene->getShortNavigation();
@@ -168,6 +169,7 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
    pathLeft.clear();
    pathRight.clear();
 
+   //Get left and right paths from the returned vector from shortNavig.cpp
    for (int i = 0; i < leftPath.size(); i++) {
        if((leftPath.at(i)!=startPath || i==0) && !startFound){
             pathRight.append(leftPath.at(i));
@@ -178,26 +180,18 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
        }
    }
 
-qDebug() <<"pathRight: "<<pathRight;
-qDebug() << "pathLeft: " << pathLeft;
-
    for (int i = 0; i < path.size(); i++) {
        geoPointToPixel(&path[i]);
    }
 
    routepoints = QPolygonF(path);
 
-   //091112: leftPath data to pixeldata for drawing
-//   for (int i = 0; i < leftPath.size(); i++) {
-//       qDebug() << "leftPath[i]: " << i << " " << &leftPath[i];
-//       geoPointToPixel(&leftPath[i]);
-//   }
-//   shortroutepoints = QPolygonF(leftPath);
-
    for (int i = 0; i < pathRight.size(); i++) {
        qDebug() << "pathRight[i]: " << i << " " << &pathRight[i];
        geoPointToPixel(&pathRight[i]);
    }
+
+   //Conform geoPoints to pixel in order to show in UI
    rightPathPoints = QPolygonF(pathRight);
 
    for (int i = 0; i < pathLeft.size(); i++) {
@@ -206,14 +200,7 @@ qDebug() << "pathLeft: " << pathLeft;
    }
    leftPathPoints = QPolygonF(pathLeft);
 
-   //compassStart = leftPathPoints.at(0);
-   //compassEnd = leftPathPoints.at(leftPathPoints.size()-1);
-
-   //09112: print out both route pixels for testing purposes
-   qDebug() << "ROUTEPOINTS: " << routepoints;
-//   qDebug() << "SHORTROUTEPOINTS: " << shortroutepoints;
-
-
+   //Start painting
    this->update(boundingRect());
 
     /*if(simMode)
