@@ -110,10 +110,17 @@ void Boat::setGPSLine(){
         gpsLineGeoPointToPixel.setLength(50);
         gps->setLine(gpsLineGeoPointToPixel);
     }else{
-        //atm line goes from boat to left upper corner, before boat have moved and get new boatGeoPositions
+        //atm line goes from boat to middle of screen, before boat have moved and it get new boatGeoPositions
         firstPoint = *boatGeoPosition;
         this->firstScenePosition = *geoPointToPixel(&firstPoint);
-        gps->setLine(firstScenePosition.x(),firstScenePosition.y(),0,0);
+        float middlepointX = ((QApplication::desktop()->screenGeometry().width())/2);
+        float middlepointY = ((QApplication::desktop()->screenGeometry().height())/2);
+        screenMiddlePoint.setX(middlepointX);
+        screenMiddlePoint.setY(middlepointY);
+        qDebug() << "middlePointX" << screenMiddlePoint;
+        gps->setLine(firstScenePosition.x(),firstScenePosition.y(), screenMiddlePoint.x(), screenMiddlePoint.y());
+        //    if needed line to go from boat to left upper corner, before boat have moved and it get new boatGeoPositions
+        //    gps->setLine(firstScenePosition.x(),firstScenePosition.y(),0,0);
     }
 }
 
