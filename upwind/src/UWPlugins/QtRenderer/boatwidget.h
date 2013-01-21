@@ -1,6 +1,11 @@
 #ifndef BOATWIDGET_H
 #define BOATWIDGET_H
 
+#include <QObject>
+#include <QVector>
+#include <QPoint>
+#include <QGraphicsItem>
+
 #include "../shared/uwmath.h"
 #include "../../UWCore/uwcore.h"
 
@@ -13,6 +18,7 @@ public:
     //271112 for gps here
     ~BoatWidget();
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+    void getLaylines(QPolygonF route);
     QRectF boundingRect() const;
     void updateBoatGPS();
     //271112 to here

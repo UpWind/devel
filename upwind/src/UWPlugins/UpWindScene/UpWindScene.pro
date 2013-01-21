@@ -21,7 +21,8 @@ SOURCES += \
     Scene/polardiagram.cpp \
     Scene/naviglineinfo.cpp \
     Scene/shortnavig.cpp \
-    ../shared/uwmath.cpp
+    ../shared/uwmath.cpp \
+    Scene/calculatelaylines.cpp
 
 
 
@@ -41,7 +42,8 @@ HEADERS += \
     ../../Settings/settings.h \
     Scene/polardiagram.h \
     Scene/shortnavig.h \
-    ../shared/uwmath.h
+    ../shared/uwmath.h \
+    Scene/calculatelaylines.h
 
 
 

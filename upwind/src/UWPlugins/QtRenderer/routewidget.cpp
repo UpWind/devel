@@ -26,14 +26,6 @@ RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chart
     longroute_pen.setWidthF(6);
     longroute_brush.setColor(Qt::blue);
 
-    right_pen.setColor(Qt::yellow);
-    right_pen.setWidthF(2);
-    right_brush.setColor(Qt::yellow);
-
-    left_pen.setColor(Qt::red);
-    left_pen.setWidthF(2);
-    left_brush.setColor(Qt::red);
-
 }
 
 RouteWidget::~RouteWidget(){}
@@ -75,21 +67,6 @@ void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->scale(zoomFactor, zoomFactor);
     painter->rotate(rotateAngle);
     painter->drawPolyline(routepoints);
-
-    //Painter specifics for right side layline
-    painter->setPen(right_pen);
-    painter->setBrush(right_brush);
-    painter->setRenderHint(QPainter::Antialiasing, true);
-    //painter->scale(zoomFactor, zoomFactor);
-    painter->rotate(rotateAngle);
-    painter->drawPolyline(/*leftPath.data(), leftPath.size()*/rightPathPoints);
-    //Painter specifics for left side layline
-    painter->setPen(left_pen);
-    painter->setBrush(left_brush);
-    painter->setRenderHint(QPainter::Antialiasing, true);
-    //painter->scale(zoomFactor, zoomFactor);
-    painter->rotate(rotateAngle);
-    painter->drawPolyline(/*leftPath.data(), leftPath.size()*/leftPathPoints);
 
     uwScene->getBoat()->updateBoatPosition();
 }
@@ -150,35 +127,9 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
    //geoPointToPixel(&start);
    pixelToGeoPoint(&end);
-  qDebug() << "Boat ui position " << end;
 
    Route* route = uwScene->getRoute();
-   ShortNavigation* routeShort = uwScene->getShortNavigation();
-
-   PolarDiagram *diagram = uwScene->getPolarDiagram();
-   routeShort->setPolarDiagram(diagram);
    path = route->path(start, end, 0);
-
-   this->leftPath = routeShort->startCalc(path, start);
-
-   qDebug()<<"ShortNavig palautti: "<<leftPath;
-
-   QPointF startPath = leftPath.at(0);
-   bool startFound = false;
-
-   pathLeft.clear();
-   pathRight.clear();
-
-   //Get left and right paths from the returned vector from shortNavig.cpp
-   for (int i = 0; i < leftPath.size(); i++) {
-       if((leftPath.at(i)!=startPath || i==0) && !startFound){
-            pathRight.append(leftPath.at(i));
-
-       } else if(leftPath.at(i) == startPath || startFound){
-           startFound = true;
-           pathLeft.append(leftPath.at(i));
-       }
-   }
 
    for (int i = 0; i < path.size(); i++) {
        geoPointToPixel(&path[i]);
@@ -186,21 +137,6 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
    routepoints = QPolygonF(path);
 
-   for (int i = 0; i < pathRight.size(); i++) {
-       qDebug() << "pathRight[i]: " << i << " " << &pathRight[i];
-       geoPointToPixel(&pathRight[i]);
-   }
-
-   //Conform geoPoints to pixel in order to show in UI
-   rightPathPoints = QPolygonF(pathRight);
-
-   for (int i = 0; i < pathLeft.size(); i++) {
-       qDebug() << "pathLeft[i]: " << i << " " << &pathLeft[i];
-       geoPointToPixel(&pathLeft[i]);
-   }
-   leftPathPoints = QPolygonF(pathLeft);
-
-   //Start painting
    this->update(boundingRect());
 
     /*if(simMode)

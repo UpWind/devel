@@ -13,10 +13,13 @@
 #include "Scene/shortnavig.h"
 #include "Scene/polardiagram.h"
 #include "../ChartProviderInterface/chartproviderinterface.h"
+#include "Scene/calculatelaylines.h"
+
 
 class Route;
 class ShortNavigation;
 class PolarDiagram;
+class CalculateLaylines;
 
 class CoreUpWindScene: public QObject, public UpWindSceneInterface
 {
@@ -73,9 +76,8 @@ private:
     float latitude;
     float longitude;
 
-protected slots:
-
-signals:
+    CalculateLaylines *calculateLaylines;
+    QVector<QPointF> *layLines;
 };
 
 #endif // COREUPWINDSCENE_H

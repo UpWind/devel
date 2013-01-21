@@ -27,6 +27,8 @@ public:
     QGraphicsSvgItem *getBoatImage();
     QGraphicsLineItem *getBoatCompass();
     QGraphicsLineItem *getBoatGPS();
+    QGraphicsPolygonItem *getPortLayline();
+    QGraphicsPolygonItem *getStarBoardLayline();
     QString getName();
     void setGeoPosition(QPointF position);
     void setGeoPosition(float longitude, float latitude);
@@ -38,6 +40,7 @@ public:
     void updateBoatPosition();
     void setHeading(float hdg);
     float getHeading();
+    void injectLaylines(QVector<QPointF> laylines);
 
     void zoomIn();
     void zoomOut();
@@ -55,9 +58,17 @@ private:
     QPointF endSceneCompassPoint;
     QGraphicsLineItem *compass;
     QGraphicsLineItem *gps;
+    QGraphicsPolygonItem *portLaylineItem;
+    QGraphicsPolygonItem *starBoardLaylineItem;
     QPen compass_pen;
     QPen gps_pen;
+    QPen starBoardLayline_pen;
+    QPen portLayline_pen;
     QVector<QPointF> boatPositionVector;
+
+    QBrush starBoard_brush;
+    QBrush port_brush;
+    QBrush compass_brush;
 
     float boatAngle;
     float boatScale;
@@ -65,6 +76,18 @@ private:
     float zoomFactor;
     QRectF chartBoundaries;
     QSize size;
+
+    QVector<QPointF> layLinePoints;
+    QVector<QPointF> tempPath; //Modify so that both paths can be put into the same variable
+    QVector<QPointF> pathStarBoard;
+    QVector<QPointF> pathPort;
+    QPolygonF starBoardLayline;
+    QPolygonF portLayline;
+    QVector<QPolygonF> navcorrected;
+
+    void setLaylines();
+    void geoLaylineToPixel(QPointF* pixelPoint);
+
 };
 
 #endif // BOAT_H

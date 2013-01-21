@@ -923,8 +923,14 @@ QVector < QPointF> Route::path( QPointF startPoint,QPointF endPoint,bool type){
   // time3=time3.currentTime();
   // qDebug() << QString("Route:: Dijkstra: %1 ms ").arg( QString::number(time1.msecsTo(time2),10));
  //  qDebug() << QString("Route:: Generate path: %1 ms ").arg( QString::number(time2.msecsTo(time3),10));
+   this->routePoints = path;
 
    return path;
+}
+
+QPolygonF Route::getRoute(){
+
+    return this->routePoints;
 }
 
 int Route::nearestNode( QPointF point){

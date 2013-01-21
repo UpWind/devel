@@ -27,6 +27,7 @@ public:
     void loadChartObjects( QVector<ChartObjectInterface*> cObjects);
     QVector <QPolygonF> getNavigLinesCorrected();
     QVector<QPointF> path( QPointF startPoint,QPointF endPoint,bool type);
+    QPolygonF getRoute();
 
 
 private:
@@ -91,6 +92,7 @@ private:
     QVector <QPointF> nodes;
     QVector <QLineF> edges;
     QVector <QPainterPath> airway;
+    QPolygonF routePoints;
 
 };
 

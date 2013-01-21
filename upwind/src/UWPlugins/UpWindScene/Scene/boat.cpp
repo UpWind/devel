@@ -20,7 +20,19 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     this->boatImage->setOpacity(0.7);
     this->gps = new QGraphicsLineItem();
     this->compass = new QGraphicsLineItem();
+    this->starBoardLaylineItem = new QGraphicsPolygonItem();
+    this->portLaylineItem = new QGraphicsPolygonItem();
 
+    starBoardLayline_pen.setColor(Qt::yellow);
+    starBoardLayline_pen.setWidth(2);
+    starBoard_brush.setColor(Qt::yellow);
+    portLayline_pen.setColor(Qt::red);
+    portLayline_pen.setWidth(2);
+    port_brush.setColor(Qt::red);
+    starBoardLaylineItem->setPen(starBoardLayline_pen);
+    portLaylineItem->setPen(portLayline_pen);
+
+    // compass->setLine(boatImage->x(),boatImage->y(),100,100);
     compass_pen.setColor(Qt::green);
     compass_pen.setWidth(4);
     compass->setPen(compass_pen);
@@ -63,6 +75,17 @@ QGraphicsLineItem *Boat::getBoatCompass()
 QGraphicsLineItem *Boat::getBoatGPS()
 {
     return gps;
+}
+
+QGraphicsPolygonItem *Boat::getPortLayline(){
+
+    return portLaylineItem;
+}
+
+QGraphicsPolygonItem *Boat::getStarBoardLayline(){
+
+
+    return starBoardLaylineItem;
 }
 
 QString Boat::getName()
@@ -108,11 +131,13 @@ void Boat::setGPSLine(){
 
         QLineF gpsLineGeoPointToPixel(firstScenePosition,secondScenePosition);
         gpsLineGeoPointToPixel.setLength(50);
+
         gps->setLine(gpsLineGeoPointToPixel);
     }else{
         //atm line goes from boat to middle of screen, before boat have moved and it get new boatGeoPositions
         firstPoint = *boatGeoPosition;
         this->firstScenePosition = *geoPointToPixel(&firstPoint);
+        QPointF screenMiddlePoint;
         float middlepointX = ((QApplication::desktop()->screenGeometry().width())/2);
         float middlepointY = ((QApplication::desktop()->screenGeometry().height())/2);
         screenMiddlePoint.setX(middlepointX);
@@ -176,13 +201,67 @@ void Boat::updateBoatPosition()
     }
 
     compass->setLine(boatRect.center().x(), boatRect.center().y(), endx, endy );
-
+    setLaylines();
 }
 
 void Boat::setHeading(float hdg)
 {
     this->heading = hdg;
     this->boatImage->setRotation(heading);
+}
+
+void Boat::injectLaylines(QVector<QPointF> laylines){
+
+    this->layLinePoints = laylines;
+
+    QPointF startPath = layLinePoints.at(0);
+    bool startFound = false;
+
+    pathPort.clear();
+    pathStarBoard.clear();
+
+    for (int i = 0; i < layLinePoints.size(); i++) {
+        if((layLinePoints.at(i)!=startPath || i==0) && !startFound){
+            pathStarBoard.append(layLinePoints.at(i));
+
+        } else if(layLinePoints.at(i) == startPath || startFound){
+            startFound = true;
+            pathPort.append(layLinePoints.at(i));
+        }
+    }
+
+
+    //    091112: leftPath data to pixeldata for drawing
+    for (int i = 0; i < pathPort.size(); i++) {
+        qDebug() << "leftPath[i]: " << i << " " << &pathPort[i];
+        geoLaylineToPixel(&pathPort[i]);
+    }
+    portLayline = QPolygonF(pathPort);
+
+    for (int i = 0; i < pathStarBoard.size(); i++) {
+        qDebug() << "pathRight[i]: " << i << " " << &pathStarBoard[i];
+        geoLaylineToPixel(&pathStarBoard[i]);
+    }
+    starBoardLayline = QPolygonF(pathStarBoard);
+
+}
+
+void Boat::geoLaylineToPixel(QPointF *geoPoint){
+
+    UwMath::toConformalInverted(*geoPoint);
+    geoPoint->setX((geoPoint->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width()));
+    geoPoint->setY((geoPoint->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height()));
+
+}
+
+void Boat::setLaylines(){
+
+    qDebug() << "starboard: "<< starBoardLaylineItem->polygon();
+    qDebug() << "Port: " << portLaylineItem->polygon();
+
+    portLaylineItem->setPolygon(this->portLayline);
+    starBoardLaylineItem->setPolygon(this->starBoardLayline);
+
 }
 
 float Boat::getHeading(){

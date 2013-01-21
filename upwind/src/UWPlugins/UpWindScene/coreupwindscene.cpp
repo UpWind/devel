@@ -3,6 +3,7 @@
 #include <QDebug>
 #include "coreupwindscene.h"
 #include "../shared/uwmath.h"
+#include "Scene/calculatelaylines.h"
 
 
 CoreUpWindScene::CoreUpWindScene(){
@@ -14,6 +15,7 @@ CoreUpWindScene::CoreUpWindScene(){
     this->shortNavigation = ShortNavigation::getInstance();//new ShortNavigation();
     this->route = Route::getInstance();
     this->pDiagram = PolarDiagram::getInstance();
+    calculateLaylines = new CalculateLaylines();
 }
 
 void CoreUpWindScene::setChartObjects(CoreChartProvider* model){
@@ -117,6 +119,12 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
         QStringList strList = text.split(",");
         float heading = ((QString)strList.at(1)).toFloat();
         this->boat->setHeading(heading );
+        if(this->route->getRoute().size() > 0){
+            QVector<QPointF> layLinePoints;
+            layLinePoints = this->calculateLaylines->startCalc(this->route->getRoute(), *this->boat->getGeoPosition());
+            qDebug() << layLines;
+            this->boat->injectLaylines(layLinePoints);
+        }
     }
 }
 Q_EXPORT_PLUGIN2(coreupwindscene, CoreUpWindScene)
