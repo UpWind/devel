@@ -10,14 +10,14 @@
 #include "Scene/boat.h"
 #include "../ChartProviderInterface/corechartprovider.h"
 #include "Scene/route.h"
-#include "Scene/shortnavig.h"
+#include "Scene/loadObstacles.h"
 #include "Scene/polardiagram.h"
 #include "../ChartProviderInterface/chartproviderinterface.h"
 #include "Scene/calculatelaylines.h"
 
 
 class Route;
-class ShortNavigation;
+class LoadObstacles;
 class PolarDiagram;
 class CalculateLaylines;
 
@@ -52,11 +52,11 @@ public:
     Settings* getSettings();
     Boat* getBoat();
     Route* getRoute();
-    ShortNavigation* getShortNavigation();
+    LoadObstacles* getLoadObstacles();
     PolarDiagram* getPolarDiagram();
     void initializeSettings();
     Route *route;
-    ShortNavigation *shortNavigation;
+    LoadObstacles *loadObstacles;
     void setBoat(Boat *boat);
     PolarDiagram *pDiagram;
 

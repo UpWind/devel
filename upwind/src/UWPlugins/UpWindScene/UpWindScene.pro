@@ -20,9 +20,9 @@ SOURCES += \
     ../../Settings/settings.cpp \
     Scene/polardiagram.cpp \
     Scene/naviglineinfo.cpp \
-    Scene/shortnavig.cpp \
     ../shared/uwmath.cpp \
-    Scene/calculatelaylines.cpp
+    Scene/calculatelaylines.cpp \
+    Scene/loadObstacles.cpp
 
 
 
@@ -41,9 +41,9 @@ HEADERS += \
     settingsui.h \
     ../../Settings/settings.h \
     Scene/polardiagram.h \
-    Scene/shortnavig.h \
     ../shared/uwmath.h \
-    Scene/calculatelaylines.h
+    Scene/calculatelaylines.h \
+    Scene/loadObstacles.h
 
 
 

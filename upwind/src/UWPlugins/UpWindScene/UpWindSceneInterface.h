@@ -9,7 +9,7 @@
 
 
 class Route;
-class ShortNavigation;
+class LoadObstacles;
 class PolarDiagram;
 
 class UpWindSceneInterface : public UWPluginInterface
@@ -18,7 +18,7 @@ public:
 
     virtual  Boat* getBoat() = 0;
     virtual  Route* getRoute() = 0;
-    virtual  ShortNavigation* getShortNavigation() = 0;
+    virtual  LoadObstacles* getLoadObstacles() = 0;
     virtual  PolarDiagram* getPolarDiagram() = 0;
 
 

@@ -12,7 +12,7 @@ CoreUpWindScene::CoreUpWindScene(){
 
     settingsUI = new SettingsUI();
     settingsUI->setupSettings(settings);
-    this->shortNavigation = ShortNavigation::getInstance();//new ShortNavigation();
+    this->loadObstacles = LoadObstacles::getInstance();
     this->route = Route::getInstance();
     this->pDiagram = PolarDiagram::getInstance();
     calculateLaylines = new CalculateLaylines();
@@ -28,7 +28,7 @@ void CoreUpWindScene::setChartObjects(CoreChartProvider* model){
 void CoreUpWindScene::fetchChartObjects() {
     chartObjects = model->getChartObjects();
     this->route->loadChartObjects(chartObjects);
-    this->shortNavigation->loadChartObjects(chartObjects);
+    this->loadObstacles->loadChartObjects(chartObjects);
 
 }
 
@@ -64,8 +64,8 @@ Route* CoreUpWindScene::getRoute(){
     return route;
 }
 
-ShortNavigation* CoreUpWindScene::getShortNavigation(){
-    return shortNavigation;
+LoadObstacles* CoreUpWindScene::getLoadObstacles(){
+    return loadObstacles;
 }
 
 PolarDiagram* CoreUpWindScene::getPolarDiagram(){
