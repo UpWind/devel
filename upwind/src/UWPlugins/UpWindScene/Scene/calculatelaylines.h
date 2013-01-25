@@ -19,6 +19,7 @@ class CalculateLaylines : public QObject
 
 
 public:
+
     CalculateLaylines();
     ~CalculateLaylines();
     QVector<QPointF> startCalc(QPolygonF routepoints, QPointF start); //called from RouteWidget when layLine data is asked from *this
@@ -26,7 +27,7 @@ public:
     void processData( const QVector<QPointF> * geoRoute,
                       QPointF &geoBoatPos, float &twd, float &wspeed,
                       PolarDiagram * pd, QThread::Priority = QThread::InheritPriority);
-//#include <liits>
+
     static QPointF getFromWKTPoint( QString wkt_geometry);
     static QString buildWKTPolygon( const QPolygonF &rhomboid );
     static QString buildWKTPolygon( const QPolygonF &polygon, const QPointF &centroid,
@@ -39,45 +40,9 @@ public:
     bool publicCheckIntersection( const QString &layerName, const QPointF &point );
     void setStartPoint(QPointF start);
     void setRoutePoints(QPolygonF routePoints);
-// void process();
-//  void run();
-//protected:
-
-//public slots:
-//       void process();
-//       void run();
-
-//signals:
-//    void finished();
-//     void error(QString err);
-//    void finishedProcessing( QPointF geoDestinyPos, QPointF destinyPos,
-//                             QVector<QPointF> * pLeftPath, QVector<QPointF> * pRightPath,
-//                             float layLinesAngle );
-
-public Q_SLOTS:
-    void start();
-
-Q_SIGNALS:
-    void calculationComplete(QVector<QPointF> layLines);
-
 
 
 private:
-
-    // local values for uws
-//    QVector<QPolygonF > polyObstacles;
-//    QVector<QPointF > pointObstacles;
-//    QVector<QLineF > lineObstacles;
-//    QVector<ChartObjectInterface*> chartObjects;
-//    QVector<QPolygonF> rock;
-//    QVector<QPolygonF> wreck;
-//    QVector<QPolygonF> signsound;
-//    QVector<QPolygonF> offset;
-//    QList<QPoint> listqpoint;
-    QPointF boatPosition;
-    QPointF boatGeoPosition;
-
-
 
     bool checkGeometriesIntersection( const QString &object1, const QString &object2 );
     bool checkIntersection( const QString &layerName, const QString &object, QString shape );
@@ -98,26 +63,17 @@ private:
     QPointF getNextPoint( const QVector<QPointF> &route, const QPointF &position, const float &offset);
     int getNearestPoint( const QVector<QPointF> &route, const QPointF &boatPos);
 
-
+    void openPostgreConnection();
     void updateCheckPoint();
     void updateLayLines();
 
     PGresult *res;
     PGconn *conn;
 
-
-
-//    bool debug, new_data, obstaclesTablesCreated, status;
-    //SettingsManager * settingsManager;
-    //UwStatus * status;
-//    QMutex uws_mutex;
-//    QByteArray driver;
-
     // values coming from the settings
     float ACCU_OFFSET, MAX_TURNING_POINTS;
 
     // the data to be processed
-    const QVector<QPointF> * pGeoRoute;
     QPointF geoBoatPos;
     float trueWindDirection, windSpeed;
     PolarDiagram * pPolarDiagram;
@@ -129,7 +85,6 @@ private:
     QVector<QPointF> pathPoints;
     QPointF startPoint;
 
-    void openPostgreConnection();
 
 };
 
