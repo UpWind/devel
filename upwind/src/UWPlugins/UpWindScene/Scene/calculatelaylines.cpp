@@ -37,48 +37,35 @@ void CalculateLaylines::setStartPoint(QPointF startPoint){
     qDebug() <<Q_FUNC_INFO <<"Setting start point";
 }
 
-void CalculateLaylines::start(){
-
-    qDebug() << "What a wonderful world!";
-    QVector<QPointF> pointsArray;
-    emit calculationComplete(pointsArray);
-}
-
 QVector<QPointF> CalculateLaylines::startCalc(QPolygonF routepoints, QPointF start){
-    //    this->boatGeoPosition = start;
-    qDebug() << "Start calculating laylines";
-
-    this->openPostgreConnection();
-   // qDebug() <<"Connection open";
-    this->ACCU_OFFSET = 1;
-    this->MAX_TURNING_POINTS = 3;
-    qDebug() << "Max turn point and accuoffset set";
-    this->geoBoatPos = start;
-    qDebug() << "startPointSet";
-    this->pathPoints = routepoints;
-
-    qDebug() << "ROUTEPOINTS: " << routepoints;
-
-    this->updateCheckPoint();
-    this->updateLayLines();
 
     QVector<QPointF> layLines;
     QVector<QPointF> rightpath;
     QVector<QPointF> leftpath;
-    qDebug() << "rightpath shortnavigation startCalc" << *pRightPath;
-    qDebug() << "leftpath shortnavigation startCalc" << *pLeftPath;
+
+    this->openPostgreConnection();
+
+    this->ACCU_OFFSET = 1;
+    this->MAX_TURNING_POINTS = 3;
+
+    this->geoBoatPos = start;
+    this->pathPoints = routepoints;
+
+    //Start process of calculating laylines. First get the the destination point on long term route (no obstacles between baot and long term route point).
+    this->updateCheckPoint();
+    //then calculate the laylines that takes the boat to that destination point
+    this->updateLayLines();
+
     rightpath = *pRightPath;
     leftpath = *pLeftPath;
     for(int i = 0; i < rightpath.size(); i++){
         layLines.append(rightpath.at(i));
     }
-    qDebug() << "ready size after rightpath" << ready.size();
+
     for(int i = 0; i < leftpath.size(); i++){
         layLines.append(leftpath.at(i));
     }
-    qDebug() << "ready size after leftpath: " << ready.size();
-//    emit finished();
-    return ready;
+
 
     return layLines;
 }
@@ -739,7 +726,6 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
         while ( !obs_r && !obs_l &&  i < (route.size()/* - 2*/ )) {
 
-            qDebug() << "Here we are!" << i;
             triangle.clear();
 
             triangle << boatPos;
@@ -754,7 +740,6 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
             if ( obs_r || obs_l ) {
 
-                qDebug() << "obs_r" << obs_r << "obs_l" << obs_l;
 
                 bool ready = false;
 
@@ -787,15 +772,7 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
             i++;
         }
 
-//        for(int j = 0; j <  route.size(); j++){
-//            if(triangle.at(2) == route.at(j)){
-//                qDebug() << "CheckPoint on piste: " << j << "routella, " << route.at(i);
-//                qDebug() << "Is geodestinypos on route: " << UwMath::checkIfBetweenCoordinates(triangle.at(2), route.at(i), route.at(i+1));
-//                qDebug() << "Is geodestinypos on route: " << UwMath::checkIfBetweenCoordinates(triangle.at(2), route.at(i-1), route.at(1));
-//            }
-//        }
 
-    qDebug() << "Triangle: " << triangle << " of which checkpoint is: " << triangle.at(2);
         return triangle.at( 2);
 
     }
@@ -810,15 +787,7 @@ void CalculateLaylines::updateCheckPoint()
     // Find the destiny check point in geographical format:
     geoDestinyPos = this->getNextPoint( this->pathPoints, geoBoatPos, ACCU_OFFSET);
 
-    //    qDebug() << "after";
-    //    qDebug() << "updateCheckPoint() boatGeoPosition " << boatGeoPosition;
-    //    qDebug() << "updateCheckPoint() geoBoatPos" << geoBoatPos;
-    //    qDebug() << "updateCheckPoint() ACCU_OFFSET is" << ACCU_OFFSET;
-    qDebug() << "updateCheckPoint() geoDestinyPos" << geoDestinyPos;
-    // and set it for Qt scene as well
     destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
-
-    qDebug() << "Resolved checkpoint: " << destinyPos;
 
 }
 
@@ -826,17 +795,10 @@ void CalculateLaylines::updateLayLines()
 {
     QTime timeUpdateLayLines;
     timeUpdateLayLines.start();
-    qDebug()<<"void ShortNavigation::updateLayLines()";
-    qDebug()<<"Max turning points: " <<this->MAX_TURNING_POINTS;
     this->pPolarDiagram->populate();
-//    pPolarDiagram->populate();
-    //    if (debug) qDebug() << "updateLayLines(): started";
 
     // LayLines are not calculated with the actual TWA,
     // but the TWA that we will have when heading towards our destiny.
-    qDebug() << " updateLayLines geoBoatPos " << geoBoatPos;
-    qDebug() << " updateLayLines geoDestinyPos" << geoDestinyPos;
-    qDebug() << " updateLayLines trueWindDirection" << trueWindDirection;
 
     //************HARDCODED VALUE FOR futureTrueWindAngle*************
     this->trueWindDirection = 270.0;
@@ -846,7 +808,6 @@ void CalculateLaylines::updateLayLines()
 
     layLinesAngle = pPolarDiagram->getAngle( windSpeed, futureTrueWindAngle);
 
-    qDebug() << "layLinesAngle" << layLinesAngle;
     // new paths...
     pLeftPath = new QVector<QPointF>;
     pRightPath = new QVector<QPointF>;
@@ -876,7 +837,6 @@ void CalculateLaylines::updateLayLines()
 
         if ( checkIntersection( "obstacles_r", rhomboid, rhomboid ) ||
              checkIntersection( "obstacles_l", rhomboid, rhomboid) ) {
-            qDebug() << "UPDATELAYLINES CHECKINTERSECTION";
             // If we have polygon obstacles in the area
             // OR we have line obstacles in the area:
 
@@ -889,8 +849,6 @@ void CalculateLaylines::updateLayLines()
                      trueWindDirection, layLinesAngle,
                      geoBoatPos, geoDestinyPos, rhomboid, *pLeftPath);
 
-            qDebug()<<"Left: " << pLeftPath;
-            qDebug()<<"Right: " << pRightPath;
 
         } else {
 
