@@ -1,7 +1,8 @@
 #include "calculatelaylines.h"
 
 
-CalculateLaylines::CalculateLaylines()
+CalculateLaylines::CalculateLaylines(QObject* parent)
+    : QObject(parent)
 {}
 
 void CalculateLaylines::openPostgreConnection(){
@@ -24,17 +25,21 @@ void CalculateLaylines::setPolarDiagram(PolarDiagram *diagram){
     this->pPolarDiagram = diagram;
 }
 
+void CalculateLaylines::start(){
+
+    QVector<QPointF> laylines = startCalc(this->pathPoints, this->startPoint);
+    emit calculationComplete(laylines);
+}
+
 
 void CalculateLaylines::setRoutePoints(QPolygonF routePoints){
 
     this->pathPoints = routePoints;
-    qDebug() <<Q_FUNC_INFO <<"Setting routePoints";
 }
 
 void CalculateLaylines::setStartPoint(QPointF startPoint){
 
     this->startPoint = startPoint;
-    qDebug() <<Q_FUNC_INFO <<"Setting start point";
 }
 
 QVector<QPointF> CalculateLaylines::startCalc(QPolygonF routepoints, QPointF start){

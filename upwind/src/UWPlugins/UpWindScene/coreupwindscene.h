@@ -60,6 +60,14 @@ public:
     void setBoat(Boat *boat);
     PolarDiagram *pDiagram;
 
+public slots:
+
+   void receiveData(QVector<QPointF> layLineData);
+   void error(QString err);
+
+signals:
+    void finished();
+
 private:
 
     void fetchChartObjects();
@@ -68,7 +76,6 @@ private:
     QVector<ChartObjectInterface*> chartObjects;
     Boat *boat;
 
-    //ShortNavigation *shortnavig;
     SettingsUI *settingsUI;
     Settings *settings;
 
@@ -77,7 +84,8 @@ private:
     float longitude;
 
     CalculateLaylines *calculateLaylines;
-    QVector<QPointF> *layLines;
+
+    QThread *thread;
 };
 
 #endif // COREUPWINDSCENE_H

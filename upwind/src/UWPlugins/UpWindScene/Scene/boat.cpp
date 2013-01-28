@@ -43,7 +43,7 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     gps->setPen(gps_pen);
     gps->setOpacity(0.7);
 
-    // Initial position Oulu:
+    // Initial position Oulu
     this->boatGeoPosition = new QPointF(/*25.109253, 65.013026*/ 25.2715, 65.1126);
 
     if(boatImage != NULL)
@@ -142,7 +142,6 @@ void Boat::setGPSLine(){
         float middlepointY = ((QApplication::desktop()->screenGeometry().height())/2);
         screenMiddlePoint.setX(middlepointX);
         screenMiddlePoint.setY(middlepointY);
-        qDebug() << "middlePointX" << screenMiddlePoint;
         gps->setLine(firstScenePosition.x(),firstScenePosition.y(), screenMiddlePoint.x(), screenMiddlePoint.y());
         //    if needed line to go from boat to left upper corner, before boat have moved and it get new boatGeoPositions
         //    gps->setLine(firstScenePosition.x(),firstScenePosition.y(),0,0);
@@ -233,13 +232,11 @@ void Boat::injectLaylines(QVector<QPointF> laylines){
 
     //    091112: leftPath data to pixeldata for drawing
     for (int i = 0; i < pathPort.size(); i++) {
-        qDebug() << "leftPath[i]: " << i << " " << &pathPort[i];
         geoLaylineToPixel(&pathPort[i]);
     }
     portLayline = QPolygonF(pathPort);
 
     for (int i = 0; i < pathStarBoard.size(); i++) {
-        qDebug() << "pathRight[i]: " << i << " " << &pathStarBoard[i];
         geoLaylineToPixel(&pathStarBoard[i]);
     }
     starBoardLayline = QPolygonF(pathStarBoard);
@@ -255,9 +252,6 @@ void Boat::geoLaylineToPixel(QPointF *geoPoint){
 }
 
 void Boat::setLaylines(){
-
-    qDebug() << "starboard: "<< starBoardLaylineItem->polygon();
-    qDebug() << "Port: " << portLaylineItem->polygon();
 
     portLaylineItem->setPolygon(this->portLayline);
     starBoardLaylineItem->setPolygon(this->starBoardLayline);

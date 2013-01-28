@@ -15,7 +15,7 @@ CoreUpWindScene::CoreUpWindScene(){
     this->loadObstacles = LoadObstacles::getInstance();
     this->route = Route::getInstance();
     this->pDiagram = PolarDiagram::getInstance();
-    calculateLaylines = new CalculateLaylines();
+    qRegisterMetaType<QVector<QPointF> >("QVector<QPointF>");
 }
 
 void CoreUpWindScene::setChartObjects(CoreChartProvider* model){
@@ -44,6 +44,11 @@ void CoreUpWindScene::initializeSettings(){
         settings->setSetting("Something", "false");
         settings->setSetting("SomethingElse", "false");
     }
+}
+
+void CoreUpWindScene::receiveData(QVector<QPointF> layLineData){
+
+     this->boat->injectLaylines(layLineData);
 }
 
 void CoreUpWindScene::setBoat(Boat *boat)
@@ -105,11 +110,11 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
             longitude = ((QString)strList.at(5)).toDouble();
         } else{
             this->parsedNMEAValues.append("E");
-           longitude = ((QString)strList.at(5)).toDouble();
+            longitude = ((QString)strList.at(5)).toDouble();
         }
 
-     //   longitude /= 100;
-     //   latitude /= 100;
+        //   longitude /= 100;
+        //   latitude /= 100;
         qDebug() << Q_FUNC_INFO << latitude << ", " << longitude;
         this->boat->setGeoPosition(longitude, latitude);
     }
@@ -119,11 +124,23 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
         QStringList strList = text.split(",");
         float heading = ((QString)strList.at(1)).toFloat();
         this->boat->setHeading(heading );
+
         if(this->route->getRoute().size() > 0){
-            QVector<QPointF> layLinePoints;
-            layLinePoints = this->calculateLaylines->startCalc(this->route->getRoute(), *this->boat->getGeoPosition());
-            qDebug() << layLines;
-            this->boat->injectLaylines(layLinePoints);
+
+            QThread* thread = new QThread;
+            calculateLaylines = new CalculateLaylines();
+            calculateLaylines->setPolarDiagram(this->pDiagram);
+            calculateLaylines->setRoutePoints(this->route->getRoute());
+            calculateLaylines->setStartPoint(*this->boat->getGeoPosition());
+            calculateLaylines->moveToThread(thread);
+
+            connect(thread, SIGNAL(started()), calculateLaylines, SLOT(start()));
+            connect(calculateLaylines, SIGNAL(calculationComplete(QVector<QPointF>)), this, SLOT(receiveData(QVector<QPointF>)));
+            connect(calculateLaylines, SIGNAL(finished()), thread, SLOT(quit()));
+            connect(calculateLaylines, SIGNAL(finished()), calculateLaylines, SLOT(deleteLater()));
+            connect(calculateLaylines, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+            thread->start();
         }
     }
 }

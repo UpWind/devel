@@ -6,6 +6,7 @@
 #include <QString>
 #include <QLineF>
 #include <QVector>
+#include <QObject>
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
@@ -15,12 +16,12 @@
 
 class CalculateLaylines : public QObject
 {
-   Q_OBJECT
+    Q_OBJECT
 
 
 public:
 
-    CalculateLaylines();
+    CalculateLaylines(QObject* parent = 0);
     ~CalculateLaylines();
     QVector<QPointF> startCalc(QPolygonF routepoints, QPointF start); //called from RouteWidget when layLine data is asked from *this
 
@@ -41,6 +42,13 @@ public:
     void setStartPoint(QPointF start);
     void setRoutePoints(QPolygonF routePoints);
 
+
+public Q_SLOTS:
+    void start();
+
+Q_SIGNALS:
+    void calculationComplete(QVector<QPointF> layLines);
+    void finished();
 
 private:
 
