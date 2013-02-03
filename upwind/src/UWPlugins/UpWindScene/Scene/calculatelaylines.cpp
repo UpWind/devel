@@ -6,6 +6,7 @@ CalculateLaylines::CalculateLaylines(QObject* parent)
 {}
 
 void CalculateLaylines::openPostgreConnection(){
+
     qDebug() << Q_FUNC_INFO;
     conn = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
     qDebug() << "Connection ok!";
@@ -27,8 +28,14 @@ void CalculateLaylines::setPolarDiagram(PolarDiagram *diagram){
 
 void CalculateLaylines::start(){
 
-    QVector<QPointF> laylines = startCalc(this->pathPoints, this->startPoint);
-    emit calculationComplete(laylines);
+    QTimer* timer = new QTimer;
+    timer->setInterval(10000);
+    connect(timer, SIGNAL(timeout()), this, SLOT(startCalc()));
+    timer->start();
+}
+
+void CalculateLaylines::calculationComplete(){
+    emit emitLaylines(this->layLines);
 }
 
 
@@ -42,11 +49,14 @@ void CalculateLaylines::setStartPoint(QPointF startPoint){
     this->startPoint = startPoint;
 }
 
-QVector<QPointF> CalculateLaylines::startCalc(QPolygonF routepoints, QPointF start){
-
+void CalculateLaylines::startCalc(){
+    qDebug() << "Starting calculation...";
     QVector<QPointF> layLines;
     QVector<QPointF> rightpath;
     QVector<QPointF> leftpath;
+
+    QPolygonF routepoints = this->pathPoints;
+    QPointF start = this->startPoint;
 
     this->openPostgreConnection();
 
@@ -71,8 +81,7 @@ QVector<QPointF> CalculateLaylines::startCalc(QPolygonF routepoints, QPointF sta
         layLines.append(leftpath.at(i));
     }
 
-
-    return layLines;
+     emit emitLaylines(layLines);
 }
 
 
