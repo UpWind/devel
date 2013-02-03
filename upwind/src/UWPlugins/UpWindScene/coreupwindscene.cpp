@@ -15,6 +15,7 @@ CoreUpWindScene::CoreUpWindScene(){
     this->loadObstacles = LoadObstacles::getInstance();
     this->route = Route::getInstance();
     this->pDiagram = PolarDiagram::getInstance();
+    this->threadingStarted = 0;
     qRegisterMetaType<QVector<QPointF> >("QVector<QPointF>");
 }
 
@@ -125,23 +126,22 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
         float heading = ((QString)strList.at(1)).toFloat();
         this->boat->setHeading(heading );
 
-        if(this->route->getRoute().size() > 0){
+    }
 
-            QThread* thread = new QThread;
-            calculateLaylines = new CalculateLaylines();
-            calculateLaylines->setPolarDiagram(this->pDiagram);
-            calculateLaylines->setRoutePoints(this->route->getRoute());
-            calculateLaylines->setStartPoint(*this->boat->getGeoPosition());
-            calculateLaylines->moveToThread(thread);
+    if (this->threadingStarted == 0){
+        this->threadingStarted = 1;
+   		QThread* thread = new QThread;
 
-            connect(thread, SIGNAL(started()), calculateLaylines, SLOT(start()));
-            connect(calculateLaylines, SIGNAL(calculationComplete(QVector<QPointF>)), this, SLOT(receiveData(QVector<QPointF>)));
-            connect(calculateLaylines, SIGNAL(finished()), thread, SLOT(quit()));
-            connect(calculateLaylines, SIGNAL(finished()), calculateLaylines, SLOT(deleteLater()));
-            connect(calculateLaylines, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    	calculateLaylines = new CalculateLaylines();
+    	calculateLaylines->setPolarDiagram(this->pDiagram);
+    	calculateLaylines->setRoutePoints(this->route->getRoute());
+    	calculateLaylines->setStartPoint(*this->boat->getGeoPosition());
+    	calculateLaylines->moveToThread(thread);
 
-            thread->start();
-        }
+  		connect(thread, SIGNAL(started()), calculateLaylines, SLOT(start()));
+   		connect(calculateLaylines, SIGNAL(emitLaylines(QVector<QPointF>)), this, SLOT(receiveData(QVector<QPointF>)));
+
+   		thread->start();
     }
 }
 Q_EXPORT_PLUGIN2(coreupwindscene, CoreUpWindScene)

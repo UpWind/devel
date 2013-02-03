@@ -86,6 +86,7 @@ private:
     CalculateLaylines *calculateLaylines;
 
     QThread *thread;
+    int threadingStarted;
 };
 
 #endif // COREUPWINDSCENE_H
