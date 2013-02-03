@@ -47,6 +47,7 @@ public Q_SLOTS:
 public slots:
         void calculationComplete();
         void startCalc();
+        void receiveData(QVector<QPointF> route, QPointF startpoint);
 Q_SIGNALS:
     void emitLaylines(QVector<QPointF> layLines);
     void finished();

@@ -49,6 +49,11 @@ void CalculateLaylines::setStartPoint(QPointF startPoint){
     this->startPoint = startPoint;
 }
 
+void CalculateLaylines::receiveData(QVector<QPointF> route, QPointF startpoint){
+    this->pathPoints = route;
+    this->startPoint = startPoint;
+}
+
 void CalculateLaylines::startCalc(){
     qDebug() << "Starting calculation...";
     QVector<QPointF> layLines;
@@ -58,30 +63,34 @@ void CalculateLaylines::startCalc(){
     QPolygonF routepoints = this->pathPoints;
     QPointF start = this->startPoint;
 
-    this->openPostgreConnection();
+    if (routepoints.size() > 0){
+        this->openPostgreConnection();
 
-    this->ACCU_OFFSET = 1;
-    this->MAX_TURNING_POINTS = 3;
+        this->ACCU_OFFSET = 1;
+        this->MAX_TURNING_POINTS = 3;
 
-    this->geoBoatPos = start;
-    this->pathPoints = routepoints;
+        this->geoBoatPos = start;
+        this->pathPoints = routepoints;
 
-    //Start process of calculating laylines. First get the the destination point on long term route (no obstacles between baot and long term route point).
-    this->updateCheckPoint();
-    //then calculate the laylines that takes the boat to that destination point
-    this->updateLayLines();
+        //Start process of calculating laylines. First get the the destination point on long term route (no obstacles between baot and long term route point).
+        this->updateCheckPoint();
+        //then calculate the laylines that takes the boat to that destination point
+        this->updateLayLines();
 
-    rightpath = *pRightPath;
-    leftpath = *pLeftPath;
-    for(int i = 0; i < rightpath.size(); i++){
-        layLines.append(rightpath.at(i));
+        rightpath = *pRightPath;
+        leftpath = *pLeftPath;
+        for(int i = 0; i < rightpath.size(); i++){
+            layLines.append(rightpath.at(i));
+        }
+
+        for(int i = 0; i < leftpath.size(); i++){
+            layLines.append(leftpath.at(i));
+        }
+
+        this->layLines = layLines;
+        emit emitLaylines(this->layLines);
     }
 
-    for(int i = 0; i < leftpath.size(); i++){
-        layLines.append(leftpath.at(i));
-    }
-
-     emit emitLaylines(layLines);
 }
 
 
