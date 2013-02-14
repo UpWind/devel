@@ -34,11 +34,6 @@ void CalculateLaylines::start(){
     timer->start();
 }
 
-void CalculateLaylines::calculationComplete(){
-    emit emitLaylines(this->layLines);
-}
-
-
 void CalculateLaylines::setRoutePoints(QPolygonF routePoints){
 
     this->pathPoints = routePoints;
@@ -87,8 +82,7 @@ void CalculateLaylines::startCalc(){
             layLines.append(leftpath.at(i));
         }
 
-        this->layLines = layLines;
-        emit emitLaylines(this->layLines);
+        emit emitLaylines(layLines);
     }
 
 }

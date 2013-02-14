@@ -45,7 +45,6 @@ public:
 public Q_SLOTS:
     void start();
 public slots:
-        void calculationComplete();
         void startCalc();
         void receiveData(QVector<QPointF> route, QPointF startpoint);
 Q_SIGNALS:
