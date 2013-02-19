@@ -741,7 +741,7 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
         //Note: This doesn't work correctly. Here the search for the route fails instantly when obstacles
         //are found on the route. What if there is obstacle-free route on the next route interval:
 
-        while ( !obs_r && !obs_l &&  i < (route.size()/* - 2*/ )) {
+        while ( !obs_r && !obs_l &&  i < (route.size() - 1 )) {
 
             triangle.clear();
 
