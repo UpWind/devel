@@ -10,6 +10,7 @@ class Wreck: public ChartObjectInterface
 
 public:
     explicit Wreck(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinateData,OGRLayer* feat, QString tabName);
+    Wreck(QList<ChartObjectInterface::ChartElement> rocks, OGRLayer *feat, QString tabName);
     ~Wreck();
     ChartObjectInterface::ChartObjectType getType() const;
     QVector<QPolygonF> getPixelGeometry() const;

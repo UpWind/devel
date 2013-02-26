@@ -16,7 +16,7 @@ ChartWidget::ChartWidget(QSize size) :
     size(size)
 {
     qDebug()<<Q_FUNC_INFO;
-    this->setCacheMode(QGraphicsItem::ItemCoordinateCache);
+    this->setCacheMode(QGraphicsItem::NoCache);
 }
 
 ChartWidget::~ChartWidget(){}
@@ -35,54 +35,67 @@ void ChartWidget::fetchChartObjects() {
 }
 
 QRectF ChartWidget::boundingRect() const {
-    qDebug() << Q_FUNC_INFO;
-
     return QRectF(0,0, size.width()*zoomFactor, size.height()*zoomFactor);
+}
+
+void ChartWidget::drawChartSymbol(QPainter *painter, const QString &resource, const QPointF &point) {
+    painter->save();
+
+    /*
+     * This reverts the scale operation affecting the whole chart item.
+     * This is needed to keep the size of navigation symbols the same
+     * when the overall scale of the chart item changes.
+     */
+    if (zoomFactor > 0) {
+        painter->scale(1 / zoomFactor, 1 / zoomFactor);
+    }
+
+    QPixmap pixmap(resource);
+    QPointF correctedPoint((point.x() * zoomFactor) - pixmap.width() / 2,
+                (point.y() * zoomFactor) - pixmap.height() / 2);
+
+    painter->drawPixmap(correctedPoint, pixmap);
+
+    painter->restore();
 }
 
 void ChartWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
 
-	(void)option;
-	(void)widget;
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
 
-    qDebug()<<Q_FUNC_INFO;
     painter->setRenderHint(QPainter::Antialiasing, false);
 
     painter->scale(zoomFactor, zoomFactor);
     painter->rotate(rotateAngle);
-    foreach(ChartObjectInterface *object, chartObjects){
+
+    foreach (ChartObjectInterface *object, chartObjects) {
 
         QPen pen = object->getPen();
-        pen.setWidthF(pen.widthF()/zoomFactor);
+        pen.setWidthF(pen.widthF() / zoomFactor);
         painter->setPen(pen);
         painter->setBrush(object->getBrush().color());
         QVector<QPolygonF> geometry = object->getPixelGeometry();
 
-        switch(object->getType()){
+        switch (object->getType()) {
         case ChartObjectInterface::Point:
-            //qDebug() << Q_FUNC_INFO << "Drawing points";
-            if(object->getTableName() != "signsound_p"){
-                //qDebug() << object->getTableName();
-                foreach(QPolygonF poly, geometry){
-                    foreach(QPointF point, poly){
-                        painter->drawEllipse(point, 4, 4);
-                    }
+            foreach(ChartObjectInterface::ChartElement e, object->elements()) {
+                QString resource = object->resourceName(e.attributes);
+                if (!resource.isEmpty()) {
+                    drawChartSymbol(painter, resource, QPointF(e.pixelPoint.x(), e.pixelPoint.y()));
                 }
             }
-            break;
+        break;
         case ChartObjectInterface::Line:
-            //qDebug() << Q_FUNC_INFO << "Drawing lines";
             foreach(QPolygonF poly, geometry)
                 painter->drawPolyline(poly);
-            break;
+        break;
         case ChartObjectInterface::Polygon:
-            //qDebug() << Q_FUNC_INFO << "Drawing polygons";
             foreach(QPolygonF poly, geometry)
                 painter->drawPolygon(poly);
-            break;
+        break;
         default:
-            //qDebug() << Q_FUNC_INFO << "ChartObject not found.";
-            break;
+        break;
         }
     }
 

@@ -2,7 +2,6 @@
 #include "../../Settings/settings.h"
 #include "../shared/uwmath.h"
 #include "../UpWindScene/Scene/projection.h"
-//#include "../UpWindScene/Scene/polardiagram.h"
 
 #include <math.h>
 #include "ogrsf_frmts.h"

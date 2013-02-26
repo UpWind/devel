@@ -54,12 +54,15 @@
         <file>symbols/buoy_danger.png</file>
         <file>symbols/buoy_east.png</file>
         <file>symbols/buoy_left.png</file>
+        <file>symbols/40_buoy_left.png</file>
         <file>symbols/buoy_northern.png</file>
         <file>symbols/buoy_right.png</file>
+        <file>symbols/40_buoy_right.png</file>
         <file>symbols/buoy_safe.png</file>
         <file>symbols/buoy_safewatermark.png</file>
         <file>symbols/buoy_southern.png</file>
         <file>symbols/buoy_specialmark.png</file>
+        <file>symbols/40_buoy_special.png</file>
         <file>symbols/buoy_west.png</file>
         <file>symbols/buoyX.png</file>
         <file>symbols/cairn.png</file>
@@ -91,12 +94,12 @@
         <file>symbols/pile.png</file>
         <file>symbols/radartarget.png</file>
         <file>symbols/redcone.png</file>
-        <file>symbols/rock1.png</file>
-        <file>symbols/rock2.png</file>
-        <file>symbols/rock3.png</file>
-        <file>symbols/rock4.png</file>
-        <file>symbols/rock5.png</file>
-        <file>symbols/rock6.png</file>
+        <file>symbols/20_rock1.png</file>
+        <file>symbols/20_rock2.png</file>
+        <file>symbols/20_rock3.png</file>
+        <file>symbols/20_rock4.png</file>
+        <file>symbols/20_rock5.png</file>
+        <file>symbols/20_rock6.png</file>
         <file>symbols/spar_dangermark.png</file>
         <file>symbols/spar_east.png</file>
         <file>symbols/spar_left.png</file>

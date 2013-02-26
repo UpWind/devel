@@ -1,4 +1,4 @@
-
+#define QT_NO_DEBUG_OUTPUT
 
 #include <QGraphicsProxyWidget>
 #include <QGraphicsScene>
@@ -116,6 +116,7 @@ void RouteWidget::drawRoute(bool activate)
 }
 
 void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    qDebug() << Q_FUNC_INFO;
 
    QPointF end;
 

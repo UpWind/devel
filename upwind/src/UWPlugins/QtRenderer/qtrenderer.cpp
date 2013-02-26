@@ -24,7 +24,7 @@ QString QtRenderer::getName()
 void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, CoreChartProvider* model ){
     CoreViewRenderer::ConnectPlugin(scene, frame, model);
     qDebug()<<Q_FUNC_INFO<<"Chart drawing area size: "<<frame->size();
-    QGraphicsScene *graphicsScene=new QGraphicsScene;
+    QGraphicsScene *graphicsScene = new QGraphicsScene;
     QRectF chartBoundaries = model->getChartBoundaries();
     chartWidget = new ChartWidget(frame->size());
     routeWidget = new RouteWidget(frame->size(),scene,chartBoundaries);
@@ -49,7 +49,7 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
     boatWidget->updateBoatPosition();
 
 
-    QGraphicsView *view=new QGraphicsView(graphicsScene, frame);
+    QGraphicsView *view = new QGraphicsView(graphicsScene, frame);
     view->setGeometry(0, 0, frame->size().width(), frame->size().height());
     chartWidget->setModel(model);
     view->lower();

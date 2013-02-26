@@ -1,6 +1,5 @@
 #include "navaid.h"
 
-
 NavaId::NavaId(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinateData, OGRLayer* feat, QString tabName) :
      ChartObjectInterface(geomPixelData,geomCoordinateData,feat,tabName),
     pGeometry(geomPixelData),
@@ -9,6 +8,13 @@ NavaId::NavaId(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordina
     tableName(tabName)
 {
     setupGraphicProperties();
+}
+
+NavaId::NavaId(QList<ChartObjectInterface::ChartElement> rocks, OGRLayer *feat, QString tabName)
+    : ChartObjectInterface(QVector<QPolygonF>(), QVector<QPolygonF>(), feat, tabName) {
+    tableName = tabName;
+    featureData = feat;
+    mElements = rocks;
 }
 
 NavaId::~NavaId(){}
@@ -44,4 +50,32 @@ QString NavaId::getTableName() const {
 
 OGRLayer* NavaId::getFeatureData() const {
     return featureData;
+}
+
+const QString NavaId::resourceName(ChartObjectInterface::ChartElement::Attributes attributes) const {
+    QString resource;
+    switch (attributes.value("fi_typenav").toInt()) {
+    case 9:
+        // buoy
+        switch (attributes.value("ntypnavaid").toInt()) {
+        case 1:
+            //left side mark
+            resource = ":/symbols/40_buoy_left.png";
+        break;
+        case 2:
+            //right side mark
+            resource = ":/symbols/40_buoy_right.png";
+        break;
+        case 9:
+            // special mark
+            resource = ":/symbols/40_buoy_specialmark.png";
+        break;
+        default:
+        break;
+        }
+    break;
+    default:
+    break;
+    }
+    return resource;
 }

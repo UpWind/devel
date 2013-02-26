@@ -10,6 +10,13 @@ Rock::Rock(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinateDa
     setupGraphicProperties();
 }
 
+Rock::Rock(QList<ChartObjectInterface::ChartElement> rocks, OGRLayer *feat, QString tabName)
+    : ChartObjectInterface(QVector<QPolygonF>(), QVector<QPolygonF>(), feat, tabName) {
+    tableName = tabName;
+    featureData = feat;
+    mElements = rocks;
+}
+
 Rock::~Rock(){}
 
 void Rock::setupGraphicProperties() {
@@ -44,5 +51,30 @@ QString Rock::getTableName() const {
 
 OGRLayer* Rock::getFeatureData() const {
     return featureData;
+}
+
+const QString Rock::resourceName(ChartObjectInterface::ChartElement::Attributes attributes) const {
+    QString resource;
+    switch (attributes.value("fi_typrock").toInt()) {
+    case 1:
+        resource = ":/symbols/20_rock1.png";
+        break;
+    case 2:
+        resource = ":/symbols/20_rock2.png";
+        break;
+    case 3:
+        resource = ":/symbols/20_rock3.png";
+        break;
+    case 4:
+        resource = ":/symbols/20_rock4.png";
+        break;
+    case 5:
+        resource = ":/symbols/20_rock5.png";
+        break;
+    case 6:
+        resource = ":/symbols/20_rock6.png";
+        break;
+    }
+    return resource;
 }
 

@@ -10,6 +10,7 @@ class SignSound: public ChartObjectInterface
 
 public:
     explicit SignSound(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinateData,OGRLayer* feat, QString tabName);
+    SignSound(QList<ChartObjectInterface::ChartElement> rocks, OGRLayer *feat, QString tabName);
     ~SignSound();
     ChartObjectInterface::ChartObjectType getType() const;
     QVector<QPolygonF> getPixelGeometry() const;

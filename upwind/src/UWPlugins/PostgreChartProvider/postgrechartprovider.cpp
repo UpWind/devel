@@ -211,22 +211,20 @@ void PostgreChartProvider::setBoundingBox(OGRLayer *layer){
                              UwMath::toConformalInverted(QPointF(maxX, minY)));
 }
 
-void PostgreChartProvider::setAreaFilter(QRectF area){
+void PostgreChartProvider::setAreaFilter(QRectF area) {
     filter = area;
-    QString layerName, baseName;
-    OGRwkbGeometryType layerType;
-    ChartObjectInterface *obj;
 
+    QHash<QString, QList<ChartObjectInterface::ChartElement> > chartPointLayers;
 
-    foreach(OGRLayer *layer, layers){
-        layerType = wkbFlatten(layer->GetLayerDefn()->GetGeomType());
-        layerName = layer->GetLayerDefn()->GetName();
+    foreach (OGRLayer *layer, layers) {
+        OGRwkbGeometryType layerType = wkbFlatten(layer->GetLayerDefn()->GetGeomType());
+        const QString &layerName = layer->GetLayerDefn()->GetName();
 
-        if(layerType == wkbPoint || layerType == wkbMultiPoint)
-            getPoints(layer);
+        if (layerType == wkbPoint || layerType == wkbMultiPoint) {
+            chartPointLayers.insert(layerName, getPoints(layer));
 
-        else if((detailLevel == 0 && !layerName.contains("level"))
-             || (detailLevel != 0 && layerName.contains("level" + QString::number(detailLevel)))){
+        } else if((detailLevel == 0 && !layerName.contains("level"))
+             || (detailLevel != 0 && layerName.contains("level" + QString::number(detailLevel)))) {
 
             if(layerType == wkbPolygon || layerType == wkbMultiPolygon)
                 getPolygons(layer);
@@ -237,10 +235,11 @@ void PostgreChartProvider::setAreaFilter(QRectF area){
     }
 
     //TODO Add all selected layers as ChartObject to chartObjects vector
-    foreach(const QString layerName, layersPixelGeometry.keys()) {
-        baseName = cleanupLayerName(layerName);
+    foreach (const QString layerName, layersPixelGeometry.keys()) {
+        ChartObjectInterface *obj = NULL;
+        const QString &baseName = cleanupLayerName(layerName);
 
-        if(baseName == "deptharea_r"){
+        if (baseName == "deptharea_r") {
 
             getDepths(layers.value(layerName));
 
@@ -250,15 +249,12 @@ void PostgreChartProvider::setAreaFilter(QRectF area){
             QVector<QPolygonF> deepgeo;
             QVector<QPolygonF> wkb = layersPixelGeometry.value(layerName);
             QVector<QPolygonF> wkb2 = layersCoordinateGeometry.value(layerName);
-            for (int l = 0; l<depths.size(); l++)
-            {
-                if(depths.at(l)>=10)
-                {
+
+            for (int l = 0; l < depths.size(); l++) {
+                if (depths.at(l) >= 10) {
                     deep.append(wkb.at(l));
                     deepgeo.append(wkb2.at(l));
-                }
-                else
-                {
+                } else {
                     shallow.append(wkb.at(l));
                     shallowgeo.append(wkb2.at(l));
                 }
@@ -279,16 +275,8 @@ void PostgreChartProvider::setAreaFilter(QRectF area){
            obj = new TransmissionLine(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
         } else if(baseName == "bridge_l") {
            obj = new Bridge(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(baseName), baseName);
-        } else if(baseName == "rock_p") {
-           obj = new Rock(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
-        } else if(baseName == "wreck_p") {
-           obj = new Wreck(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
-        } else if(baseName == "navaid_p") {
-           obj = new NavaId(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
         } else if(baseName == "depthcont_l") {
            obj = new DepthContour(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
-        } else if(baseName == "signsound_p") {
-           obj = new SignSound(layersPixelGeometry.value(layerName), layersCoordinateGeometry.value(layerName),layers.value(layerName), baseName);
         } else {
            qDebug() << Q_FUNC_INFO << "object in unknown layer: " << baseName;
         }
@@ -298,6 +286,26 @@ void PostgreChartProvider::setAreaFilter(QRectF area){
         qDebug() << Q_FUNC_INFO << "object in layer: " << baseName;
         chartObjects.append(obj);
     }
+
+    foreach (const QString &layerName, chartPointLayers.keys()) {
+        const QString &baseName = cleanupLayerName(layerName);
+
+        ChartObjectInterface *chartObj = NULL;
+        if (layerName.contains("rock")) {
+            chartObj = new Rock(chartPointLayers.value(layerName), layers.value(layerName), baseName);
+        } else if (layerName.contains("navaid")) {
+           chartObj = new NavaId(chartPointLayers.value(layerName), layers.value(layerName), baseName);
+        } else if (layerName.contains("wreck")) {
+            chartObj = new Wreck(chartPointLayers.value(layerName),layers.value(layerName), baseName);
+        } else if (layerName.contains("signsound")) {
+            chartObj = new SignSound(chartPointLayers.value(layerName), layers.value(layerName), baseName);
+        }
+
+        if (chartObj) {
+            chartObjects.append(chartObj);
+        }
+    }
+
     emit modelChanged();
 }
 
@@ -348,16 +356,14 @@ Settings * PostgreChartProvider::getSettings(){
     return settings;
 }
 
-void PostgreChartProvider::getPoints(OGRLayer *layer){
-    QVector<QPointF> points;
-     QVector<QPointF> geoPoints;
-    QVector<QPolygonF> pointsAsPolygons;
-     QVector<QPolygonF> geopointsAsPolygons;
+QList<ChartObjectInterface::ChartElement> PostgreChartProvider::getPoints(OGRLayer *layer){
     OGRGeometry *geometry;
     OGRFeature *feature;
-    OGRMultiPoint *multiPoint;
-    OGRPoint *point;
-    int pointCount;
+    QList<ChartObjectInterface::ChartElement> pointChartElements;
+
+    OGRFeatureDefn *featureDefn = layer->GetLayerDefn();
+    QString layerName = featureDefn->GetName();
+    int fieldCount = featureDefn->GetFieldCount();
 
     layer->ResetReading();
 
@@ -365,36 +371,55 @@ void PostgreChartProvider::getPoints(OGRLayer *layer){
         geometry = feature->GetGeometryRef();
 
         if(geometry != NULL && wkbFlatten(geometry->getGeometryType()) == wkbPoint){
-            point = (OGRPoint *) geometry;
+            OGRPoint *ogrPoint = (OGRPoint *) geometry;
+            QHash<QString, QVariant> attributes;
 
-            QPointF p(point->getX(), point->getY());
-            geoPoints.append(p);
+            for (int i = 0; i < fieldCount; i++) {
+                OGRFieldDefn *fieldDefn = featureDefn->GetFieldDefn(i);
+                QString fieldName = fieldDefn->GetNameRef();
 
-            geopointToPixel(&p);
-            points.append(p);
-        }
-        else if(geometry != NULL && wkbFlatten(geometry->getGeometryType()) == wkbMultiPoint){
-            multiPoint = (OGRMultiPoint *) geometry;
-
-            pointCount = multiPoint->getNumGeometries();
-
-            for(int i = 0; i < pointCount; ++i){
-                point = (OGRPoint *) multiPoint->getGeometryRef(i);
-                QPointF p(point->getX(), point->getY());
-                geoPoints.append(p);
-                geopointToPixel(&p);
-                points.append(p);
+                if (fieldDefn->GetType() == OFTInteger) {
+                    attributes.insert(fieldName, feature->GetFieldAsInteger(i));
+                } else if(fieldDefn->GetType() == OFTReal) {
+                    attributes.insert(fieldName, feature->GetFieldAsDouble(i));
+                } else if (fieldDefn->GetType() == OFTString) {
+                    attributes.insert(fieldName, feature->GetFieldAsString(i));
+                }
             }
+
+            QPointF point(ogrPoint->getX(), ogrPoint->getY());
+
+            ChartObjectInterface::ChartElement element;
+            element.name = layerName;
+            element.attributes = attributes;
+            element.geoPoint = point;
+            geopointToPixel(&point);
+            element.pixelPoint = point;
+
+            pointChartElements.append(element);
         }
-        else
-            qDebug() << Q_FUNC_INFO << ": No point geometry";
+
+        /*
+         * Case of wkbMultiPoint should be handled somewhere else?
+         * Current chart data doesn't seem to return any wkbMultiPoint objects.
+         */
+        //else if(geometry != NULL && wkbFlatten(geometry->getGeometryType()) == wkbMultiPoint){
+        //    multiPoint = (OGRMultiPoint *) geometry;
+        //    pointCount = multiPoint->getNumGeometries();
+        //    for(int i = 0; i < pointCount; ++i){
+        //        point = (OGRPoint *) multiPoint->getGeometryRef(i);
+        //        QPointF p(point->getX(), point->getY());
+        //        geoPoints.append(p);
+        //        geopointToPixel(&p);
+        //        points.append(p);
+        //    }
+        //}
+
+
         OGRFeature::DestroyFeature(feature);
     }
-    geopointsAsPolygons.append(geoPoints);
-    pointsAsPolygons.append(points);
-    layersPixelGeometry.insert(layer->GetLayerDefn()->GetName(), pointsAsPolygons);
-    layersCoordinateGeometry.insert(layer->GetLayerDefn()->GetName(), geopointsAsPolygons);
 
+    return pointChartElements;
 }
 
 void PostgreChartProvider::getLines(OGRLayer *layer){

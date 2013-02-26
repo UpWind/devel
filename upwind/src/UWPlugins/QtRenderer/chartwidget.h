@@ -36,6 +36,8 @@ private slots:
     void fetchChartObjects();
 
 private:
+    void drawChartSymbol(QPainter *painter, const QString &resource, const QPointF &point);
+
     CoreChartProvider *model;
     QVector<ChartObjectInterface*> chartObjects;
     QPointF mouseButtonPressedPositition;
