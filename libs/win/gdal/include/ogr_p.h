@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: ogr_p.h 10645 2007-01-18 02:22:39Z warmerdam $
+ * $Id: ogr_p.h 23638 2011-12-22 21:02:56Z rouault $
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  Some private helper functions and stuff for OGR implementation.
@@ -27,8 +27,8 @@
  * DEALINGS IN THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef _OGR_P_H_INCLUDED
-#define _OGR_P_H_INCLUDED
+#ifndef OGR_P_H_INCLUDED
+#define OGR_P_H_INCLUDED
 
 /* -------------------------------------------------------------------- */
 /*      Include the common portability library ... lets us do lots      */
@@ -37,6 +37,10 @@
 
 #include "cpl_string.h"
 #include "cpl_conv.h"
+#include "cpl_minixml.h"
+
+#include "ogr_core.h"
+#include "ogr_geometry.h"
 
 #ifdef CPL_MSB 
 #  define OGR_SWAP(x)   (x == wkbNDR)
@@ -60,8 +64,32 @@ const char CPL_DLL * OGRWktReadPoints( const char * pszInput,
                                        int * pnReadPoints );
 
 void CPL_DLL OGRMakeWktCoordinate( char *, double, double, double, int );
+
 #endif
 
+void OGRFormatDouble( char *pszBuffer, int nBufferLen, double dfVal, char chDecimalSep, int nPrecision = 15 );
+
+/* -------------------------------------------------------------------- */
+/*      Date-time parsing and processing functions                      */
+/* -------------------------------------------------------------------- */
+
+/* Internal use by OGR drivers only, CPL_DLL is just there in case */
+/* they are compiled as plugins  */
+int CPL_DLL OGRGetDayOfWeek(int day, int month, int year);
+int CPL_DLL OGRParseXMLDateTime( const char* pszXMLDateTime,
+                               int *pnYear, int *pnMonth, int *pnDay,
+                               int *pnHour, int *pnMinute, float* pfSecond, int *pnTZ);
+int CPL_DLL OGRParseRFC822DateTime( const char* pszRFC822DateTime,
+                                  int *pnYear, int *pnMonth, int *pnDay,
+                                  int *pnHour, int *pnMinute, int *pnSecond, int *pnTZ);
+char CPL_DLL * OGRGetRFC822DateTime(int year, int month, int day,
+                                    int hour, int minute, int second, int TZ);
+char CPL_DLL * OGRGetXMLDateTime(int year, int month, int day,
+                                 int hour, int minute, int second, int TZFlag);
+char CPL_DLL * OGRGetXML_UTF8_EscapedString(const char* pszString);
+
+int OGRCompareDate(   OGRField *psFirstTuple,
+                      OGRField *psSecondTuple ); /* used by ogr_gensql.cpp and ogrfeaturequery.cpp */
 
 /* General utility option processing. */
 int CPL_DLL OGRGeneralCmdLineProcessor( int nArgc, char ***ppapszArgv, int nOptions );
@@ -69,17 +97,37 @@ int CPL_DLL OGRGeneralCmdLineProcessor( int nArgc, char ***ppapszArgv, int nOpti
 /************************************************************************/
 /*     Support for special attributes (feature query and selection)     */
 /************************************************************************/
-CPL_C_START
-#include "swq.h"
-CPL_C_END
-
 #define SPF_FID 0
 #define SPF_OGR_GEOMETRY 1
 #define SPF_OGR_STYLE 2
 #define SPF_OGR_GEOM_WKT 3
-#define SPECIAL_FIELD_COUNT 4
+#define SPF_OGR_GEOM_AREA 4
+#define SPECIAL_FIELD_COUNT 5
 
-extern char* SpecialFieldNames[SPECIAL_FIELD_COUNT];
-extern swq_field_type SpecialFieldTypes[SPECIAL_FIELD_COUNT];
+extern const char* SpecialFieldNames[SPECIAL_FIELD_COUNT];
 
-#endif /* ndef _OGR_P_H_INCLUDED */
+#ifdef _SWQ_H_INCLUDED_
+extern const swq_field_type SpecialFieldTypes[SPECIAL_FIELD_COUNT];
+#endif
+
+/************************************************************************/
+/*     Some SRS related stuff, search in SRS data files.                */
+/************************************************************************/
+
+OGRErr CPL_DLL OSRGetEllipsoidInfo( int, char **, double *, double *);
+
+/* Fast atof function */
+double OGRFastAtof(const char* pszStr);
+
+OGRErr CPL_DLL OGRCheckPermutation(int* panPermutation, int nSize);
+
+/* GML related */
+
+OGRGeometry *GML2OGRGeometry_XMLNode( const CPLXMLNode *psNode,
+                                      int bGetSecondaryGeometryOption,
+                                      int nRecLevel = 0,
+                                      int bIgnoreGSG = FALSE,
+                                      int bOrientation = TRUE,
+                                      int bFaceHoleNegative = FALSE );
+
+#endif /* ndef OGR_P_H_INCLUDED */

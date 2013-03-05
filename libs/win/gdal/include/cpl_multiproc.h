@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: cpl_multiproc.h 13253 2007-12-05 14:54:00Z warmerdam $
+ * $Id: cpl_multiproc.h 23729 2012-01-08 01:11:14Z rouault $
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  CPL Multi-Threading, and process handling portability functions.
@@ -41,6 +41,9 @@
 
 #if defined(WIN32) && !defined(CPL_MULTIPROC_STUB)
 #  define CPL_MULTIPROC_WIN32
+/* MinGW can have pthread support, so disable it to avoid issues */
+/* in cpl_multiproc.cpp */
+#  undef  CPL_MULTIPROC_PTHREAD
 #endif
 
 #if !defined(CPL_MULTIPROC_WIN32) && !defined(CPL_MULTIPROC_PTHREAD) \
@@ -98,17 +101,28 @@ class CPL_DLL CPLMutexHolder
 #define CTLS_CSVTABLEPTR                3         /* cpl_csv.cpp */
 #define CTLS_CSVDEFAULTFILENAME         4         /* cpl_csv.cpp */
 #define CTLS_ERRORCONTEXT               5         /* cpl_error.cpp */
-#define CTLS_FINDERINFO                 6         /* cpl_finder.cpp */
+#define CTLS_UNUSED1                    6
 #define CTLS_PATHBUF                    7         /* cpl_path.cpp */
 #define CTLS_SPRINTFBUF                 8         /* cpl_string.cpp */
 #define CTLS_SWQ_ERRBUF                 9         /* swq.c */
 #define CTLS_CPLSPRINTF                10         /* cpl_string.h */
+#define CTLS_RESPONSIBLEPID            11         /* gdaldataset.cpp */
+#define CTLS_VERSIONINFO               12         /* gdal_misc.cpp */
+#define CTLS_VERSIONINFO_LICENCE       13         /* gdal_misc.cpp */
+#define CTLS_CONFIGOPTIONS             14         /* cpl_conv.cpp */
+#define CTLS_FINDFILE                  15         /* cpl_findfile.cpp */
 
 #define CTLS_MAX                       32         
 
 CPL_C_START
 void CPL_DLL * CPLGetTLS( int nIndex );
 void CPL_DLL CPLSetTLS( int nIndex, void *pData, int bFreeOnExit );
+
+/* Warning : the CPLTLSFreeFunc must not in any case directly or indirectly */
+/* use or fetch any TLS data, or a terminating thread will hang ! */
+typedef void (*CPLTLSFreeFunc)( void* pData );
+void CPL_DLL CPLSetTLSWithFreeFunc( int nIndex, void *pData, CPLTLSFreeFunc pfnFree );
+
 void CPL_DLL CPLCleanupTLS();
 CPL_C_END
 

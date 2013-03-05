@@ -25,7 +25,7 @@
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
-#include "/usr/include/postgresql/libpq-fe.h"
+#include "libpq-fe.h"
 #include "../shared/uwmath.h"
 #include "polardiagram.h"
 #include "../../UWCore/pluginmanager.h"

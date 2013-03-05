@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: ogr_featurestyle.h 13311 2007-12-11 03:18:19Z dmorissette $
+ * $Id: ogr_featurestyle.h 19442 2010-04-18 00:02:37Z mloskot $
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  Define of Feature Representation
@@ -36,29 +36,15 @@
 
 class OGRFeature;
 
-
-/* All OGRStyleTool param lists are defined in ogr_core.h, except for 
- * OGRSTVectorParam which is kept here because we do not want to expose
- * it to the C API.
- * 
- * The OGRStyleVector class (and OGRSTVectorParam enum) are currently unused
- * and will likely be removed in a future release, so their use is discouraged.
+/**
+ * \file ogr_featurestyle.h
+ *
+ * Simple feature style classes.
  */
-typedef enum ogr_style_tool_param_vector_id
-{  
-    OGRSTVectorId       = 0,
-    OGRSTVectorNoCompress = 1,
-    OGRSTVectorSprain   = 2,
-    OGRSTVectorNoSlope  = 3,
-    OGRSTVectorMirroring = 4,
-    OGRSTVectorCentering = 5,
-    OGRSTVectorPriority = 6,
-    OGRSTVectorPlacement = 7,
-    OGRSTVectorLength   = 8,
-    OGRSTVectorEven     = 9,
-    OGRSTVectorLast     = 10
-              
-} OGRSTVectorParam;
+
+/*
+ * All OGRStyleTool param lists are defined in ogr_core.h.
+ */
 
 typedef enum ogr_style_type
 {
@@ -89,13 +75,16 @@ typedef struct ogr_style_value
 
 //Everytime a pszStyleString gived in parameter is NULL, 
 //    the StyleString defined in the Mgr will be use.
-
+/**
+ * This class represents a style table
+ */
 class CPL_DLL OGRStyleTable
 {
   private:
     char **m_papszStyleTable;
 
     CPLString osLastRequestedStyleName;
+    int iNextStyle;
 
   public:
     OGRStyleTable();
@@ -112,11 +101,17 @@ class CPL_DLL OGRStyleTable
     void  Print(FILE *fpOut);
     void  Clear();
     OGRStyleTable   *Clone();
+    void ResetStyleStringReading();
+    const char *GetNextStyle();
+    const char *GetLastStyleName();
 };
 
 
 class OGRStyleTool;
 
+/**
+ * This class represents a style manager
+ */
 class CPL_DLL OGRStyleMgr
 {
   private:
@@ -158,6 +153,9 @@ class CPL_DLL OGRStyleMgr
 
 };
 
+/**
+ * This class represents a style tool
+ */
 class CPL_DLL OGRStyleTool
 {
   private:
@@ -238,6 +236,9 @@ for Each style tools.*/
 
 };
 
+/**
+ * This class represents a style pen
+ */
 class CPL_DLL OGRStylePen : public OGRStyleTool
 {
   private:
@@ -259,7 +260,7 @@ class CPL_DLL OGRStylePen : public OGRStyleTool
     void SetColor(const char *pszColor){SetParamStr(OGRSTPenColor,pszColor);}
     double Width(GBool &bDefault){return GetParamDbl(OGRSTPenWidth,bDefault);}
     void SetWidth(double dfWidth){SetParamDbl(OGRSTPenWidth,dfWidth);}
-    const char *Pattern(GBool &bDefault){return (char *)GetParamStr(OGRSTPenPattern,bDefault);}
+    const char *Pattern(GBool &bDefault){return (const char *)GetParamStr(OGRSTPenPattern,bDefault);}
     void SetPattern(const char *pszPattern){SetParamStr(OGRSTPenPattern,pszPattern);}
     const char *Id(GBool &bDefault){return GetParamStr(OGRSTPenId,bDefault);}
     void SetId(const char *pszId){SetParamStr(OGRSTPenId,pszId);}
@@ -283,6 +284,9 @@ class CPL_DLL OGRStylePen : public OGRStyleTool
     const char *GetStyleString();
 };
 
+/**
+ * This class represents a style brush
+ */
 class CPL_DLL OGRStyleBrush : public OGRStyleTool
 {
   private:
@@ -327,6 +331,9 @@ class CPL_DLL OGRStyleBrush : public OGRStyleTool
      const char *GetStyleString();
 };
 
+/**
+ * This class represents a style symbol
+ */
 class CPL_DLL OGRStyleSymbol : public OGRStyleTool
 {
   private:
@@ -368,6 +375,8 @@ class CPL_DLL OGRStyleSymbol : public OGRStyleTool
         {return GetParamStr(OGRSTSymbolFontName,bDefault);}
     void SetFontName(const char *pszFontName)
         {SetParamStr(OGRSTSymbolFontName,pszFontName);}
+    const char *OColor(GBool &bDefault){return GetParamStr(OGRSTSymbolOColor,bDefault);}
+    void SetOColor(const char *pszColor){SetParamStr(OGRSTSymbolOColor,pszColor);}
 
     /*****************************************************************/
     
@@ -380,6 +389,9 @@ class CPL_DLL OGRStyleSymbol : public OGRStyleTool
      const char *GetStyleString();
 };
 
+/**
+ * This class represents a style label
+ */
 class CPL_DLL OGRStyleLabel : public OGRStyleTool
 {
   private:
@@ -437,6 +449,8 @@ class CPL_DLL OGRStyleLabel : public OGRStyleTool
     void SetAdjustmentVert(const char *pszAdjustmentVert){SetParamStr(OGRSTLabelAdjHor,pszAdjustmentVert);}
     const char *ShadowColor(GBool &bDefault){return GetParamStr(OGRSTLabelHColor,bDefault);}
     void SetShadowColor(const char *pszShadowColor){SetParamStr(OGRSTLabelHColor,pszShadowColor);}
+    const char *OutlineColor(GBool &bDefault){return GetParamStr(OGRSTLabelOColor,bDefault);}
+    void SetOutlineColor(const char *pszOutlineColor){SetParamStr(OGRSTLabelOColor,pszOutlineColor);}
     
     /*****************************************************************/
     
@@ -446,63 +460,6 @@ class CPL_DLL OGRStyleLabel : public OGRStyleTool
      void SetParamStr(OGRSTLabelParam eParam, const char *pszParamString);
      void SetParamNum(OGRSTLabelParam eParam, int nParam);
      void SetParamDbl(OGRSTLabelParam eParam, double dfParam);
-     const char *GetStyleString();
-};
-
-
-/* IMPORTANT NOTE:
- * The OGRStyleVector class (and OGRSTVectorParam enum) are currently unused
- * and will likely be removed in a future release, so their use is discouraged.
- */
-
-class CPL_DLL OGRStyleVector : public OGRStyleTool
-{
-  private:
-    
-    OGRStyleValue    *m_pasStyleValue;
-
-    GBool Parse();
-
-  public:
-
-    OGRStyleVector();
-    virtual ~OGRStyleVector();
-
-    /*****************************************************************/
-    /* Explicit fct for all parameters defined in the Drawing tools  */
-    /*****************************************************************/
-    
-    const char *Id(GBool &bDefault){return GetParamStr(OGRSTVectorId,bDefault);}
-    void  SetId(const char *pszId){ SetParamStr(OGRSTVectorId,pszId);}
-    int  Priority(GBool &bDefault){return GetParamNum(OGRSTVectorPriority,bDefault);}
-    void SetPriority(int nPriority){SetParamNum(OGRSTVectorPriority,nPriority);}
-    
-
-    GBool NoCompress(GBool &bDefault){return GetParamNum(OGRSTVectorNoCompress,bDefault);}
-    void SetNoCompress(GBool bNoCompress){SetParamNum(OGRSTVectorNoCompress,bNoCompress);}
-    GBool Sprain(GBool &bDefault){return GetParamNum(OGRSTVectorSprain,bDefault);}
-    void SetSprain(GBool bSprain){SetParamNum(OGRSTVectorSprain,bSprain);}
-    GBool NoSlope(GBool &bDefault){return GetParamNum(OGRSTVectorNoSlope,bDefault);}
-    void SetNoSlope(GBool bNoSlope){SetParamNum(OGRSTVectorNoSlope,bNoSlope);}
-    GBool Mirroring(GBool &bDefault){return GetParamNum(OGRSTVectorMirroring,bDefault);}
-    void SetMirroring(GBool bMirroring){SetParamNum(OGRSTVectorMirroring,bMirroring);}
-    GBool Centering(GBool &bDefault){return GetParamNum(OGRSTVectorCentering,bDefault);}
-    void SetCentering(GBool bCentering){SetParamNum(OGRSTVectorCentering,bCentering);}
-    const char *Placement(GBool &bDefault){return GetParamStr(OGRSTVectorPlacement,bDefault);}
-    void SetPlacement(const char *pszPlacement){SetParamStr(OGRSTVectorPlacement,pszPlacement);}
-    double Length(GBool &bDefault){return GetParamDbl(OGRSTVectorLength,bDefault);}
-    void SetLength(double dfLength){SetParamDbl(OGRSTVectorLength,dfLength);}
-    GBool Even(GBool &bDefault){return GetParamNum(OGRSTVectorEven,bDefault);}
-    void SetEven(GBool bEven){SetParamNum(OGRSTVectorEven,bEven);}
-
-    /*****************************************************************/
-    
-     const char *GetParamStr(OGRSTVectorParam eParam, GBool &bValueIsNull);
-     int GetParamNum(OGRSTVectorParam eParam,GBool &bValueIsNull);
-     double GetParamDbl(OGRSTVectorParam eParam,GBool &bValueIsNull);
-     void SetParamStr(OGRSTVectorParam eParam, const char *pszParamString);
-     void SetParamNum(OGRSTVectorParam eParam, int nParam);
-     void SetParamDbl(OGRSTVectorParam eParam, double dfParam);
      const char *GetStyleString();
 };
 

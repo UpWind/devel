@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: cpl_port.h 13724 2008-02-07 20:02:52Z warmerdam $
+ * $Id: cpl_port.h 23431 2011-11-27 15:02:24Z rouault $
  *
  * Project:  CPL - Common Portability Library
  * Author:   Frank Warmerdam, warmerdam@pobox.com
@@ -30,11 +30,6 @@
 
 #ifndef CPL_BASE_H_INCLUDED
 #define CPL_BASE_H_INCLUDED
-
-/* Remove annoying warnings Microsoft Visual C++ */
-#if defined(_MSC_VER)
-#  pragma warning(disable:4251 4275 4786)
-#endif
 
 /**
  * \file cpl_port.h
@@ -85,7 +80,6 @@
 #  endif
 #endif
 
-
 #include "cpl_config.h"
 
 /* ==================================================================== */
@@ -100,6 +94,31 @@
 
 #if defined(VSI_NEED_LARGEFILE64_SOURCE) && !defined(_LARGEFILE64_SOURCE)
 #  define _LARGEFILE64_SOURCE 1
+#endif
+
+/* ==================================================================== */
+/*      If iconv() is available use extended recoding module.           */
+/*      Stub implementation is always compiled in, because it works     */
+/*      faster than iconv() for encodings it supports.                  */
+/* ==================================================================== */
+
+#if defined(HAVE_ICONV)
+#  define CPL_RECODE_ICONV
+#endif
+
+#define CPL_RECODE_STUB
+
+/* ==================================================================== */
+/*      MinGW stuff                                                     */
+/* ==================================================================== */
+
+/* We need __MSVCRT_VERSION__ >= 0x0601 to have "struct __stat64" */
+/* Latest versions of mingw32 define it, but with older ones, */
+/* we need to define it manually */
+#if defined(__MINGW32__)
+#ifndef __MSVCRT_VERSION__
+#define __MSVCRT_VERSION__ 0x0601
+#endif
 #endif
 
 /* ==================================================================== */
@@ -167,7 +186,12 @@ typedef unsigned int    GUInt32;
 typedef short           GInt16;
 typedef unsigned short  GUInt16;
 typedef unsigned char   GByte;
+/* hack for PDF driver and poppler >= 0.15.0 that defines incompatible "typedef bool GBool" */
+/* in include/poppler/goo/gtypes.h */
+#ifndef CPL_GBOOL_DEFINED
+#define CPL_GBOOL_DEFINED
 typedef int             GBool;
+#endif
 
 /* -------------------------------------------------------------------- */
 /*      64bit support                                                   */
@@ -189,6 +213,24 @@ typedef unsigned long long GUIntBig;
 typedef long             GIntBig;
 typedef unsigned long    GUIntBig;
 
+#endif
+
+#if defined(__MSVCRT__) || (defined(WIN32) && defined(_MSC_VER))
+  #define CPL_FRMT_GB_WITHOUT_PREFIX     "I64"
+#elif HAVE_LONG_LONG
+  #define CPL_FRMT_GB_WITHOUT_PREFIX     "ll"
+#else
+  #define CPL_FRMT_GB_WITHOUT_PREFIX     "l"
+#endif
+
+#define CPL_FRMT_GIB     "%" CPL_FRMT_GB_WITHOUT_PREFIX "d"
+#define CPL_FRMT_GUIB    "%" CPL_FRMT_GB_WITHOUT_PREFIX "u"
+
+/* Workaround VC6 bug */
+#if defined(_MSC_VER) && (_MSC_VER <= 1200)
+#define GUINTBIG_TO_DOUBLE(x) (double)(GIntBig)(x)
+#else
+#define GUINTBIG_TO_DOUBLE(x) (double)(x)
 #endif
 
 /* ==================================================================== */
@@ -235,6 +277,17 @@ typedef unsigned long    GUIntBig;
 #  define FORCE_CDECL 
 #endif
 
+/* TODO : support for other compilers needed */
+#if defined(__GNUC__) || defined(_MSC_VER)
+#define HAS_CPL_INLINE  1
+#define CPL_INLINE __inline
+#elif defined(__SUNPRO_CC)
+#define HAS_CPL_INLINE  1
+#define CPL_INLINE inline
+#else
+#define CPL_INLINE
+#endif
+
 #ifndef NULL
 #  define NULL  0
 #endif
@@ -265,14 +318,19 @@ typedef unsigned long    GUIntBig;
 #  define CPLIsEqual(x,y) (fabs((x) - (y)) < 0.0000000000001)
 #endif
 
+/* -------------------------------------------------------------------- */
+/*      Provide macros for case insensitive string comparisons.         */
+/* -------------------------------------------------------------------- */
 #ifndef EQUAL
-#if defined(WIN32) || defined(WIN32CE)
-#  define EQUALN(a,b,n)           (strnicmp(a,b,n)==0)
-#  define EQUAL(a,b)              (stricmp(a,b)==0)
-#else
-#  define EQUALN(a,b,n)           (strncasecmp(a,b,n)==0)
-#  define EQUAL(a,b)              (strcasecmp(a,b)==0)
-#endif
+#  if defined(WIN32) || defined(WIN32CE)
+#    define STRCASECMP(a,b)         (stricmp(a,b))
+#    define STRNCASECMP(a,b,n)      (strnicmp(a,b,n))
+#  else
+#    define STRCASECMP(a,b)         (strcasecmp(a,b))
+#    define STRNCASECMP(a,b,n)      (strncasecmp(a,b,n))
+#  endif
+#  define EQUALN(a,b,n)           (STRNCASECMP(a,b,n)==0)
+#  define EQUAL(a,b)              (STRCASECMP(a,b)==0)
 #endif
 
 #ifdef macos_pre10
@@ -281,8 +339,8 @@ int strncasecmp(char * str1, char * str2, int len);
 char * strdup (char *instr);
 #endif
 
-#ifndef CPL_THREADLOCAL 
-#  define CPL_THREADLOCAL 
+#ifndef CPL_THREADLOCAL
+#  define CPL_THREADLOCAL
 #endif
 
 /* -------------------------------------------------------------------- */
@@ -429,6 +487,23 @@ char * strdup (char *instr);
 #  define CPL_MSBPTR64(x)       CPL_SWAP64PTR(x)
 #endif
 
+/** Return a Int16 from the 2 bytes ordered in LSB order at address x */
+#define CPL_LSBINT16PTR(x)    ((*(GByte*)(x)) | ((*(GByte*)((x)+1)) << 8))
+
+/** Return a Int32 from the 4 bytes ordered in LSB order at address x */
+#define CPL_LSBINT32PTR(x)    ((*(GByte*)(x)) | ((*(GByte*)((x)+1)) << 8) | \
+                              ((*(GByte*)((x)+2)) << 16) | ((*(GByte*)((x)+3)) << 24))
+
+
+/* Utility macro to explicitly mark intentionally unreferenced parameters. */
+#ifndef UNREFERENCED_PARAM 
+#  ifdef UNREFERENCED_PARAMETER /* May be defined by Windows API */
+#    define UNREFERENCED_PARAM(param) UNREFERENCED_PARAMETER(param)
+#  else
+#    define UNREFERENCED_PARAM(param) ((void)param)
+#  endif /* UNREFERENCED_PARAMETER */
+#endif /* UNREFERENCED_PARAM */
+
 /***********************************************************************
  * Define CPL_CVSID() macro.  It can be disabled during a build by
  * defining DISABLE_CPLID in the compiler options.
@@ -438,10 +513,27 @@ char * strdup (char *instr);
  */
 
 #ifndef DISABLE_CVSID
+#if defined(__GNUC__) && __GNUC__ >= 4
+#  define CPL_CVSID(string)     static char cpl_cvsid[] __attribute__((used)) = string;
+#else
 #  define CPL_CVSID(string)     static char cpl_cvsid[] = string; \
 static char *cvsid_aw() { return( cvsid_aw() ? ((char *) NULL) : cpl_cvsid ); }
+#endif
 #else
 #  define CPL_CVSID(string)
 #endif
+
+#if defined(__GNUC__) && __GNUC__ >= 3 && !defined(DOXYGEN_SKIP)
+#define CPL_PRINT_FUNC_FORMAT( format_idx, arg_idx )  __attribute__((__format__ (__printf__, format_idx, arg_idx)))
+#else
+#define CPL_PRINT_FUNC_FORMAT( format_idx, arg_idx )
+#endif
+
+#if defined(__GNUC__) && __GNUC__ >= 4 && !defined(DOXYGEN_SKIP)
+#define CPL_WARN_UNUSED_RESULT                        __attribute__((warn_unused_result))
+#else
+#define CPL_WARN_UNUSED_RESULT
+#endif
+
 
 #endif /* ndef CPL_BASE_H_INCLUDED */

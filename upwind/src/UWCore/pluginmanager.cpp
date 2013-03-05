@@ -193,7 +193,7 @@ void PluginManager::loadPlugins(){
         // THIS HAS NO SECURITY WATSOEVER AND CAN BE EXPLOITED BADLY
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
-        qDebug() << Q_FUNC_INFO << fileName << " " << plugin;
+        qDebug() << Q_FUNC_INFO << fileName << " " << plugin << (plugin == 0 ? pluginLoader.errorString() : "Success");
 
         if(plugin) {
             if(qobject_cast<UWPluginInterface *>(plugin))

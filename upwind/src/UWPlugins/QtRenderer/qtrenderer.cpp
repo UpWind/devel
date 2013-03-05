@@ -110,4 +110,4 @@ void QtRenderer::drawRoute(bool activate)
     routeWidget->drawRoute(activate);
 }
 
-Q_EXPORT_PLUGIN2(qtrenderer, QtRenderer)
+Q_EXPORT_PLUGIN2(QtRenderer, QtRenderer)

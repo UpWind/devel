@@ -81,7 +81,7 @@ win32 {
 #  DESTDIR = C:/myQt/bin
 #  MOC_DIR      = C:/tmp/moc
 #  OBJECTS_DIR  = C:/tmp/obj
-
+    INCLUDEPATH += "$$PWD/../../../libs/win/PostgreSQL9.2/include"
 }
 
 

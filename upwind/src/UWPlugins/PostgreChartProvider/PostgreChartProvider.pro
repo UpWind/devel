@@ -64,10 +64,7 @@ else:unix {
 }
 
 win32 {
-    INCLUDEPATH += "C:\\gdal\\gdal\\include"
-    LIBS += "C:\\gdal\\gdal\\bin\\libgdal-1.dll"
-
-    INCLUDEPATH += "C:\\Program Files (x86)\\PostgreSQL\\8.4\\include"
-    LIBS += "C:\\Program Files (x86)\\PostgreSQL\\8.4\\bin\\libpq.dll"
+    INCLUDEPATH += "$$PWD/../../../../libs/win/gdal/include"
+    LIBS += -L$$PWD/../../../../libs/win/gdal/lib -lgdal-1
 }
 

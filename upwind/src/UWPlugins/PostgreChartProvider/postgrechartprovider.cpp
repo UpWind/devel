@@ -17,7 +17,7 @@
 #include "generarea.h"
 #include "signsound.h"
 
-#include <ogrsf_frmts.h>
+#include "ogrsf_frmts.h"
 #include <QDebug>
 #include <QString>
 #include <QSet>
@@ -72,7 +72,6 @@ void PostgreChartProvider::initConnection(){
                              " password=" + dbPass +
                              " port=" + QString::number(dbPort) +
                              " host=" + dbHost);
-    qDebug() << Q_FUNC_INFO << driver;
     dataSource = OGRSFDriverRegistrar::Open(driver.toAscii(), FALSE);
 
     if(dataSource == NULL){
@@ -93,7 +92,6 @@ QSet<QString> PostgreChartProvider::getSelectedLayers()
 void PostgreChartProvider::mapLayers()
 {
     OGRLayer *layer;
-    QString layerName;
 
     foreach(QString baseName, selectedLayers)
     {
@@ -118,7 +116,7 @@ void PostgreChartProvider::mapLayers()
         // If the layer was found from the database.
         if (layer != NULL)
         {
-            QString name = QString::fromLocal8Bit(layer->GetLayerDefn()->GetName());
+            QString name = QString::fromUtf8(layer->GetLayerDefn()->GetName());
             layers.insert(name, layer);
         }
     }
@@ -138,7 +136,9 @@ OGRLayer* PostgreChartProvider::getLayerLevel(QString layerNameString, int layer
         layerNameString = layerNameString;
 
     // Convert to const char*
-    const char* layerName = layerNameString.toStdString().c_str();
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QByteArray encodedString = codec->fromUnicode(layerNameString);
+    const char* layerName = encodedString.constData();
 
     layer = dataSource->GetLayerByName(layerName);
 
@@ -341,7 +341,7 @@ void PostgreChartProvider::initializeSettings(){
 }
 
 QString PostgreChartProvider::getName(){
-    return QString("PostgreChartProvider");
+    return QString("ChartProvider");
 }
 
 Settings * PostgreChartProvider::getSettings(){

@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: memdataset.h 11582 2007-05-28 15:55:35Z warmerdam $
+ * $Id: memdataset.h 21803 2011-02-22 22:12:22Z warmerdam $
  *
  * Project:  Memory Array Translator
  * Purpose:  Declaration of MEMDataset, and MEMRasterBand.
@@ -66,6 +66,8 @@ class CPL_DLL MEMDataset : public GDALDataset
     virtual CPLErr GetGeoTransform( double * );
     virtual CPLErr SetGeoTransform( double * );
 
+    virtual void *GetInternalHandle( const char * );
+
     virtual int    GetGCPCount();
     virtual const char *GetGCPProjection();
     virtual const GDAL_GCP *GetGCPs();
@@ -106,12 +108,13 @@ class CPL_DLL MEMRasterBand : public GDALPamRasterBand
     double         dfOffset;
     double         dfScale;
 
+    CPLXMLNode    *psSavedHistograms;
   public:
 
                    MEMRasterBand( GDALDataset *poDS, int nBand,
                                   GByte *pabyData, GDALDataType eType,
                                   int nPixelOffset, int nLineOffset,
-                                  int bAssumeOwnership );
+                                  int bAssumeOwnership,  const char * pszPixelType = NULL);
     virtual        ~MEMRasterBand();
 
     // should override RasterIO eventually.
@@ -138,6 +141,16 @@ class CPL_DLL MEMRasterBand : public GDALPamRasterBand
     CPLErr SetOffset( double );
     virtual double GetScale( int *pbSuccess = NULL );
     CPLErr SetScale( double );
+
+    virtual CPLErr SetDefaultHistogram( double dfMin, double dfMax,
+                                        int nBuckets, int *panHistogram );
+    virtual CPLErr GetDefaultHistogram( double *pdfMin, double *pdfMax,
+                                        int *pnBuckets, int ** ppanHistogram,
+                                        int bForce,
+                                        GDALProgressFunc, void *pProgressData);
+
+    // allow access to MEM driver's private internal memory buffer
+    GByte *GetData(void) const {return(pabyData);}
 };
 
 #endif /* ndef MEMDATASET_H_INCLUDED */

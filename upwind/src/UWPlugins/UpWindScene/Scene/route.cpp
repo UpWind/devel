@@ -6,7 +6,7 @@
 //#include "../UpWindScene/Scene/polardiagram.h"
 
 #include <math.h>
-#include <ogrsf_frmts.h>
+#include "ogrsf_frmts.h"
 
 //Default Chart Error (in metres)
 #define CHARTERROR 15
