@@ -65,6 +65,9 @@ public slots:
    void receiveData(QVector<QPointF> layLineData);
    void error(QString err);
 
+Q_SIGNALS:
+   void injectData(QVector<QPointF> route, QPointF startpoint);
+
 signals:
     void finished();
 
@@ -86,6 +89,7 @@ private:
     CalculateLaylines *calculateLaylines;
 
     QThread *thread;
+    int threadingStarted;
 };
 
 #endif // COREUPWINDSCENE_H

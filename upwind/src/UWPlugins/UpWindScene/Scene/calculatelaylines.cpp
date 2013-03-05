@@ -6,6 +6,7 @@ CalculateLaylines::CalculateLaylines(QObject* parent)
 {}
 
 void CalculateLaylines::openPostgreConnection(){
+
     qDebug() << Q_FUNC_INFO;
     conn = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
     qDebug() << "Connection ok!";
@@ -27,10 +28,11 @@ void CalculateLaylines::setPolarDiagram(PolarDiagram *diagram){
 
 void CalculateLaylines::start(){
 
-    QVector<QPointF> laylines = startCalc(this->pathPoints, this->startPoint);
-    emit calculationComplete(laylines);
+    QTimer* timer = new QTimer;
+    timer->setInterval(10000);
+    connect(timer, SIGNAL(timeout()), this, SLOT(startCalc()));
+    timer->start();
 }
-
 
 void CalculateLaylines::setRoutePoints(QPolygonF routePoints){
 
@@ -42,37 +44,47 @@ void CalculateLaylines::setStartPoint(QPointF startPoint){
     this->startPoint = startPoint;
 }
 
-QVector<QPointF> CalculateLaylines::startCalc(QPolygonF routepoints, QPointF start){
+void CalculateLaylines::receiveData(QVector<QPointF> route, QPointF startpoint){
+    this->pathPoints = route;
+    this->startPoint = startPoint;
+}
 
+void CalculateLaylines::startCalc(){
+    qDebug() << "Starting calculation...";
     QVector<QPointF> layLines;
     QVector<QPointF> rightpath;
     QVector<QPointF> leftpath;
 
-    this->openPostgreConnection();
+    QPolygonF routepoints = this->pathPoints;
+    QPointF start = this->startPoint;
 
-    this->ACCU_OFFSET = 1;
-    this->MAX_TURNING_POINTS = 3;
+    if (routepoints.size() > 0){
+        this->openPostgreConnection();
 
-    this->geoBoatPos = start;
-    this->pathPoints = routepoints;
+        this->ACCU_OFFSET = 1;
+        this->MAX_TURNING_POINTS = 3;
 
-    //Start process of calculating laylines. First get the the destination point on long term route (no obstacles between baot and long term route point).
-    this->updateCheckPoint();
-    //then calculate the laylines that takes the boat to that destination point
-    this->updateLayLines();
+        this->geoBoatPos = start;
+        this->pathPoints = routepoints;
 
-    rightpath = *pRightPath;
-    leftpath = *pLeftPath;
-    for(int i = 0; i < rightpath.size(); i++){
-        layLines.append(rightpath.at(i));
+        //Start process of calculating laylines. First get the the destination point on long term route (no obstacles between baot and long term route point).
+        this->updateCheckPoint();
+        //then calculate the laylines that takes the boat to that destination point
+        this->updateLayLines();
+
+        rightpath = *pRightPath;
+        leftpath = *pLeftPath;
+        for(int i = 0; i < rightpath.size(); i++){
+            layLines.append(rightpath.at(i));
+        }
+
+        for(int i = 0; i < leftpath.size(); i++){
+            layLines.append(leftpath.at(i));
+        }
+
+        emit emitLaylines(layLines);
     }
 
-    for(int i = 0; i < leftpath.size(); i++){
-        layLines.append(leftpath.at(i));
-    }
-
-
-    return layLines;
 }
 
 
@@ -729,7 +741,7 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
         //Note: This doesn't work correctly. Here the search for the route fails instantly when obstacles
         //are found on the route. What if there is obstacle-free route on the next route interval:
 
-        while ( !obs_r && !obs_l &&  i < (route.size()/* - 2*/ )) {
+        while ( !obs_r && !obs_l &&  i < (route.size() - 1 )) {
 
             triangle.clear();
 

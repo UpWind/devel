@@ -23,7 +23,6 @@ public:
 
     CalculateLaylines(QObject* parent = 0);
     ~CalculateLaylines();
-    QVector<QPointF> startCalc(QPolygonF routepoints, QPointF start); //called from RouteWidget when layLine data is asked from *this
 
     void processData( const QVector<QPointF> * geoRoute,
                       QPointF &geoBoatPos, float &twd, float &wspeed,
@@ -45,9 +44,11 @@ public:
 
 public Q_SLOTS:
     void start();
-
+public slots:
+        void startCalc();
+        void receiveData(QVector<QPointF> route, QPointF startpoint);
 Q_SIGNALS:
-    void calculationComplete(QVector<QPointF> layLines);
+    void emitLaylines(QVector<QPointF> layLines);
     void finished();
 
 private:

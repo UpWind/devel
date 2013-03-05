@@ -113,17 +113,14 @@ void Boat::setGPSLine(){
     //Wait until there is at least two points in the vector
     //then prepend and append the vector with incoming values
 
-    if(*boatGeoPosition != boatPositionVector.at(0)){
-
-        boatPositionVector.push_front(QPointF( *boatGeoPosition));
-        if(boatPositionVector.size() >= 3){
-            while(boatPositionVector.size()>=3){
-                boatPositionVector.pop_back();
-            }
+    if (boatPositionVector.empty() || boatPositionVector.at(0) != *boatGeoPosition) {
+        boatPositionVector.push_front(QPointF(*boatGeoPosition));
+        while (boatPositionVector.size() > 2) {
+            boatPositionVector.pop_back();
         }
     }
 
-    if(boatPositionVector.size() >= 2 ){
+    if (boatPositionVector.size() == 2) {
         firstPoint = boatPositionVector.at(0);
         secondPoint = boatPositionVector.at(1);
         this->firstScenePosition = *geoPointToPixel(&firstPoint);
@@ -133,7 +130,7 @@ void Boat::setGPSLine(){
         gpsLineGeoPointToPixel.setLength(50);
 
         gps->setLine(gpsLineGeoPointToPixel);
-    }else{
+    } else {
         //atm line goes from boat to middle of screen, before boat have moved and it get new boatGeoPositions
         firstPoint = *boatGeoPosition;
         this->firstScenePosition = *geoPointToPixel(&firstPoint);
