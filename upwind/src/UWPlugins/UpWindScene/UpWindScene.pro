@@ -4,13 +4,15 @@
 #
 #-------------------------------------------------
 
+TARGET = UpWindScene
+TEMPLATE = lib
+DESTDIR = ../plugins
 
 QT       += core gui\
             network \
             xml\
             webkit\
             svg
-
 
 SOURCES += \
     coreupwindscene.cpp \
@@ -23,13 +25,6 @@ SOURCES += \
     ../shared/uwmath.cpp \
     Scene/calculatelaylines.cpp \
     Scene/loadObstacles.cpp
-
-
-
-TARGET = UpWindScene
-TEMPLATE = lib
-
-DESTDIR = ../plugins
 
 HEADERS += \
     coreupwindscene.h \
@@ -45,27 +40,15 @@ HEADERS += \
     Scene/calculatelaylines.h \
     Scene/loadObstacles.h
 
-
-
-
-
 FORMS += \
     settingsui.ui
 
 RESOURCES += \
     resources.qrc
 
-
 mac {
     INCLUDEPATH += /Library/Frameworks/GDAL.framework/Headers/
     LIBS += -L/Library/Frameworks/GDAL.framework/unix/lib -lgdal -lpq
-}
-
-else:unix {
-
-    INCLUDEPATH +=/usr/include/gdal/ \
-        /usr/include/postgresql
-    LIBS +=-lpq -lgdal1.7.0
 }
 
 win32 {
@@ -76,7 +59,7 @@ win32 {
     LIBS += -L$$PWD/../../../../libs/win/gdal/lib -lgdal-1
 }
 
-
-
-
-
+unix {
+    INCLUDEPATH += /usr/include/gdal/ /usr/include/postgresql
+    LIBS +=-lpq -lgdal1.7.0
+}

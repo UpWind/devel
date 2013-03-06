@@ -1,6 +1,5 @@
 #include "route.h"
 #include "../../Settings/settings.h"
-#include "../../UWCore/uwcore.h"
 #include "../shared/uwmath.h"
 #include "../UpWindScene/Scene/projection.h"
 //#include "../UpWindScene/Scene/polardiagram.h"

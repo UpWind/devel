@@ -10,6 +10,9 @@ QT += core gui\
     webkit\
     svg
 
+unix:INCLUDEPATH += "/usr/include/postgresql"
+unix:INCLUDEPATH += "/usr/include/gdal/"
+
 TARGET = UWCore
 TEMPLATE = app
 
