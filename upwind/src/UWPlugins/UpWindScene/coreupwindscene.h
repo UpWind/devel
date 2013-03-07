@@ -63,7 +63,7 @@ public:
 public slots:
 
    void receiveData(QVector<QPointF> layLineData);
-   void error(QString err);
+   void error(QString);
 
 Q_SIGNALS:
    void injectData(QVector<QPointF> route, QPointF startpoint);

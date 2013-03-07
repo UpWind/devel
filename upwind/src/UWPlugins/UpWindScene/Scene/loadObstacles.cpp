@@ -94,6 +94,11 @@ LoadObstacles::~LoadObstacles()
     PQfinish(conn);
 }
 
+void LoadObstacles::clear()
+{
+    // TODO NOTE this was missing
+}
+
 void LoadObstacles::loadChartObjects(QVector<ChartObjectInterface*> cObjects) {
     this->chartObjects = cObjects;
     createObstaclesTables();

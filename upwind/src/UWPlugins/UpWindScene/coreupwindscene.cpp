@@ -49,7 +49,12 @@ void CoreUpWindScene::initializeSettings(){
 
 void CoreUpWindScene::receiveData(QVector<QPointF> layLineData){
 
-     this->boat->injectLaylines(layLineData);
+    this->boat->injectLaylines(layLineData);
+}
+
+void CoreUpWindScene::error(QString /*err*/)
+{
+    // TODO NOTE this was missing
 }
 
 void CoreUpWindScene::setBoat(Boat *boat)
