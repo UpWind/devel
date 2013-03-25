@@ -16,7 +16,7 @@ ChartWidget::ChartWidget(QSize size) :
     size(size)
 {
     qDebug()<<Q_FUNC_INFO;
-    this->setCacheMode(QGraphicsItem::NoCache);
+    this->setCacheMode(QGraphicsItem::ItemCoordinateCache);
 }
 
 ChartWidget::~ChartWidget(){}

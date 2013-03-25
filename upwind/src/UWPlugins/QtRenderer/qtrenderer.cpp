@@ -6,6 +6,7 @@
 #include "../UpWindScene/Scene/boat.h"
 #include "../UpWindScene/coreupwindscene.h"
 #include <QRect>
+#include <QGLWidget>
 
 QtRenderer::QtRenderer() :
     chartWidget(0),
@@ -56,6 +57,9 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setDragMode(QGraphicsView::NoDrag);
+    view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+
+    QPixmapCache::setCacheLimit(1024 * 320);
 }
 
 void QtRenderer::zoomIn()

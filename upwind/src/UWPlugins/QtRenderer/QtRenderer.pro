@@ -1,5 +1,5 @@
 
-QT += core gui svg
+QT += core gui svg opengl
 
 TARGET = QtRenderer
 
