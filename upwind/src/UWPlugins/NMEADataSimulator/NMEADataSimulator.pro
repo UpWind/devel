@@ -15,14 +15,17 @@ SOURCES += \
     datasimulator.cpp \
     ../NMEAReader/corenmeareader.cpp \
     settingsui.cpp \
-    ../../Settings/settings.cpp
+    ../../Settings/settings.cpp \
+    ../shared/uwmath.cpp
 
 HEADERS += \
     datasimulator.h \
     ../NMEAReader/corenmeareader.h \
     ../NMEAReader/nmeareaderinterface.h \
     settingsui.h \
-    ../../Settings/settings.h
+    ../../Settings/settings.h \
+    ../shared/uwmath.h \
+    datasimulatorcontrolinterface.h
 
 
 DESTDIR         = ../plugins

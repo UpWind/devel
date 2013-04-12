@@ -47,7 +47,7 @@ QStringList CoreNMEAInstrument::getParsedNMEAValues(){
 
 void CoreNMEAInstrument::mouseDoubleClickEvent (QMouseEvent *event)
 {
-	(void)event;
+    (void)event;
 }
 
 void CoreNMEAInstrument::mousePressEvent(QMouseEvent *event){

@@ -6,13 +6,14 @@
 #include "../NMEAReader/corenmeareader.h"
 #include "time.h"
 #include "settingsui.h"
+#include "datasimulatorcontrolinterface.h"
 
 /**
   The dataSimulator class simulate the NMEA Strings from 4 boat sail's instruments.
   It generates one of them periodically in a interval of time (Timer delay)
   */
 
-class dataSimulator: public CoreNMEAReader
+class dataSimulator: public CoreNMEAReader, public DataSimulatorControlInterface
 {
     Q_OBJECT
 public:
@@ -72,6 +73,10 @@ public:
       */
     void initializeSettings();
 
+    virtual void setTurningSpeed(int degreesPerSecond);
+
+    virtual operator QObject*();
+
 private slots:
     /** Choose one of the active instruments and call its simulate method to generate a NMEAString
       */
@@ -122,6 +127,16 @@ private:
 
     //settings
     SettingsUI* settingsUI;
+
+    double m_currentGpsPositionLongitude;
+    double m_currentGpsPositionLatitude;
+    double m_currentCompassHeading;
+    double m_currentVelocity; // Speed over the ground in knots
+    double m_currentSteeringSpeed; // Unit degrees per second
+
+    // controls
+
+    QPointF* test;
 };
 
 #endif // DATASIMULATOR_H

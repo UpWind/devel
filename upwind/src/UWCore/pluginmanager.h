@@ -16,9 +16,8 @@
 
 #include "../UWPlugins/NMEAReader/corenmeareader.h"
 #include "../UWPlugins/ViewRenderer/coreviewrenderer.h"
-
-
-
+#include "../NMEADataSimulator/datasimulatorcontrolinterface.h"
+#include "../NMEAInstruments/SimulatorWheel/simulatorwheelinterface.h"
 
 class PluginManager : public QObject
 {
@@ -174,6 +173,9 @@ private:
     ChartProviderInterface *chartProvider;
     QSet<ChartProviderInterface *> loadedChartProviders;
 
+    DataSimulatorControlInterface *dataSimulatorControlInterface;
+    SimulatorWheelInterface *simulatorWheel;
+
     NMEAReaderInterface *nmeaReader;
     QSet<NMEAReaderInterface *> loadedNmeaProviders;
 
@@ -190,6 +192,8 @@ private:
     QSet<UWPluginInterface *> loadedPlugins;
 
     QMap<QString, NMEAInstrumentInterface *> instruments;
+
+    void connectWheelAndSimulator();
 
 signals:
     void paintInstrumentChanged(const QString &nmeaString);

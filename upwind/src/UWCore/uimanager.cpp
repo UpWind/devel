@@ -34,6 +34,7 @@ void UIManager::initialize(){
 //    Antti: Why not get the real screen geometry? not window geometry
 //    QRect screenGeometry = navigationWindow->geometry();
     QRect screenGeometry =  QApplication::desktop()->screenGeometry();
+    navigationWindow->setGeometry(screenGeometry);
 
     toolbox->setGeometry((screenGeometry.topRight().x() - toolbox->width()), 50, toolbox->width(), screenGeometry.bottomRight().y() - 120);
     navigationWindow->addButtons();

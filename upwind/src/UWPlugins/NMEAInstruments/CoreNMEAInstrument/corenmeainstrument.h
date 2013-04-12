@@ -98,8 +98,8 @@ public slots:
     void mouseDoubleClickEvent ( QMouseEvent *event );
 
 private:
-    QPoint handlingPoint;
     QPoint actualPoint;
+    QPoint handlingPoint;
     Settings *settings;
 
 protected:

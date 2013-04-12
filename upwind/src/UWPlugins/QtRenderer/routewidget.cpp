@@ -12,6 +12,7 @@
 
 RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chartboundaries) :
     zoomFactor(1.0),
+    penWidthZoomFactor(6.0),
     rotateAngle(0.0),
     size(size),
     chartBoundaries(chartboundaries)
@@ -23,9 +24,8 @@ RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chart
     simMode = false;
 
     longroute_pen.setColor(Qt::blue);
-    longroute_pen.setWidthF(6);
+    longroute_pen.setWidthF(penWidthZoomFactor / zoomFactor);
     longroute_brush.setColor(Qt::blue);
-
 }
 
 RouteWidget::~RouteWidget(){}
@@ -163,4 +163,11 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         }
 
     }*/
+}
+
+
+void RouteWidget::prepareGeometryChange()
+{
+    longroute_pen.setWidthF(penWidthZoomFactor / zoomFactor);
+    QGraphicsItem::prepareGeometryChange();
 }

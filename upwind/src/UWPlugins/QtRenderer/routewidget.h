@@ -32,6 +32,8 @@ signals:
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void geopointToPixel(QPointF *geopoint);
+    void prepareGeometryChange();
+
     
 public slots:
     
@@ -39,6 +41,7 @@ private:
     CoreUpWindScene* uwScene;
     QRectF chartBoundaries;
     qreal zoomFactor;
+    qreal penWidthZoomFactor;
     qreal rotateAngle;
     QSize size;
     bool simMode;

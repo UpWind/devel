@@ -4,4 +4,5 @@ SUBDIRS = Anemometer \
     Clock \
     Compass \
     CoreNMEAInstrument \
-    GPS
+    GPS \
+    SimulatorWheel

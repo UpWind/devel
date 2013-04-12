@@ -15,6 +15,7 @@ signals:
     void mouseMoved(QMouseEvent *event);
     void mousePressed(QMouseEvent *event);
     void mouseDoubleClicked(QMouseEvent *event);
+    void mouseReleased(QMouseEvent *event);
 
 private:
     void mouseMoveEvent(QMouseEvent *event);

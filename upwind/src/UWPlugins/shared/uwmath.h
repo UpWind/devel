@@ -44,6 +44,7 @@ public:
 
     static double mod(const double &x, const double &y);
     static double toRadians(const double &degrees);
+    static QPointF toRadians(const QPointF &pointDegrees);
     static double toDegrees(const double &radians);
 
     static float toPolar(const float &cartesianAngle);

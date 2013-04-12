@@ -39,7 +39,6 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
     Boat *boat = new Boat(frame->size(), chartBoundaries);
     scene->setBoat(boat);
 
-
     graphicsScene->addItem(scene->getBoat()->getBoatImage());    // put boat image on screen.
     graphicsScene->addItem(scene->getBoat()->getBoatCompass());
     graphicsScene->addItem(scene->getBoat()->getBoatGPS());
@@ -49,15 +48,15 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
     boatWidget->setBoat(scene->getBoat());
     boatWidget->updateBoatPosition();
 
-
     QGraphicsView *view = new QGraphicsView(graphicsScene, frame);
     view->setGeometry(0, 0, frame->size().width(), frame->size().height());
     chartWidget->setModel(model);
     view->lower();
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setDragMode(QGraphicsView::NoDrag);
-    view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
+    view->setDragMode(QGraphicsView::ScrollHandDrag);
+    view->setInteractive(true);
+//    view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
 
     QPixmapCache::setCacheLimit(1024 * 320);
 }
