@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "../chartobjectinterface.h"
-
+#include<QtGui>
 
 class NavaId: public ChartObjectInterface
 {

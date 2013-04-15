@@ -54,10 +54,8 @@
         <file>symbols/buoy_danger.png</file>
         <file>symbols/buoy_east.png</file>
         <file>symbols/buoy_left.png</file>
-        <file>symbols/40_buoy_left.png</file>
         <file>symbols/buoy_northern.png</file>
         <file>symbols/buoy_right.png</file>
-        <file>symbols/40_buoy_right.png</file>
         <file>symbols/buoy_safe.png</file>
         <file>symbols/buoy_safewatermark.png</file>
         <file>symbols/buoy_southern.png</file>
@@ -115,6 +113,25 @@
         <file>symbols/wreck3.png</file>
         <file>symbols/wreck.png</file>
         <file>symbols/wreck_notdangerous.png</file>
+        <file>symbols/40_buoy_danger.png</file>
+        <file>symbols/40_ice_buoy_right.png</file>
+        <file>symbols/40_ice_buoy_left.png</file>
+        <file>symbols/40_mark_buoy_left.png</file>
+        <file>symbols/40_mark_buoy_right.png</file>
+        <file>symbols/40_spar_dangermark.png</file>
+        <file>symbols/40_spar_east.png</file>
+        <file>symbols/40_spar_left.png</file>
+        <file>symbols/40_spar_north.png</file>
+        <file>symbols/40_spar_right.png</file>
+        <file>symbols/40_spar_safewatermark.png</file>
+        <file>symbols/40_spar_specialmark.png</file>
+        <file>symbols/40_ice_buoy_special.png</file>
+        <file>symbols/40_mark_buoy_danger.png</file>
+        <file>symbols/40_mark_buoy_east.png</file>
+        <file>symbols/40_mark_buoy_safe.png</file>
+        <file>symbols/40_mark_buoy_safewatermark.png</file>
+        <file>symbols/40_mark_buoy_south.png</file>
+        <file>symbols/40_mark_buoy_west.png</file>
     </qresource>
     <qresource prefix="/buttons">
         <file>zoom-in.svg</file>
