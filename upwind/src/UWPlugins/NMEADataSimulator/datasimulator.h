@@ -106,6 +106,9 @@ private slots:
      */
     void changeSpeed(int s);
 
+    void setBoatPositionLon(double longitude);
+    void setBoatPositionLat(double latitude);
+
 private:
     bool display;
     time_t UCT;

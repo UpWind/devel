@@ -9,6 +9,7 @@ SettingsUI::SettingsUI(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->pushButton_startTest, SIGNAL(clicked()), this, SLOT(startReading()));
     connect(ui->pushButton_endTest, SIGNAL(clicked()), this, SLOT(endTest()));
+
     first = true;
 }
 
@@ -46,6 +47,17 @@ bool SettingsUI::getCompass(){
     QCheckBox* com = qFindChild<QCheckBox*>(this, "checkBox_Compass");
     return com->isChecked();
 }
+
+double SettingsUI::boatPositionLongitude()
+{
+    return ui->boatPosLonDSpinBox->value();
+}
+
+double SettingsUI::boatPositionLatitude()
+{
+    return ui->boatPosLatDSpinBox->value();
+}
+
 bool SettingsUI::getClock(){
     QCheckBox* clo = qFindChild<QCheckBox*>(this, "checkBox_Clock");
     return clo->isChecked();
@@ -75,13 +87,18 @@ void SettingsUI::setupSettings(Settings *s){
     else
         ui->checkBox_Clock->setChecked(false);
 
-    int time;
-    time = s->getSetting("Timer").toInt();
+    double boatPosLon = settings->getSetting("boatPosLongitude").toDouble();
+    double boatPosLat =  settings->getSetting("boatPosLatitude").toDouble();
+    int time = s->getSetting("Timer").toInt();
+
+    ui->boatPosLonDSpinBox->setValue(boatPosLon);
+    ui->boatPosLatDSpinBox->setValue(boatPosLat);
     ui->horizontalSlider_velocity->setValue(time);
     changeSpeed(time);
 }
 
 void SettingsUI::updateSettings(){
+    qDebug() << Q_FUNC_INFO;
     if(ui->checkBox_GPS->isChecked())
         settings->setSetting("GPS", "true");
     else
@@ -103,6 +120,8 @@ void SettingsUI::updateSettings(){
         settings->setSetting("Clock", "false");
 
     settings->setSetting("Timer", QString::number(ui->horizontalSlider_velocity->value()));
+    settings->setSetting("boatPosLongitude", QString::number(ui->boatPosLonDSpinBox->value()));
+    settings->setSetting("boatPosLatitude", QString::number(ui->boatPosLatDSpinBox->value()));
 }
 
 void SettingsUI::setReader(dataSimulator* read){
@@ -113,6 +132,8 @@ void SettingsUI::setReader(dataSimulator* read){
     connect(ui->checkBox_Compass, SIGNAL (clicked()), reader, SLOT(changeCompass()));
     connect(ui->horizontalSlider_velocity, SIGNAL(valueChanged(int)), reader, SLOT(changeSpeed(int)));
     connect(ui->horizontalSlider_velocity, SIGNAL(valueChanged(int)), this, SLOT(changeSpeed(int)));
+    connect(ui->boatPosLonDSpinBox, SIGNAL(valueChanged(double)), reader, SLOT(setBoatPositionLon(double)));
+    connect(ui->boatPosLatDSpinBox, SIGNAL(valueChanged(double)), reader, SLOT(setBoatPositionLat(double)));
 }
 
 void SettingsUI::changeSpeed(int s){
@@ -131,6 +152,14 @@ void SettingsUI::readData(const QString & data){
 
 void SettingsUI::on_horizontalSlider_velocity_valueChanged(int value){
 	(void)value;
+    this->updateSettings();
+}
+
+void SettingsUI::on_boatPosLonDSpinBox_valueChanged(double val) {
+    this->updateSettings();
+}
+
+void SettingsUI::on_boatPosLatDSpinBox_valueChanged(double val) {
     this->updateSettings();
 }
 
