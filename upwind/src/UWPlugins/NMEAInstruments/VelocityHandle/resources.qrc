@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="background">background.png</file>
+        <file alias="anchorOn">anchor_on.png</file>
+        <file alias="anchorOff">anchor_off.png</file>
+        <file alias="handle">handle.png</file>
+    </qresource>
+</RCC>

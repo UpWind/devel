@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="velocity_handle.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3795">
+      <stop
+         id="stop3797"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop3799"
+         offset="1"
+         style="stop-color:#00091f;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3783">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop3785" />
+      <stop
+         style="stop-color:#2a478e;stop-opacity:1;"
+         offset="1"
+         id="stop3787" />
+    </linearGradient>
+    <filter
+       inkscape:collect="always"
+       id="filter3813">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.4445691"
+         id="feGaussianBlur3815" />
+    </filter>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3783"
+       id="radialGradient3821"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.76033065,0.76033071,-0.70710665,0.70710691,266.62057,-67.570263)"
+       cx="207.08127"
+       cy="306.8696"
+       fx="207.08127"
+       fy="306.8696"
+       r="61.114227" />
+    <filter
+       id="filter3861"
+       inkscape:menu-tooltip="In and out glow with a possible offset and colorizable flood"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Cutout Glow"
+       color-interpolation-filters="sRGB">
+      <feOffset
+         id="feOffset3863"
+         dy="3"
+         dx="3" />
+      <feGaussianBlur
+         id="feGaussianBlur3865"
+         result="result8"
+         stdDeviation="3" />
+      <feFlood
+         id="feFlood3867"
+         flood-color="rgb(0,0,0)"
+         flood-opacity="1"
+         in="result8"
+         result="result10" />
+      <feComposite
+         id="feComposite3869"
+         in2="SourceGraphic"
+         operator="in"
+         in="result10"
+         result="result9" />
+      <feBlend
+         id="feBlend3871"
+         in2="result9"
+         mode="normal"
+         in="result8" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4046">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.7893804"
+         id="feGaussianBlur4048" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4066">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.18125"
+         id="feGaussianBlur4068" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4102">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.610506"
+         id="feGaussianBlur4104" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3993">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.62265"
+         id="feGaussianBlur3995" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="245.62438"
+     inkscape:cy="207.3878"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1018"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       transform="translate(-4.5351673e-8,158.99803)"
+       id="g3915"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943">
+      <rect
+         style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#5d5d5d;stroke-width:11.35999966;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect3917"
+         width="330.99405"
+         height="588.45868"
+         x="136.89702"
+         y="168.93721"
+         ry="23.233509" />
+      <rect
+         ry="23.233509"
+         y="168.93721"
+         x="136.89702"
+         height="588.45868"
+         width="330.99405"
+         id="rect3919"
+         style="color:#000000;fill:#a3a3a3;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:11.35999966;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter3861);enable-background:accumulate" />
+    </g>
+    <g
+       id="g3891"
+       transform="translate(0,39.800034)"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943">
+      <rect
+         ry="23.233509"
+         y="168.93721"
+         x="136.89702"
+         height="588.45868"
+         width="330.99405"
+         id="rect2985"
+         style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#5d5d5d;stroke-width:11.35999966;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <rect
+         style="color:#000000;fill:#a3a3a3;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:11.35999966;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter3861);enable-background:accumulate"
+         id="rect3851"
+         width="330.99405"
+         height="588.45868"
+         x="136.89702"
+         y="168.93721"
+         ry="23.233509" />
+    </g>
+    <path
+       style="fill:none;stroke:#717171;stroke-width:9.6733675;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:9.67336716, 9.67336716;stroke-dashoffset:0"
+       d="m 302.39404,270.30761 c 0,461.27734 0,461.27734 0,461.27734"
+       id="path3913"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943" />
+    <rect
+       style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:11.35999966;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3873"
+       width="169.70563"
+       height="9.0913725"
+       x="217.54123"
+       y="499.9183"
+       ry="4.5456862"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943" />
+    <rect
+       ry="4.5456862"
+       y="271.30954"
+       x="183.6001"
+       height="9.0913725"
+       width="237.58788"
+       id="rect3883"
+       style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:13.44133282;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943" />
+    <rect
+       style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:12.44425583;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3885"
+       width="203.64676"
+       height="9.0913725"
+       x="200.57066"
+       y="385.59216"
+       ry="4.5456862"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943" />
+    <rect
+       ry="4.5456862"
+       y="614.302"
+       x="234.5118"
+       height="9.0913725"
+       width="135.7645"
+       id="rect3887"
+       style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:10.16069221;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943" />
+    <rect
+       style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.7994175;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3889"
+       width="101.82338"
+       height="9.0913725"
+       x="251.48236"
+       y="728.76666"
+       ry="4.5456862"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943" />
+    <text
+       xml:space="preserve"
+       style="font-size:56px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       x="254.37842"
+       y="488.69702"
+       id="text3895"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943"><tspan
+         sodipodi:role="line"
+         id="tspan3897"
+         x="254.37842"
+         y="488.69702">10x</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3899"
+       y="260.40256"
+       x="238.79248"
+       style="font-size:56px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943"><tspan
+         y="260.40256"
+         x="238.79248"
+         id="tspan3901"
+         sodipodi:role="line">100x</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3905"
+       y="720.02191"
+       x="268.52057"
+       style="font-size:56px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943"><tspan
+         y="720.02191"
+         x="268.52057"
+         id="tspan3907"
+         sodipodi:role="line">1x</tspan></text>
+    <g
+       id="g3817"
+       transform="translate(-451.53818,226.27416)">
+      <path
+         sodipodi:type="arc"
+         style="opacity:0.80263157;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter3813);enable-background:accumulate"
+         id="path3791"
+         sodipodi:cx="235.87062"
+         sodipodi:cy="330.60818"
+         sodipodi:rx="61.114227"
+         sodipodi:ry="61.114227"
+         d="m 296.98485,330.60818 c 0,33.75246 -27.36177,61.11423 -61.11423,61.11423 -33.75246,0 -61.11423,-27.36177 -61.11423,-61.11423 0,-33.75245 27.36177,-61.11422 61.11423,-61.11422 33.75246,0 61.11423,27.36177 61.11423,61.11422 z"
+         transform="translate(-11.111678,43.436563)" />
+      <path
+         transform="translate(-17.172593,37.375644)"
+         d="m 296.98485,330.60818 c 0,33.75246 -27.36177,61.11423 -61.11423,61.11423 -33.75246,0 -61.11423,-27.36177 -61.11423,-61.11423 0,-33.75245 27.36177,-61.11422 61.11423,-61.11422 33.75246,0 61.11423,27.36177 61.11423,61.11422 z"
+         sodipodi:ry="61.114227"
+         sodipodi:rx="61.114227"
+         sodipodi:cy="330.60818"
+         sodipodi:cx="235.87062"
+         id="path3773"
+         style="color:#000000;fill:url(#radialGradient3821);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g4118"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943">
+      <g
+         transform="translate(-5.9383637,6.8977531)"
+         style="opacity:0.8226316;fill:#000000;fill-opacity:1;filter:url(#filter4102)"
+         id="g4076">
+        <text
+           sodipodi:linespacing="125%"
+           id="text4078"
+           y="847.30121"
+           x="198.69032"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             y="847.30121"
+             x="198.69032"
+             id="tspan4080"
+             sodipodi:role="line">2</tspan></text>
+        <text
+           sodipodi:linespacing="125%"
+           id="text4082"
+           y="887.70728"
+           x="160.97548"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             y="887.70728"
+             x="160.97548"
+             id="tspan4084"
+             sodipodi:role="line">knots</tspan></text>
+      </g>
+      <g
+         transform="translate(-8.0812204,4.0406102)"
+         id="g4070">
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+           x="198.69032"
+           y="847.30121"
+           id="text3921"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan3923"
+             x="198.69032"
+             y="847.30121">2</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+           x="160.97548"
+           y="887.70728"
+           id="text3927"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan3929"
+             x="160.97548"
+             y="887.70728">knots</tspan></text>
+      </g>
+    </g>
+    <g
+       style="opacity:0.84508769;fill:none;stroke:#000000;stroke-opacity:1;filter:url(#filter4046)"
+       transform="matrix(0.89699948,0,0,0.89699948,-28.100694,150.37879)"
+       id="g4022">
+      <path
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:6.83462143;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="m -16.324282,866.77067 c 0,17.06308 -13.832362,30.89544 -30.895445,30.89544 -17.063084,0 -30.895446,-13.83236 -30.895446,-30.89544"
+         id="path4024"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="csc" />
+      <path
+         sodipodi:type="arc"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="path4026"
+         sodipodi:cx="-321.22852"
+         sodipodi:cy="344.24524"
+         sodipodi:rx="26.263966"
+         sodipodi:ry="26.263966"
+         d="m -294.96455,344.24524 c 0,14.50519 -11.75878,26.26396 -26.26397,26.26396 -14.50518,0 -26.26396,-11.75877 -26.26396,-26.26396 0,-14.50519 11.75878,-26.26397 26.26396,-26.26397 14.50519,0 26.26397,11.75878 26.26397,26.26397 z"
+         transform="matrix(0.34173108,0,0,0.34173108,62.55404,693.38148)" />
+      <path
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:6.58548546;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="m -46.874524,822.82128 0,72.75182"
+         id="path4028"
+         inkscape:connector-curvature="0" />
+      <path
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:6.83462143;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="m -25.01504,864.82853 19.8395706,5.316 -7.8109986,-13.52905 -13.634739,7.87203 z"
+         id="path4030"
+         inkscape:connector-curvature="0" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4032"
+         d="m -86.931466,869.71062 19.83957,-5.316 -13.529044,-7.81099 -7.872022,13.63473 z"
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:6.83462143;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    </g>
+    <g
+       id="g4015"
+       transform="matrix(0.89699948,0,0,0.89699948,-128.34708,42.970863)"
+       style="stroke:#c10000;stroke-opacity:1">
+      <path
+         sodipodi:nodetypes="csc"
+         inkscape:connector-curvature="0"
+         id="path3943"
+         d="m -16.324282,866.77067 c 0,17.06308 -13.832362,30.89544 -30.895445,30.89544 -17.063084,0 -30.895446,-13.83236 -30.895446,-30.89544"
+         style="color:#000000;fill:none;stroke:#c10000;stroke-width:6.83462143;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         transform="matrix(0.34173108,0,0,0.34173108,62.55404,693.38148)"
+         d="m -294.96455,344.24524 c 0,14.50519 -11.75878,26.26396 -26.26397,26.26396 -14.50518,0 -26.26396,-11.75877 -26.26396,-26.26396 0,-14.50519 11.75878,-26.26397 26.26396,-26.26397 14.50519,0 26.26397,11.75878 26.26397,26.26397 z"
+         sodipodi:ry="26.263966"
+         sodipodi:rx="26.263966"
+         sodipodi:cy="344.24524"
+         sodipodi:cx="-321.22852"
+         id="path3945"
+         style="color:#000000;fill:none;stroke:#c10000;stroke-width:20;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3947"
+         d="m -46.874524,822.82128 0,72.75182"
+         style="color:#000000;fill:none;stroke:#c10000;stroke-width:6.58548546;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3968"
+         d="m -25.01504,864.82853 19.8395706,5.316 -7.8109986,-13.52905 -13.634739,7.87203 z"
+         style="color:#000000;fill:#717171;fill-opacity:1;stroke:#c10000;stroke-width:6.83462143;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         style="color:#000000;fill:#717171;fill-opacity:1;stroke:#c10000;stroke-width:6.83462143;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         d="m -86.931466,869.71062 19.83957,-5.316 -13.529044,-7.81099 -7.872022,13.63473 z"
+         id="path3972"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="g4032"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.617943"
+       inkscape:export-ydpi="43.617943">
+      <text
+         xml:space="preserve"
+         style="font-size:32px;font-style:normal;font-weight:normal;line-height:75.99999905%;letter-spacing:0px;word-spacing:0px;opacity:0.79203539;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter3993);enable-background:accumulate;font-family:Sans"
+         x="365.17014"
+         y="844.77588"
+         id="text3973"
+         sodipodi:linespacing="75.999999%"><tspan
+           sodipodi:role="line"
+           id="tspan3975"
+           x="365.17014"
+           y="844.77588">Polar</tspan><tspan
+           sodipodi:role="line"
+           x="365.17014"
+           y="869.09589"
+           id="tspan3977">target</tspan><tspan
+           sodipodi:role="line"
+           x="365.17014"
+           y="893.41589"
+           id="tspan3979">speed</tspan></text>
+      <text
+         inkscape:export-ydpi="43.505314"
+         inkscape:export-xdpi="43.505314"
+         inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+         sodipodi:linespacing="75.999999%"
+         id="text3135"
+         y="842.75555"
+         x="363.14984"
+         style="font-size:32px;font-style:normal;font-weight:normal;line-height:75.99999905000000000%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans;color:#000000;fill-rule:nonzero;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         xml:space="preserve"><tspan
+           y="842.75555"
+           x="363.14984"
+           id="tspan3137"
+           sodipodi:role="line">Polar</tspan><tspan
+           id="tspan3139"
+           y="867.07556"
+           x="363.14984"
+           sodipodi:role="line">target</tspan><tspan
+           id="tspan3141"
+           y="891.39557"
+           x="363.14984"
+           sodipodi:role="line">speed</tspan></text>
+    </g>
+  </g>
+</svg>

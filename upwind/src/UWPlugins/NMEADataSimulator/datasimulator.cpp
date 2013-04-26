@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <qmath.h>
 #include "../shared/uwmath.h"
+#include "../shared/polardiagram.h"
 
 const static double KNOT_TO_METER_MULTI = 0.514444444;
 
@@ -13,6 +14,9 @@ dataSimulator::dataSimulator() :
   , m_currentGpsPositionLongitude(0)
   , m_currentCompassHeading(0.0)
   , m_currentVelocity(0.0)
+  , m_polarDiagram(0)
+  , m_windAngle(0.0)
+  , m_windSpeed(0.0)
 {
     delay = 1000;
     timer = new QTimer();
@@ -31,9 +35,15 @@ dataSimulator::dataSimulator() :
 
     m_currentGpsPositionLatitude = 65.013026;
     m_currentGpsPositionLongitude = 25.109253; //Oulu coordinates
-    m_currentCompassHeading = 90; // clockwise degrees from north
+    m_currentCompassHeading = 0; // clockwise degrees from north
     m_currentVelocity = 1000.4; // knots per hour, one knot
     m_currentSteeringSpeed = 0.0;
+
+    m_windAngle = 270.0;
+    m_windSpeed = 20; // 20 knots or roughly 10m/s
+
+    m_polarDiagram = new PolarDiagram();
+    m_polarDiagram->populate();
 }
 
 dataSimulator::~dataSimulator(){}
@@ -127,19 +137,13 @@ void dataSimulator::simulateNMEAAngleAndWindSpeed(){
     6. Checksum
     **/
 
-    int windAngle = 0;
-    int windSpeed = 10; // knotSpeed
-    int simAngle = randInt(-15, 15);
-    windAngle += simAngle;
-    int simSpeed = randInt(-3, 3);
-    windSpeed += simSpeed;
-    float windSpeedMS = convertWindSpeed(windSpeed); // M/s Speed
+    float windSpeedMS = convertWindSpeed(m_windSpeed); // M/s Speed
 
     QString str;
     str = "$IIMWV,";
-    str += QString::number(windAngle);
+    str += QString::number(m_windAngle);
     str += ",T,";
-    str += QString::number(windSpeed);
+    str += QString::number(m_windSpeed);
     str += ",K,";
     str += QString::number(windSpeedMS);
     str+= ",M,";
@@ -210,6 +214,15 @@ void dataSimulator::simulateNMEAGPS(){
 //    else
 //        trigonometricAngle = (m_currentCompassHeading + 270.0) / 180.0 * M_PI;
 
+    float twa = m_windAngle + UwMath::toCartesian(m_currentCompassHeading);
+    while (twa < -180.0)
+        twa += 360;
+    while (twa > 180.0)
+        twa -= 360;
+    m_currentVelocity = (float)3600.0 / m_polarDiagram->getTA(m_windSpeed, twa) * 100;
+//    m_currentVelocity = m_currentVelocity *
+//            * m_currentVelocity;
+
 //    float scaleFactor = 0.03;
     double velocityInDegrees = m_currentVelocity / 60;
     double timeDeltaHours = (float)timer->interval() / 1000 / 3600;
@@ -222,7 +235,7 @@ void dataSimulator::simulateNMEAGPS(){
     translate = UwMath::toRadians(translate);
 
     QPointF currentGPs(m_currentGpsPositionLongitude, m_currentGpsPositionLatitude);
-    UwMath::toConformalInverted(currentGPs);
+    UwMath::toConformalInverted(&currentGPs);
 
     qDebug() << Q_FUNC_INFO << currentGPs << " vs " << m_currentGpsPositionLongitude << m_currentGpsPositionLatitude;
 //    UwMath::toConformalInverted(translate);
@@ -241,7 +254,6 @@ void dataSimulator::simulateNMEAGPS(){
 
 //    m_currentGpsPositionLatitude += translate.x();
 //    m_currentGpsPositionLongitude += translate.y();
-
 
     QString slatitude= QString::number(m_currentGpsPositionLatitude, 'f', 6);
     QString slongitude= QString::number(m_currentGpsPositionLongitude, 'f', 6);

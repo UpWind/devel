@@ -201,14 +201,14 @@ QLabel#label, QLabel#label_2, QLabel#label_3,  QLabel#label_4 {
 </string>
   </property>
   <property name="currentIndex">
-   <number>3</number>
+   <number>0</number>
   </property>
   <widget class="QWidget" name="page">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>197</width>
+     <width>196</width>
      <height>551</height>
     </rect>
    </property>
@@ -410,7 +410,7 @@ QLabel#label, QLabel#label_2, QLabel#label_3,  QLabel#label_4 {
           </property>
           <property name="icon">
            <iconset resource="../../resources/resources.qrc">
-            <normaloff>:/buttons/lock_boat_view.svg</normaloff>:/buttons/lock_boat_view.svg</iconset>
+            <normaloff>:/buttons/unlock_boat_view.svg</normaloff>:/buttons/unlock_boat_view.svg</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -779,7 +779,7 @@ color: rgb(145, 221, 219);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>197</width>
+     <width>196</width>
      <height>1464</height>
     </rect>
    </property>
@@ -1453,7 +1453,7 @@ color: rgb(145, 221, 219);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>197</width>
+     <width>196</width>
      <height>468</height>
     </rect>
    </property>

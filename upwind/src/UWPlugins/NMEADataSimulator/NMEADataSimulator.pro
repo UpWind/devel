@@ -16,7 +16,8 @@ SOURCES += \
     ../NMEAReader/corenmeareader.cpp \
     settingsui.cpp \
     ../../Settings/settings.cpp \
-    ../shared/uwmath.cpp
+    ../shared/uwmath.cpp \
+    ../shared/polardiagram.cpp
 
 HEADERS += \
     datasimulator.h \
@@ -25,6 +26,7 @@ HEADERS += \
     settingsui.h \
     ../../Settings/settings.h \
     ../shared/uwmath.h \
+    ../shared/polardiagram.h \
     datasimulatorcontrolinterface.h
 
 

@@ -126,6 +126,7 @@ void PluginManager::connectViewRenderer(ViewRendererInterface *viewR){
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(zoomOutS()), render, SLOT(zoomOut()), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(zoomBoat()), render, SLOT(zoomBoat()), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(zoomChart()), render, SLOT(expand()), Qt::QueuedConnection);
+    connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(followBoat(bool)), render, SLOT(setFollowBoat(bool)), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(rotateLeftS()), render, SLOT(rotateLeft()), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(rotateRightS()), render, SLOT(rotateRight()), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(zoomToolActivated(bool)), render, SLOT(zoomToolActivated(bool)), Qt::QueuedConnection);

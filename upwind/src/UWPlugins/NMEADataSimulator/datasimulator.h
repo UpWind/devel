@@ -8,6 +8,8 @@
 #include "settingsui.h"
 #include "datasimulatorcontrolinterface.h"
 
+class PolarDiagram;
+
 /**
   The dataSimulator class simulate the NMEA Strings from 4 boat sail's instruments.
   It generates one of them periodically in a interval of time (Timer delay)
@@ -110,6 +112,9 @@ private:
     tm * ptm;
     int delay;
 
+    float m_windAngle;
+    float m_windSpeed;
+
     int randInt(int a, int b);
 
     QString getTime();
@@ -134,6 +139,8 @@ private:
     double m_currentVelocity; // Speed over the ground in knots
     double m_currentSteeringSpeed; // Unit degrees per second
 
+
+    PolarDiagram* m_polarDiagram;
     // controls
 
     QPointF* test;
