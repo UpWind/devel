@@ -96,7 +96,7 @@ QPointF* BoatWidget::geoPointToPixel(QPointF* geoPoint){
 
     qDebug() << Q_FUNC_INFO << "geoPoint: "<< geoPoint->x() << ", " << geoPoint->y();
 
-    UwMath::toConformalInverted(*geoPoint);
+    UwMath::toConformalInverted(geoPoint);
     geoPoint->setX((geoPoint->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width()));
     geoPoint->setY((geoPoint->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height()));
 
@@ -121,6 +121,16 @@ void BoatWidget::zoomIn()
 void BoatWidget::zoomOut()
 {
     boat->zoomOut();
+}
+
+void BoatWidget::expand()
+{
+    boat->setZoomFactor(1.0);
+}
+
+void BoatWidget::setZoomFactor(qreal zoomFactor)
+{
+    boat->setZoomFactor(zoomFactor);
 }
 
 

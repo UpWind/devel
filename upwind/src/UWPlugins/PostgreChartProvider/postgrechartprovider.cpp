@@ -730,7 +730,7 @@ void PostgreChartProvider::setChartWidgetSize(QSize size){
 }
 
 inline void PostgreChartProvider::geopointToPixel(QPointF *geopoint){
-    UwMath::toConformalInverted(*geopoint);
+    UwMath::toConformalInverted(geopoint);
 
     geopoint->setX((geopoint->x() - chartBoundaries.left()) * (chartSize.width() / chartBoundaries.width()));
     geopoint->setY((geopoint->y() - chartBoundaries.top()) * (chartSize.height() / chartBoundaries.height()));

@@ -127,7 +127,7 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
         calculateLaylines = new CalculateLaylines();
         calculateLaylines->setPolarDiagram(this->pDiagram);
         calculateLaylines->setRoutePoints(this->route->getRoute());
-        calculateLaylines->setStartPoint(*this->boat->getGeoPosition());
+        calculateLaylines->setStartPoint(this->boat->getGeoPosition());
         qDebug() << "ROUTE IN CORE:" << this->route->getRoute();
 
         if (this->threadingStarted == 0){
@@ -145,7 +145,7 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
 
             thread->start();
         }else{
-            emit injectData(this->route->getRoute(), *this->boat->getGeoPosition());
+            emit injectData(this->route->getRoute(), this->boat->getGeoPosition());
         }
 
     }

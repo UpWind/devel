@@ -2,7 +2,8 @@
 #include "../../shared/uwmath.h"
 #include "../UpWindScene/Scene/projection.h"
 
-Boat::Boat(QSize size, QRectF chartBoundaries){
+Boat::Boat(QSize size, QRectF chartBoundaries)
+{
 
     this->boatImage = new QGraphicsSvgItem(":sailboat2.svg");
     this->boatImage->setPos(0, 0);
@@ -44,7 +45,7 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
     gps->setOpacity(0.7);
 
     // Initial position Oulu
-    this->boatGeoPosition = new QPointF(/*25.109253, 65.013026*/ 25.2715, 65.1126);
+    this->boatGeoPosition = QPointF(/*25.109253, 65.013026*/ 25.2715, 65.1126);
 
     if(boatImage != NULL)
     {
@@ -98,13 +99,13 @@ QString Boat::getName()
 
 void Boat::setGeoPosition(float longitude, float latitude)
 {
-    this->boatGeoPosition = new QPointF(longitude, latitude);
+    this->boatGeoPosition = QPointF(longitude, latitude);
     updateBoatPosition();
 }
 
 void Boat::setGeoPosition(QPointF position)
 {
-    this->boatGeoPosition = &position;
+    this->boatGeoPosition = position;
     updateBoatPosition();
 }
 
@@ -113,8 +114,8 @@ void Boat::setGPSLine(){
     //Wait until there is at least two points in the vector
     //then prepend and append the vector with incoming values
 
-    if (boatPositionVector.empty() || boatPositionVector.at(0) != *boatGeoPosition) {
-        boatPositionVector.push_front(QPointF(*boatGeoPosition));
+    if (boatPositionVector.empty() || boatPositionVector.at(0) != boatGeoPosition) {
+        boatPositionVector.push_front(QPointF(boatGeoPosition));
         while (boatPositionVector.size() > 2) {
             boatPositionVector.pop_back();
         }
@@ -123,8 +124,8 @@ void Boat::setGPSLine(){
     if (boatPositionVector.size() == 2) {
         firstPoint = boatPositionVector.at(0);
         secondPoint = boatPositionVector.at(1);
-        this->firstScenePosition = *geoPointToPixel(&firstPoint);
-        this->secondScenePosition = *geoPointToPixel(&secondPoint);
+        this->firstScenePosition = geoPointToPixel(firstPoint);
+        this->secondScenePosition = geoPointToPixel(secondPoint);
 
         QLineF gpsLineGeoPointToPixel(firstScenePosition,secondScenePosition);
         gpsLineGeoPointToPixel.setLength(50);
@@ -132,8 +133,8 @@ void Boat::setGPSLine(){
         gps->setLine(gpsLineGeoPointToPixel);
     } else {
         //atm line goes from boat to middle of screen, before boat have moved and it get new boatGeoPositions
-        firstPoint = *boatGeoPosition;
-        this->firstScenePosition = *geoPointToPixel(&firstPoint);
+        firstPoint = boatGeoPosition;
+        this->firstScenePosition = geoPointToPixel(firstPoint);
         QPointF screenMiddlePoint;
         float middlepointX = ((QApplication::desktop()->screenGeometry().width())/2);
         float middlepointY = ((QApplication::desktop()->screenGeometry().height())/2);
@@ -147,7 +148,7 @@ void Boat::setGPSLine(){
 
 void Boat::setOffSet(){
 
-     boatImage->setPos(boatScenePosition->x() - 10, boatScenePosition->y() - 20);
+     boatImage->setPos(boatScenePosition.x() - 10, boatScenePosition.y() - 20);
 }
 
 void Boat::updateBoatPosition()
@@ -198,6 +199,8 @@ void Boat::updateBoatPosition()
 
     compass->setLine(boatRect.center().x(), boatRect.center().y(), endx, endy );
     setLaylines();
+
+    emit boatPositionChanged();
 }
 
 void Boat::setHeading(float hdg)
@@ -242,7 +245,7 @@ void Boat::injectLaylines(QVector<QPointF> laylines){
 
 void Boat::geoLaylineToPixel(QPointF *geoPoint){
 
-    UwMath::toConformalInverted(*geoPoint);
+    UwMath::toConformalInverted(geoPoint);
     geoPoint->setX((geoPoint->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width()));
     geoPoint->setY((geoPoint->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height()));
 
@@ -259,14 +262,14 @@ float Boat::getHeading(){
     return this->heading;
 }
 //The following line is a copied from postgrechartprovider.cpp:
-QPointF* Boat::geoPointToPixel(QPointF *geoPoint){
+QPointF Boat::geoPointToPixel(const QPointF& geoPoint){
 
-    QPointF *scenePos = new QPointF(geoPoint->x(), geoPoint->y());
+    QPointF scenePos(geoPoint.x(), geoPoint.y());
     //    QPointF *scenePos = geoPoint;
 
-    UwMath::toConformalInverted(*scenePos);
-    scenePos->setX((scenePos->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width() * zoomFactor));
-    scenePos->setY((scenePos->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height() * zoomFactor));
+    UwMath::toConformalInverted(&scenePos);
+    scenePos.setX((scenePos.x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width() * zoomFactor));
+    scenePos.setY((scenePos.y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height() * zoomFactor));
 
     return scenePos;
 }
@@ -279,14 +282,13 @@ QPointF* Boat::pixelToGeoPoint(QPointF* pixelPoint){
     return pixelPoint;
 }
 
-
 void Boat::setView(QGraphicsView *view)
 {
     qDebug() << "Set view!";
     this->view = view;
 }
 
-QPointF *Boat::getGeoPosition()
+QPointF Boat::getGeoPosition()
 {
     return boatGeoPosition;
 }
@@ -301,5 +303,16 @@ void Boat::zoomOut()
 {
     zoomFactor -=0.1f;
     updateBoatPosition();
+}
+
+void Boat::setZoomFactor(qreal zoomFactor)
+{
+    this->zoomFactor = zoomFactor;
+    updateBoatPosition();
+}
+
+QPointF Boat::getBoatScenePosition() const
+{
+    return boatScenePosition;
 }
 

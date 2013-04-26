@@ -38,7 +38,7 @@ QRectF RouteWidget::boundingRect() const {
 
 QPointF* RouteWidget::geoPointToPixel(QPointF* geoPoint){
 
-    UwMath::toConformalInverted(*geoPoint);
+    UwMath::toConformalInverted(geoPoint);
     geoPoint->setX((geoPoint->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width()));
     geoPoint->setY((geoPoint->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height()));
 
@@ -51,6 +51,12 @@ QPointF* RouteWidget::pixelToGeoPoint(QPointF* pixelPoint){
     pixelPoint->setY((pixelPoint->y() / ((size.height()*zoomFactor) /  chartBoundaries.height())) + chartBoundaries.top());
     UwMath::fromConformalInverted(*pixelPoint);
     return pixelPoint;
+}
+
+void RouteWidget::setZoomFactor(qreal zoomFactor)
+{
+    this->zoomFactor = zoomFactor;
+    prepareGeometryChange();
 }
 
 void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
@@ -121,8 +127,7 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
    QPointF end;
 
    //Boat position?
-   QPointF *boatPosition = uwScene->getBoat()->getGeoPosition();
-   start = *boatPosition;
+   start = uwScene->getBoat()->getGeoPosition();
 
    end = event->pos();
 

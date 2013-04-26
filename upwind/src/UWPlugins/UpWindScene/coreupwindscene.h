@@ -37,13 +37,10 @@ public:
     void addPluginSettingsToLayout(QLayout *layout);
     void setChartObjects(CoreChartProvider *model);
 
-
     /** Parse the NMEA string if it is a GPS NMEA string
       * @param text - NMEA string
       */
     void parseNMEAString( const QString & text);
-
-
 
     /** Returns the name of the plugin
       * @return name of the plugin as a QString
@@ -61,7 +58,6 @@ public:
     PolarDiagram *pDiagram;
 
 public slots:
-
    void receiveData(QVector<QPointF> layLineData);
    void error(QString);
 

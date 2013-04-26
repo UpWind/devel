@@ -15,12 +15,10 @@ class PolarDiagram;
 class UpWindSceneInterface : public UWPluginInterface
 {
 public:
-
     virtual  Boat* getBoat() = 0;
     virtual  Route* getRoute() = 0;
     virtual  LoadObstacles* getLoadObstacles() = 0;
     virtual  PolarDiagram* getPolarDiagram() = 0;
-
 
     /** Parse the NMEA string if it is a GPS NMEA string
       * @param text - NMEA string

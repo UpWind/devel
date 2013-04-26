@@ -27,6 +27,8 @@ public:
     QPointF *geoPointToPixel(QPointF* geoPoint);
     QPointF *pixelToGeoPoint(QPointF* pixelPoint);
 
+    void setZoomFactor(qreal zoomFactor);
+
 signals:
 
 protected:

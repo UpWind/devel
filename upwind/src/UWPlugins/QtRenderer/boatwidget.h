@@ -32,6 +32,9 @@ public:
 
     void zoomIn();
     void zoomOut();
+    void expand();
+
+    void setZoomFactor(qreal zoomFactor);
 
 private:
     CoreUpWindScene* uwScene;

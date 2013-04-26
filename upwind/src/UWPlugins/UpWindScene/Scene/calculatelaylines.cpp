@@ -804,7 +804,7 @@ void CalculateLaylines::updateCheckPoint()
     // Find the destiny check point in geographical format:
     geoDestinyPos = this->getNextPoint( this->pathPoints, geoBoatPos, ACCU_OFFSET);
 
-    destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
+    destinyPos = UwMath::toConformalInverted(geoDestinyPos);
 
 }
 

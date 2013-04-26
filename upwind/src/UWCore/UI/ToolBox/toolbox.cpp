@@ -36,7 +36,7 @@ ToolBox::ToolBox(/*LayersManager* layersManager,*/ QWidget *parent)
     ui.fortstruct_pCB->setEnabled(false);
     ui.obstacles_CB->setEnabled( false);
 
-    ui.lockButton->setEnabled( false);
+    ui.lockButton->setEnabled( true);
     ui.destinyButton->setEnabled( true);
     ui.zoomBoatButton->setEnabled( true);
     ui.obstaclesButton->setEnabled( false);
@@ -1061,20 +1061,24 @@ void ToolBox::on_zoomToolButton_clicked()
 
 void ToolBox::on_lockButton_clicked()
 {
-    /*if ( status->boatLock() ) {
-                status->setBoatLock( false);
+    static bool flickSwitch = true;
+    if ( flickSwitch ) {
+//                status->setBoatLock( false);
                 ui.lockButton->setIcon( QIcon(":/buttons/lock_boat_view.svg"));
                 ui.lockButton->setToolTip( "Follow the boat");
-                if ( status->rubberBandDrag())
-                    status->view()->setDragMode( QGraphicsView::RubberBandDrag);
-                else
-                    status->view()->setDragMode( QGraphicsView::ScrollHandDrag);
+                emit followBoat(true);
+//                if ( status->rubberBandDrag())
+//                    status->view()->setDragMode( QGraphicsView::RubberBandDrag);
+//                else
+//                    status->view()->setDragMode( QGraphicsView::ScrollHandDrag);
         } else {
                 ui.lockButton->setIcon( QIcon(":/buttons/unlock_boat_view.svg"));
                 ui.lockButton->setToolTip( "Unlock the view from the boat");
-                status->setBoatLock( true);
-                status->view()->setDragMode( QGraphicsView::NoDrag);
-        }*/
+                emit followBoat(false);
+//                status->setBoatLock( true);
+//                status->view()->setDragMode( QGraphicsView::NoDrag);
+        }
+    flickSwitch = !flickSwitch;
 }
 
 void ToolBox::on_obstaclesButton_clicked()

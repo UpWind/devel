@@ -140,6 +140,12 @@ void ChartWidget::setZoomMode(bool active) {
     zoomMode = active;
 }
 
+void ChartWidget::setZoomFactor(qreal zoomFactor)
+{
+    this->zoomFactor = zoomFactor;
+    prepareGeometryChange();
+}
+
 void ChartWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     qDebug() << Q_FUNC_INFO << "Mousepressed";
 

@@ -26,6 +26,7 @@ public:
     void rotateRight();
     void expand();
     void setZoomMode(bool);
+    void setZoomFactor(qreal zoomFactor);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -34,6 +35,9 @@ protected:
 
 private slots:
     void fetchChartObjects();
+
+signals:
+    void zoomChanged(qreal zoomFactor);
 
 private:
     void drawChartSymbol(QPainter *painter, const QString &resource, const QPointF &point);
