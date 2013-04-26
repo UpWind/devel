@@ -60,7 +60,7 @@ public:
     static void toConformal(QPolygonF &object);
     static QPointF toConformal(const QPointF &object);
     static QPolygonF toConformal(const QPolygonF &object);
-    static void toConformalInverted(QPointF &object);
+    static void toConformalInverted(QPointF* object);
     static void toConformalInverted(QPolygonF &object);
     static QPointF toConformalInverted(const QPointF &object);
     static QPolygonF toConformalInverted(const QPolygonF &object);

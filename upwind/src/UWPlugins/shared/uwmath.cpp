@@ -184,9 +184,9 @@ QPolygonF UwMath::toConformal(const QPolygonF &eobject){
     return object;
 }
 
-void UwMath::toConformalInverted(QPointF &object){
-    object.setX(UwMath::toRadians(object.x()));
-    object.setY(UwMath::toMercator(object.y()) * (-1));
+void UwMath::toConformalInverted(QPointF* object){
+    object->setX(UwMath::toRadians(object->x()));
+    object->setY(UwMath::toMercator(object->y()) * (-1));
 }
 
 void UwMath::toConformalInverted(QPolygonF &object){
@@ -201,7 +201,7 @@ void UwMath::toConformalInverted(QPolygonF &object){
 QPointF UwMath::toConformalInverted(const QPointF &eobject){
     QPointF object(eobject);
 
-    UwMath::toConformalInverted(object);
+    UwMath::toConformalInverted(&object);
     return object;
 }
 
@@ -345,6 +345,19 @@ double UwMath::getCartesianAngleWithDestiny(const double &elon1, const double &e
             ((lat1 < 0 && lat2 < 0) && (lat1 > lat2)) ||
             (((lat1 < 0 && lat2 > 0) || (lat1 > 0 && lat2 < 0)) && (lat1 > lat2)))
         angle = angle * (-1);
+
+
+    // NOTE In some cases this could return a value outside the range and it would cause
+    // Q_ASSERT crash in UwMath::toPolar function, which defines cartesian angle as to be in
+    // the range, the problem lies in the algorithm or in the input.
+
+    while (angle >= 360.0) {
+        angle -= 360.0;
+    }
+    while (angle <= 0.0) {
+        angle += 360.0;
+    }
+
     return angle;
 }
 
