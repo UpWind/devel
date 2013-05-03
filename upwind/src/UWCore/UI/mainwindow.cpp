@@ -11,10 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowState(Qt::WindowFullScreen);
 
-    QGridLayout *layout = new QGridLayout();
+    QStackedLayout *layout = new QStackedLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    this->setLayout(layout);
+    setLayout(layout);
 }
 
 MainWindow::~MainWindow(){
