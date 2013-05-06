@@ -36,6 +36,8 @@ public slots:
 private slots:
     void on_level_edit_textChanged(const QString &arg1);
 
+    void on_comboBox_databases_currentIndexChanged(int index);
+
 private:
     /** Save the settings with new parameters that the user has chosen
       */
@@ -51,6 +53,7 @@ private:
     Ui::SettingsUI *ui;
     Settings *settings;
     PostgreChartProvider *pgchart;
+    bool initializing;
 };
 
 #endif // SETTINGSUI_H

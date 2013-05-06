@@ -959,7 +959,7 @@ void Route::addStaticWeather(double angleWind,double speedWind)
     if(debug)time1=time1.currentTime();
 
     PolarDiagram pDiagram;
-    pDiagram.populate();
+    pDiagram.populateWithFinngulf36();
     qDebug()<<"Add static weather called";
 
     for(int i=0;i<adMatrix.size();i++){

@@ -812,7 +812,7 @@ void CalculateLaylines::updateLayLines()
 {
     QTime timeUpdateLayLines;
     timeUpdateLayLines.start();
-    this->pPolarDiagram->populate();
+    this->pPolarDiagram->populateWithFinngulf36();
 
     // LayLines are not calculated with the actual TWA,
     // but the TWA that we will have when heading towards our destiny.

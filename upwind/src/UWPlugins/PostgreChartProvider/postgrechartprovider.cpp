@@ -55,13 +55,15 @@ void PostgreChartProvider::initialize(QString host,
                                       uint port,
                                       QString dbname,
                                       QString username,
-                                      QString password)
+                                      QString password,
+                                      int detailLevel)
 {
     dbHost = host;
     dbPort = port;
     dbName = dbname;
     dbUser = username;
     dbPass = password;
+    this->detailLevel = detailLevel;
     initConnection();
 }
 
@@ -80,8 +82,10 @@ void PostgreChartProvider::initConnection(){
     }
     else {
         mapLayers();
-        setBoundingBox(layers.value("generarea_r"));
-//        setBoundingBox(layers.value("generarea_r_level5"));
+        if (detailLevel == 0)
+            setBoundingBox(layers.value("generarea_r"));
+        else
+            setBoundingBox(layers.value("generarea_r_level" + QString::number(detailLevel)));
     }
 }
 
@@ -111,10 +115,8 @@ void PostgreChartProvider::mapLayers()
         }
         */
 
-        // Get only level 5.
-//        layer = getLayerLevel(baseName, 5);
-        // fuck levels
-        layer = getLayerLevel(baseName, -1);
+        // Get the correct level.
+        layer = getLayerLevel(baseName, detailLevel);
 
         // If the layer was found from the database.
         if (layer != NULL)
@@ -128,12 +130,12 @@ void PostgreChartProvider::mapLayers()
 // Gets layer by basename of wanted layer-level.
 OGRLayer* PostgreChartProvider::getLayerLevel(QString layerNameString, int layerNumber)
 {
-    qDebug() << "GetLayerLevel 5";
+    qDebug() << "GetLayerLevel" << layerNumber;
     OGRLayer *layer;
     // Layer's levelnumber to QString
     QString layerNumberStr = QString::number(layerNumber);
 
-    if(layerNameString.at(layerNameString.size()-1) != 'p' && layerNumber != -1)
+    if(layerNameString.at(layerNameString.size()-1) != 'p' && layerNumber != 0)
         layerNameString = layerNameString + "_level" + layerNumberStr;
     else
         layerNameString = layerNameString;
@@ -347,7 +349,8 @@ void PostgreChartProvider::initializeSettings(){
         settings->setSetting("Password", "upwind");
         settings->setSetting("Port", "5432");
         settings->setSetting("Host", "localhost");
-        settings->setSetting("DBName", "none");
+        settings->setSetting("DBName", "chart57");
+        settings->setSetting("DetailLevel", "0");
     }
 }
 
@@ -726,6 +729,10 @@ void PostgreChartProvider::setConPort(uint port){
 
 void PostgreChartProvider::setConHost(QString host){
     dbHost = host;
+}
+
+void PostgreChartProvider::setDetailLevel(int level) {
+    detailLevel = level;
 }
 
 void PostgreChartProvider::setChartWidgetSize(QSize size){

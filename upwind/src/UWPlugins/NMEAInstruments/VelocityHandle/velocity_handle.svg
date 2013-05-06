@@ -101,14 +101,6 @@
     </filter>
     <filter
        inkscape:collect="always"
-       id="filter4066">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="1.18125"
-         id="feGaussianBlur4068" />
-    </filter>
-    <filter
-       inkscape:collect="always"
        id="filter4102">
       <feGaussianBlur
          inkscape:collect="always"
@@ -123,6 +115,14 @@
          stdDeviation="1.62265"
          id="feGaussianBlur3995" />
     </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4134">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.610506"
+         id="feGaussianBlur4136" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -132,7 +132,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="245.62438"
+     inkscape:cx="166.83248"
      inkscape:cy="207.3878"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -150,7 +150,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -280,7 +280,7 @@
          sodipodi:role="line"
          id="tspan3897"
          x="254.37842"
-         y="488.69702">10x</tspan></text>
+         y="488.69702">50x</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3899"
@@ -334,62 +334,112 @@
          sodipodi:type="arc" />
     </g>
     <g
-       id="g4118"
-       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943">
+       id="g4098"
+       style="opacity:0.80973451;fill:#000000;fill-opacity:1;filter:url(#filter4134)"
+       transform="translate(1.5152288,2.0203051)">
       <g
-         transform="translate(-5.9383637,6.8977531)"
-         style="opacity:0.8226316;fill:#000000;fill-opacity:1;filter:url(#filter4102)"
-         id="g4076">
+         id="g4100"
+         inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+         inkscape:export-xdpi="43.617943"
+         inkscape:export-ydpi="43.617943"
+         style="fill:#000000;fill-opacity:1">
         <text
            sodipodi:linespacing="125%"
-           id="text4078"
-           y="847.30121"
-           x="198.69032"
+           id="text4102"
+           y="851.3418"
+           x="179.37863"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
            xml:space="preserve"><tspan
-             y="847.30121"
-             x="198.69032"
-             id="tspan4080"
-             sodipodi:role="line">2</tspan></text>
+             y="851.3418"
+             x="179.37863"
+             id="tspan4104"
+             sodipodi:role="line">20</tspan></text>
         <text
            sodipodi:linespacing="125%"
-           id="text4082"
-           y="887.70728"
-           x="160.97548"
+           id="text4106"
+           y="891.74786"
+           x="152.89426"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
            xml:space="preserve"><tspan
-             y="887.70728"
-             x="160.97548"
-             id="tspan4084"
+             y="891.74786"
+             x="152.89426"
+             id="tspan4108"
              sodipodi:role="line">knots</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="179.37863"
+           y="851.3418"
+           id="text4110"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan4112"
+             x="179.37863"
+             y="851.3418">20</tspan></text>
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="152.89426"
+           y="891.74786"
+           id="text4114"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan4116"
+             x="152.89426"
+             y="891.74786">knots</tspan></text>
       </g>
+    </g>
+    <g
+       id="g4087">
       <g
-         transform="translate(-8.0812204,4.0406102)"
-         id="g4070">
+         inkscape:export-ydpi="43.617943"
+         inkscape:export-xdpi="43.617943"
+         inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+         id="g4118">
         <text
            xml:space="preserve"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
-           x="198.69032"
-           y="847.30121"
+           x="179.37863"
+           y="851.3418"
            id="text3921"
            sodipodi:linespacing="125%"><tspan
              sodipodi:role="line"
              id="tspan3923"
-             x="198.69032"
-             y="847.30121">2</tspan></text>
+             x="179.37863"
+             y="851.3418">20</tspan></text>
         <text
            xml:space="preserve"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
-           x="160.97548"
-           y="887.70728"
+           x="152.89426"
+           y="891.74786"
            id="text3927"
            sodipodi:linespacing="125%"><tspan
              sodipodi:role="line"
              id="tspan3929"
-             x="160.97548"
-             y="887.70728">knots</tspan></text>
+             x="152.89426"
+             y="891.74786">knots</tspan></text>
+        <text
+           sodipodi:linespacing="125%"
+           id="text3254"
+           y="851.3418"
+           x="179.37863"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             y="851.3418"
+             x="179.37863"
+             id="tspan3256"
+             sodipodi:role="line">20</tspan></text>
+        <text
+           sodipodi:linespacing="125%"
+           id="text3258"
+           y="891.74786"
+           x="152.89426"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+           xml:space="preserve"><tspan
+             y="891.74786"
+             x="152.89426"
+             id="tspan3260"
+             sodipodi:role="line">knots</tspan></text>
       </g>
     </g>
     <g

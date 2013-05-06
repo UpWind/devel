@@ -41,7 +41,7 @@ dataSimulator::dataSimulator() :
 
     m_currentCompassHeading = 0; // clockwise degrees from north
     m_currentVelocity = 0.0; // knots per hour
-    m_defaultMotorVelocity = 2.0; // knots per hour, two knots. Default motor speed.
+    m_defaultMotorVelocity = 20.0; // knots per hour, two knots. Default motor speed.
     m_currentSteeringSpeed = 0.0;
     m_velocityMultiplier = 1.0;
     m_isAnchored = false;

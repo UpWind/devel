@@ -28,7 +28,8 @@ public:
                     uint port,
                     QString dbname,
                     QString username,
-                    QString password);
+                    QString password,
+                    int detailLevel);
 
     virtual void addPluginSettingsToLayout(QLayout *layout);
 
@@ -50,6 +51,7 @@ public:
     void setConPass(QString pass);
     void setConPort(uint port);
     void setConHost(QString host);
+    void setDetailLevel(int level);
 
     void setChartWidgetSize(QSize size);
 

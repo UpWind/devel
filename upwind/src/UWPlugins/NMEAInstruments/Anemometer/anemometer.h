@@ -44,7 +44,7 @@ private:
     QGraphicsScene *anemometerScene;
     QGraphicsPixmapItem* anemometer;
     QGraphicsPixmapItem* hand;
-    int angle;
+    int m_angle;
     QGraphicsSimpleTextItem *knots;
     QGraphicsSimpleTextItem *ms;
 
@@ -53,7 +53,7 @@ private:
       * @param windSpeedMS - wind speed in metres per second
       * @param windSpeedKnots - wind speed in knots
       */
-    void setParsedNMEAValues(QString angle,  QString windSpeedMS, QString windSpeedKnots);
+    void setParsedNMEAValues(QString m_angle,  QString windSpeedMS, QString windSpeedKnots);
 
     /** Changes the size of the widget with the value of sizes[]
       */
@@ -66,7 +66,7 @@ private:
 public slots:
     /** Set the angle of the wind
       */
-    void setAngle(int angle);
+    void setAngle(int m_angle);
 
     /** Change the size of the widget calling the private method changeWidgetSize
       */
