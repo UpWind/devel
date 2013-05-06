@@ -5,7 +5,7 @@
 #include "ui_simulatorwheel.h"
 
 const static double METER_TO_KNOT = 1.94384449;
-const float wheelCenterRadiusSquared = 900.0;
+const float handleCenterRadiusSquared = 900.0;
 
 SimulatorWheel::SimulatorWheel(QWidget *parent)
     : m_halfSizeImage(0)
@@ -61,8 +61,8 @@ void SimulatorWheel::mousePressEvent(QMouseEvent *event)
     QPoint center = pos() + QPoint(width()/2, height()/2);
     QVector2D distance = QVector2D(event->globalPos() - center);
 
-    qDebug() << Q_FUNC_INFO << distance << wheelCenterRadiusSquared << distance.length();
-    if (distance.lengthSquared() > wheelCenterRadiusSquared) {
+    qDebug() << Q_FUNC_INFO << distance << handleCenterRadiusSquared << distance.length();
+    if (distance.lengthSquared() > handleCenterRadiusSquared) {
         m_turning = true;
         handlingPoint= pos() + QPoint(width()/2, height()/2);
         m_initialAngle = angleFromPoint(event->globalPos()) - m_angle ;

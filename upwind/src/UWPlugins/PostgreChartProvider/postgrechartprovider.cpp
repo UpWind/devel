@@ -25,7 +25,7 @@
 
 PostgreChartProvider::PostgreChartProvider() :
     dataSource(0),
-    detailLevel(5),
+    detailLevel(0),
     settings(0)
 {
     selectedLayers.insert("deptharea_r");
@@ -80,7 +80,8 @@ void PostgreChartProvider::initConnection(){
     }
     else {
         mapLayers();
-        setBoundingBox(layers.value("generarea_r_level5"));
+        setBoundingBox(layers.value("generarea_r"));
+//        setBoundingBox(layers.value("generarea_r_level5"));
     }
 }
 
@@ -111,7 +112,9 @@ void PostgreChartProvider::mapLayers()
         */
 
         // Get only level 5.
-        layer = getLayerLevel(baseName, 5);
+//        layer = getLayerLevel(baseName, 5);
+        // fuck levels
+        layer = getLayerLevel(baseName, -1);
 
         // If the layer was found from the database.
         if (layer != NULL)
@@ -130,7 +133,7 @@ OGRLayer* PostgreChartProvider::getLayerLevel(QString layerNameString, int layer
     // Layer's levelnumber to QString
     QString layerNumberStr = QString::number(layerNumber);
 
-    if(layerNameString.at(layerNameString.size()-1) != 'p')
+    if(layerNameString.at(layerNameString.size()-1) != 'p' && layerNumber != -1)
         layerNameString = layerNameString + "_level" + layerNumberStr;
     else
         layerNameString = layerNameString;

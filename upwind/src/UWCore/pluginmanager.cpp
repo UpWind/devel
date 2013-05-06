@@ -13,6 +13,7 @@ PluginManager::PluginManager(){
     routeManager = 0;
     logger = 0;
     simulatorWheel = 0;
+    velocityHandle = 0;
     dataSimulatorControlInterface = 0;
 }
 
@@ -160,6 +161,13 @@ void PluginManager::connectWheelAndSimulator()
     }
 }
 
+void PluginManager::connectHandleAndSimulator()
+{
+    if (velocityHandle && dataSimulatorControlInterface) {
+        velocityHandle->connectToSimulator(dataSimulatorControlInterface, dataSimulatorControlInterface->operator QObject *());
+    }
+}
+
 void PluginManager::savePluginSettings(){
     foreach(UWPluginInterface* plugin, loadedPlugins)
         if(!dynamic_cast<NMEAInstrumentInterface *>(plugin))
@@ -220,6 +228,7 @@ void PluginManager::loadPlugins(){
                 if (qobject_cast<DataSimulatorControlInterface*>(plugin)) {
                     dataSimulatorControlInterface = qobject_cast<DataSimulatorControlInterface*>(plugin);
                     connectWheelAndSimulator();
+                    connectHandleAndSimulator();
                 }
             }
 
@@ -235,7 +244,11 @@ void PluginManager::loadPlugins(){
                 if (qobject_cast<SimulatorWheelInterface*>(plugin)) {
                     simulatorWheel = qobject_cast<SimulatorWheelInterface*>(plugin);
                     connectWheelAndSimulator();
+                } else if (qobject_cast<VelocityHandleInterface*>(plugin)) {
+                    velocityHandle = qobject_cast<VelocityHandleInterface*>(plugin);
+                    connectHandleAndSimulator();
                 }
+
             }
         }
     }

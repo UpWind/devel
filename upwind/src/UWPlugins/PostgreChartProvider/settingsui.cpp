@@ -170,3 +170,12 @@ bool SettingsUI::testDBType(QString databaseName){
 
     return valid;
 }
+
+void SettingsUI::on_level_edit_textChanged(const QString &arg1)
+{
+    bool ok;
+    int number = arg1.toInt(&ok);
+    if (ok) {
+
+    }
+}

@@ -70,6 +70,9 @@ private:
     virtual void connectToSimulator(DataSimulatorControlInterface* simulator, QObject* simulatorObject);
 
     QPoint handlingPoint;
+    QRectF m_handleRect;
+    QPointF m_handlePosition;
+    QPointF m_anchorPosition;
 
 //    int m_halfSizeImage;
     Ui::SimulatorWheel m_ui;
@@ -81,12 +84,11 @@ private:
     QGraphicsPixmapItem* m_anchorOn;
     QGraphicsPixmapItem* m_anchorOff;
 
-    QRectF m_handleRect;
-
     float m_angle;
     float m_initialAngle;
-    bool m_turning;
+    bool m_dragging;
     float m_turningFactor;
+    bool m_isAnchored;
 
     DataSimulatorControlInterface* m_dataSimulatorControlInterface;
     QObject* m_dataSimulatorObject;

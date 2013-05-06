@@ -5,7 +5,7 @@
 #include "ui_velocityhandle.h"
 
 const static double METER_TO_KNOT = 1.94384449;
-const float wheelCenterRadiusSquared = 900.0;
+const float handleCenterRadiusSquared = 900.0;
 
 VelocityHandle::VelocityHandle(QWidget *parent) :
      m_index(0)
@@ -16,8 +16,9 @@ VelocityHandle::VelocityHandle(QWidget *parent) :
     ,m_anchorOff(0)
     ,m_angle(0.0)
     ,m_initialAngle(0.0)
-    ,m_turning(false)
+    ,m_dragging(false)
     ,m_turningFactor(0.0)
+   , m_isAnchored(false)
 {
 
     this->setParent(parent);
@@ -31,9 +32,13 @@ VelocityHandle::VelocityHandle(QWidget *parent) :
     m_sizes << 0.85;
     m_sizes << 1.15;
     m_index = 0;
-    initializeImages();
 
-    m_handleRect = QRectF();
+    m_handleRect = QRectF(-40, -130, 80, 210);
+    m_handlePosition = m_handleRect.bottomRight();
+
+    m_anchorPosition = QPointF(0,145);
+
+    initializeImages();
 
     setDefaultStyleSheet();
     changeWidgetSize();
@@ -64,73 +69,111 @@ void VelocityHandle::changeSize(){
 
 void VelocityHandle::mousePressEvent(QMouseEvent *event)
 {
-    QPoint center = pos() + QPoint(width()/2, height()/2);
-    QVector2D distance = QVector2D(event->globalPos() - center);
+    QPoint handleCenter = pos() + QPoint(width()/2, height()/2) + (m_handlePosition * m_sizes[m_index]).toPoint();
+    QVector2D handleDistance = QVector2D(event->globalPos() - handleCenter);
 
-    qDebug() << Q_FUNC_INFO << distance << wheelCenterRadiusSquared << distance.length();
-//    if (distance.lengthSquared() > wheelCenterRadiusSquared) {
-//        m_turning = true;
-//        handlingPoint= pos() + QPoint(width()/2, height()/2);
+    QPoint anchorCenter = pos() + QPoint(width()/2, height()/2) + (m_anchorPosition * m_sizes[m_index]).toPoint();
+    QVector2D anchorDistance = QVector2D(event->globalPos() - anchorCenter);
+
+//    qDebug() << Q_FUNC_INFO << distance << wheelCenterRadiusSquared << distance.length();
+    if (handleDistance.lengthSquared() < handleCenterRadiusSquared) {
+        m_dragging = true;
+        handlingPoint= pos() + QPoint(width()/2, height()/2);
 //        m_initialAngle = angleFromPoint(event->globalPos()) - m_angle ;
-//    } else {
+    } else if (anchorDistance.lengthSquared() < handleCenterRadiusSquared) {
+        m_isAnchored = !m_isAnchored;
+        m_anchorOff->setVisible(!m_isAnchored);
+        m_anchorOn->setVisible(m_isAnchored);
+        if (m_dataSimulatorControlInterface) {
+            m_dataSimulatorControlInterface->setAnchor(m_isAnchored);
+        }
+    } else {
         CoreNMEAInstrument::mousePressEvent(event);
-//    }
+    }
 }
 
 void VelocityHandle::mouseReleaseEvent(QMouseEvent *event)
 {
-    m_turning = false;
+    m_dragging = false;
     CoreNMEAInstrument::mouseReleaseEvent(event);
 }
 
 void VelocityHandle::mouseMoveEvent(QMouseEvent *event)
 {
-//    if (m_turning) {
-////        float angle = angleFromPoint(event->globalPos());
+    if (m_dragging) {
+        m_handlePosition = QPointF(event->globalPos() - pos() - QPoint(width()/2, height()/2)) / m_sizes[m_index];
 
-//        angle = angle - m_initialAngle;
+        if (m_handlePosition.x() < m_handleRect.center().x()) {
+            m_handlePosition.setX(m_handleRect.left());
+            if (m_dataSimulatorControlInterface) {
+                m_dataSimulatorControlInterface->setSail(false);
+            }
 
-//        if (angle > 180.0) {
-//            angle -= 360.0;
-//        } else if (angle < -180.0) {
-//            angle += 360.0;
-//        }
+        } else if (m_handlePosition.x() > m_handleRect.center().x()) {
+            m_handlePosition.setX(m_handleRect.right());
+            if (m_dataSimulatorControlInterface) {
+                m_dataSimulatorControlInterface->setSail(true);
+            }
+        }
 
-//        if (angle < -160.0) {
-//            angle = -160.0;
-//        } else if (angle > 160.0) {
-//            angle = 160.0;
-//        }
+        if (m_handlePosition.y() < m_handleRect.top()) {
+            m_handlePosition.setY(m_handleRect.top());
+        } else if (m_handlePosition.y() > m_handleRect.bottom()) {
+            m_handlePosition.setY(m_handleRect.bottom());
+        }
 
-//        this->setAngle(angle);
-//        if (m_dataSimulatorControlInterface)
-//            m_dataSimulatorControlInterface->setTurningSpeed(angle * m_turningFactor);
-//    } else
+        float multiplierPosition = (m_handleRect.bottom() - m_handlePosition.y()) / m_handleRect.height();
+        if (m_dataSimulatorControlInterface) {
+            m_dataSimulatorControlInterface->setVelocityMultiplier(multiplierPosition * 99.0 + 1.0);
+        }
+
+
+        if (m_dataSimulatorControlInterface) {
+            //m_dataSimulatorControlInterface->setTurningSpeed();
+        }
+
+        m_handle->setPos(m_handlePosition.x() * m_sizes[m_index],
+                         m_handlePosition.y() * m_sizes[m_index]);
+    } else
         CoreNMEAInstrument::mouseMoveEvent(event);
 }
 
-void VelocityHandle::changeWidgetSize(){
+void VelocityHandle::changeWidgetSize()
+{
     m_velocityHandleScene->setSceneRect(m_velocityHandleScene->itemsBoundingRect());
     QSize size;
     size.setHeight(m_velocityHandleScene->height());
     size.setWidth(m_velocityHandleScene->width());
+
+    m_handle->setPos(m_handlePosition.x() * m_sizes[m_index],
+                     m_handlePosition.y() * m_sizes[m_index]);
+    m_anchorOn->setPos(m_anchorPosition.x() * m_sizes[m_index],
+                       m_anchorPosition.y() * m_sizes[m_index]);
+    m_anchorOff->setPos(m_anchorPosition.x() * m_sizes[m_index],
+                       m_anchorPosition.y() * m_sizes[m_index]);
+
     this->resize(size);
 }
 
-void VelocityHandle::initializeImages(){
+void VelocityHandle::initializeImages()
+{
     m_velocityHandle = loadImage(":background");
     m_handle = loadImage(":handle");
     m_anchorOn = loadImage(":anchorOn");
-//    m_anchorOn->setPos(-m_velocityHandle->boundingRect().width()/2,0);
-//    m_anchorOn->setVisible(false);
+    m_anchorOn->setVisible(false);
     m_anchorOff = loadImage(":anchorOff");
-//    m_anchorOff->setPos(-m_velocityHandle->boundingRect().width()/2,0);
-//    m_anchorOff->setVisible(true);
 
     m_velocityHandleScene->addItem(m_velocityHandle);
     m_velocityHandleScene->addItem(m_handle);
     m_velocityHandleScene->addItem(m_anchorOn);
     m_velocityHandleScene->addItem(m_anchorOff);
+
+    m_handle->setPos(m_handlePosition.x() * m_sizes[m_index],
+                     m_handlePosition.y() * m_sizes[m_index]);
+    m_anchorOn->setPos(m_anchorPosition.x() * m_sizes[m_index],
+                       m_anchorPosition.y() * m_sizes[m_index]);
+    m_anchorOff->setPos(m_anchorPosition.x() * m_sizes[m_index],
+                       m_anchorPosition.y() * m_sizes[m_index]);
 }
 
 QGraphicsPixmapItem* VelocityHandle::loadImage(const QString& image, int* halfSizeImagePtr)

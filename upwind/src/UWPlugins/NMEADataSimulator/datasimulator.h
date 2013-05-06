@@ -77,6 +77,12 @@ public:
 
     virtual void setTurningSpeed(int degreesPerSecond);
 
+    virtual void setVelocityMultiplier(float velocityMultiplier);
+
+    virtual void setAnchor(bool anchor);
+
+    virtual void setSail(bool sailing);
+
     virtual operator QObject*();
 
 private slots:
@@ -137,7 +143,12 @@ private:
     double m_currentGpsPositionLatitude;
     double m_currentCompassHeading;
     double m_currentVelocity; // Speed over the ground in knots
+    double m_defaultMotorVelocity;
     double m_currentSteeringSpeed; // Unit degrees per second
+    double m_velocityMultiplier;
+
+    bool m_isSailing;
+    bool m_isAnchored;
 
 
     PolarDiagram* m_polarDiagram;

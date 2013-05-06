@@ -8,6 +8,12 @@ public:
 
     virtual void setTurningSpeed(int degreesPerSecond) = 0;
 
+    virtual void setVelocityMultiplier(float Velocitymultiplier) = 0;
+
+    virtual void setAnchor(bool anchor) = 0;
+
+    virtual void setSail(bool sailing) = 0;
+
     virtual operator QObject*() = 0;
 };
 

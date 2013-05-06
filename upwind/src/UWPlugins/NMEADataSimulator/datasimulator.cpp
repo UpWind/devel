@@ -14,9 +14,13 @@ dataSimulator::dataSimulator() :
   , m_currentGpsPositionLongitude(0)
   , m_currentCompassHeading(0.0)
   , m_currentVelocity(0.0)
+  , m_defaultMotorVelocity(0.0)
   , m_polarDiagram(0)
   , m_windAngle(0.0)
   , m_windSpeed(0.0)
+  , m_velocityMultiplier(0.0)
+  , m_isAnchored(false)
+  , m_isSailing(false)
 {
     delay = 1000;
     timer = new QTimer();
@@ -35,15 +39,21 @@ dataSimulator::dataSimulator() :
 
     m_currentGpsPositionLatitude = 65.013026;
     m_currentGpsPositionLongitude = 25.109253; //Oulu coordinates
+//    m_currentGpsPositionLatitude = 60.270;
+//    m_currentGpsPositionLongitude = 21.57; //Turku coordinates
     m_currentCompassHeading = 0; // clockwise degrees from north
-    m_currentVelocity = 1000.4; // knots per hour, one knot
+    m_currentVelocity = 0.0; // knots per hour
+    m_defaultMotorVelocity = 2.0; // knots per hour, two knots. Default motor speed.
     m_currentSteeringSpeed = 0.0;
+    m_velocityMultiplier = 1.0;
+    m_isAnchored = false;
+    m_isSailing = false;
 
-    m_windAngle = 270.0;
+    m_windAngle = 45.0;
     m_windSpeed = 20; // 20 knots or roughly 10m/s
 
     m_polarDiagram = new PolarDiagram();
-    m_polarDiagram->populate();
+    m_polarDiagram->populateWithFinngulf36();
 }
 
 dataSimulator::~dataSimulator(){}
@@ -214,12 +224,18 @@ void dataSimulator::simulateNMEAGPS(){
 //    else
 //        trigonometricAngle = (m_currentCompassHeading + 270.0) / 180.0 * M_PI;
 
-    float twa = m_windAngle + UwMath::toCartesian(m_currentCompassHeading);
+    float twa = (m_windAngle - m_currentCompassHeading);//+ UwMath::toCartesian(m_currentCompassHeading);
     while (twa < -180.0)
         twa += 360;
     while (twa > 180.0)
         twa -= 360;
-    m_currentVelocity = (float)3600.0 / m_polarDiagram->getTA(m_windSpeed, twa) * 100;
+
+    twa = qAbs(twa);
+    if (m_isSailing) {
+        m_currentVelocity = m_isAnchored ? 0.0 : (float)3600.0 / m_polarDiagram->getTA(m_windSpeed, twa) * m_velocityMultiplier;
+    } else {
+        m_currentVelocity = m_isAnchored ? 0.0 : m_defaultMotorVelocity * m_velocityMultiplier;
+    }
 //    m_currentVelocity = m_currentVelocity *
 //            * m_currentVelocity;
 
@@ -307,6 +323,21 @@ void dataSimulator::initializeSettings(){
 void dataSimulator::setTurningSpeed(int degreesPerSecond)
 {
     m_currentSteeringSpeed = degreesPerSecond;
+}
+
+void dataSimulator::setVelocityMultiplier(float velocityMultiplier)
+{
+    m_velocityMultiplier = velocityMultiplier;
+}
+
+void dataSimulator::setAnchor(bool anchor)
+{
+    m_isAnchored = anchor;
+}
+
+void dataSimulator::setSail(bool sailing)
+{
+    m_isSailing = sailing;
 }
 
 dataSimulator::operator QObject *()

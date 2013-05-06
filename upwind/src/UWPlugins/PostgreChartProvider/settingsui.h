@@ -33,6 +33,9 @@ public slots:
       */
     void save();
 
+private slots:
+    void on_level_edit_textChanged(const QString &arg1);
+
 private:
     /** Save the settings with new parameters that the user has chosen
       */
