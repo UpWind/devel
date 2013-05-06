@@ -15,12 +15,7 @@ UIManager::UIManager() {
     mainWindow->layout()->addWidget(settingsWindow);
     toolbox = new ToolBox(navigationWindow);
 
-    QRect screenGeometry = mainWindow->geometry();
-
-    navigationWindow->setGeometry(screenGeometry);
-    toolbox->setGeometry((screenGeometry.topRight().x() - toolbox->width()), 50,
-                         toolbox->width(), screenGeometry.bottomRight().y() - 120);
-
+    QObject::connect(mainWindow, SIGNAL(geometryChanged(QRect)), this, SLOT(mainWindowGeometryChanged(QRect)));
     QObject::connect(navigationWindow, SIGNAL(goBack()), this, SLOT(showMainMenu()));
     QObject::connect(navigationWindow, SIGNAL(toolboxButtonClicked()), this, SLOT(toggleToolbox()));
     QObject::connect(mainMenu, SIGNAL(close()), this, SLOT(close()));
@@ -40,6 +35,15 @@ void UIManager::connectInstruments(){
         instrument->showPlugin();
     }
 }
+
+void UIManager::mainWindowGeometryChanged(QRect geometry)
+{
+    navigationWindow->setGeometry(geometry);
+    toolbox->setGeometry((geometry.right() - toolbox->width()), 50,
+                         toolbox->width(), geometry.bottom() - 120);
+}
+
+
 
 SettingsForm* UIManager::getSettingsForm(){
     return settingsWindow;

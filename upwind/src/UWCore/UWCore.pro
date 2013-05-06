@@ -68,11 +68,9 @@ HEADERS += \
 FORMS += \
     UI/mainmenu.ui \
     UI/settingswindow.ui \
-    UI/mainwindow.ui \
     UI/settingsform.ui \
     UI/ToolBox/toolBox.ui \
-    UI/pluginselect.ui \
-    UI/navigationwindow.ui
+    UI/pluginselect.ui
 
 RESOURCES += \
     resources/resources.qrc

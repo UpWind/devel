@@ -1,3 +1,5 @@
+
+#define QT_NO_DEBUG_OUTPUT
 #include "navaid.h"
 QString spar(int mark)
 {

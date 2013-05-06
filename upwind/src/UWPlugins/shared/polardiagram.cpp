@@ -1,3 +1,4 @@
+#define QT_NO_DEBUG_OUTPUT
 /**
  * \file polardiagram.cpp
  * \author Carles Escrig i Royo
