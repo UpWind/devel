@@ -1,3 +1,5 @@
+
+#define QT_NO_DEBUG_OUTPUT
 #include <QtGui>
 #include <QFileInfo>
 #include <QDebug>

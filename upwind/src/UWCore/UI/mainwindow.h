@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
-#include <QtGui>
 
 namespace Ui {
 class MainWindow;
@@ -11,13 +10,14 @@ class MainWindow;
 class MainWindow : public QWidget
 {
     Q_OBJECT
-
 public:
     explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
 
-private:
-    Ui::MainWindow *ui;
+signals:
+    void geometryChanged(QRect);
+
+protected:
+    void resizeEvent(QResizeEvent *event);
 };
 
 #endif // MAINWINDOW_H

@@ -3,8 +3,6 @@
 
 #include <QWidget>
 #include <QPushButton>
-#include <QPainter>
-class CoastLine;
 
 namespace Ui {
 class NavigationWindow;
@@ -30,10 +28,8 @@ signals:
     void toolboxButtonClicked();
 
 private:
-    Ui::NavigationWindow *ui;
     QPushButton *m_backButton;
     QPushButton *m_toolboxButton;
-    CoastLine *coastLine;
 };
 
 #endif // NAVIGATIONWINDOW_H

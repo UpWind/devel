@@ -1,13 +1,10 @@
 #include "navigationwindow.h"
-#include "ui_navigationwindow.h"
+
 #include <QResizeEvent>
 
 NavigationWindow::NavigationWindow(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::NavigationWindow)
+    QWidget(parent)
 {
-    ui->setupUi(this);
-    this->setParent(parent);
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
 
@@ -20,7 +17,6 @@ NavigationWindow::NavigationWindow(QWidget *parent) :
 }
 
 NavigationWindow::~NavigationWindow(){
-    delete ui;
 }
 
 void NavigationWindow::back(){
@@ -39,8 +35,7 @@ void NavigationWindow::toggleToolbox(){
 }
 
 void NavigationWindow::resizeEvent(QResizeEvent *event) {
-    QWidget::resizeEvent(event);
-
     m_backButton->move(QPoint(geometry().bottomLeft().x() + 8, geometry().bottomLeft().y() - 48));
     m_toolboxButton->move(QPoint(geometry().bottomRight().x() - 8 - m_toolboxButton->width(), geometry().bottomRight().y() - 48));
+    QWidget::resizeEvent(event);
 }

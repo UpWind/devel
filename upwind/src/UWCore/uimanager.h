@@ -47,6 +47,9 @@ private:
     NavigationWindow *navigationWindow;
     ToolBox *toolbox;
 
+private slots:
+    void mainWindowGeometryChanged(QRect rect);
+
 public slots:
 
     /**
