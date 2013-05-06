@@ -17,20 +17,22 @@ class NavigationWindow : public QWidget
 public:
     explicit NavigationWindow(QWidget *parent = 0);
     ~NavigationWindow();
-    void addButtons();
+
+protected:
+    void resizeEvent(QResizeEvent *event);
 
 public slots:
     void back();
-    void toolboxButton_clicked();
+    void toggleToolbox();
 
 signals:
     void goBack();
-    void toggleToolbox();
+    void toolboxButtonClicked();
 
 private:
     Ui::NavigationWindow *ui;
-    QPushButton *backButton;
-    QPushButton *toolboxButton;
+    QPushButton *m_backButton;
+    QPushButton *m_toolboxButton;
     CoastLine *coastLine;
 };
 

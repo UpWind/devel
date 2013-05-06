@@ -36,11 +36,9 @@ dataSimulator::dataSimulator() :
     anonemeter = settingsUI->getAnenomter();
     clock = settingsUI->getClock();
     gps = settingsUI->getGPS();
+    m_currentGpsPositionLongitude = settingsUI->boatPositionLongitude();
+    m_currentGpsPositionLatitude = settingsUI->boatPositionLatitude();
 
-    m_currentGpsPositionLatitude = 65.013026;
-    m_currentGpsPositionLongitude = 25.109253; //Oulu coordinates
-//    m_currentGpsPositionLatitude = 60.270;
-//    m_currentGpsPositionLongitude = 21.57; //Turku coordinates
     m_currentCompassHeading = 0; // clockwise degrees from north
     m_currentVelocity = 0.0; // knots per hour
     m_defaultMotorVelocity = 2.0; // knots per hour, two knots. Default motor speed.
@@ -208,6 +206,11 @@ void dataSimulator::simulateNMEAGPS(){
             *6A          The checksum data, always begins with
     **/
 
+    if (qFuzzyCompare(m_currentGpsPositionLatitude, 0.0)
+            || qFuzzyCompare(m_currentGpsPositionLongitude, 0.0)) {
+        return;
+    }
+
     QString str = "$IIRMC,";
     str += getTime() + ",";
     str += "A,";
@@ -253,7 +256,6 @@ void dataSimulator::simulateNMEAGPS(){
     QPointF currentGPs(m_currentGpsPositionLongitude, m_currentGpsPositionLatitude);
     UwMath::toConformalInverted(&currentGPs);
 
-    qDebug() << Q_FUNC_INFO << currentGPs << " vs " << m_currentGpsPositionLongitude << m_currentGpsPositionLatitude;
 //    UwMath::toConformalInverted(translate);
 
     currentGPs += translate;
@@ -265,8 +267,6 @@ void dataSimulator::simulateNMEAGPS(){
 
     /*QPointF fixed = *//*UwMath::fromConformalInverted(translate);*/
 //    QPointF fixed = translate;
-
-    qDebug() << "fixed" << translate;
 
 //    m_currentGpsPositionLatitude += translate.x();
 //    m_currentGpsPositionLongitude += translate.y();
@@ -317,6 +317,9 @@ void dataSimulator::initializeSettings(){
         settings->setSetting("Compass", "true");
         settings->setSetting("Clock", "true");
         settings->setSetting("Timer", "600");
+        // Init boat position to Oulu area
+        settings->setSetting("boatPosLongitude", "25.109253");
+        settings->setSetting("boatPosLatitude", "65.013026");
     }
 }
 
@@ -458,6 +461,14 @@ void dataSimulator::changeSpeed(int speed){
 
 int dataSimulator::randInt(int low, int high){
     return qrand() % ((high + 1) - low) + low;
+}
+
+void dataSimulator::setBoatPositionLon(double longitude) {
+    m_currentGpsPositionLongitude = longitude;
+}
+
+void dataSimulator::setBoatPositionLat(double latitude) {
+    m_currentGpsPositionLatitude = latitude;
 }
 
 Q_EXPORT_PLUGIN2(datasimulator, dataSimulator)

@@ -47,6 +47,9 @@ public:
       */
     bool getCompass();
 
+    double boatPositionLongitude();
+    double boatPositionLatitude();
+
 private:
     Settings *settings;
     Ui::SettingsUI *ui;
@@ -56,6 +59,8 @@ private:
 private slots:
     /** Connect the NMEAString signal with the readData slot
        */
+    void on_boatPosLonDSpinBox_valueChanged(double val);
+    void on_boatPosLatDSpinBox_valueChanged(double val);
     void on_checkBox_Clock_clicked();
     void on_checkBox_Compass_clicked();
     void on_checkBox_Anenometer_clicked();
