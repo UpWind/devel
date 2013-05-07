@@ -1,14 +1,10 @@
-#define QT_NO_DEBUG_OUTPUT
-
 #include <QGraphicsProxyWidget>
 #include <QGraphicsScene>
 #include <QPainter>
-#include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 
 #include "routewidget.h"
 #include "../shared/uwmath.h"
-//#include "../../UWCore/uwcore.h"
 
 RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chartboundaries) :
     zoomFactor(1.0),
@@ -17,7 +13,6 @@ RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chart
     size(size),
     chartBoundaries(chartboundaries)
 {
-    qDebug()<<Q_FUNC_INFO;
     uwScene = static_cast<CoreUpWindScene*>(uwscene); //ChartObjects not yet loaded to route.cpp
 
     drawMode = false;
@@ -31,13 +26,10 @@ RouteWidget::RouteWidget(QSize size, UpWindSceneInterface* uwscene, QRectF chart
 RouteWidget::~RouteWidget(){}
 
 QRectF RouteWidget::boundingRect() const {
-    qDebug() << Q_FUNC_INFO;
-
     return QRectF(0,0, size.width()*zoomFactor, size.height()*zoomFactor);
 }
 
-QPointF* RouteWidget::geoPointToPixel(QPointF* geoPoint){
-
+QPointF* RouteWidget::geoPointToPixel(QPointF* geoPoint) {
     UwMath::toConformalInverted(geoPoint);
     geoPoint->setX((geoPoint->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width()));
     geoPoint->setY((geoPoint->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height()));
@@ -45,7 +37,7 @@ QPointF* RouteWidget::geoPointToPixel(QPointF* geoPoint){
     return geoPoint;
 }
 
-QPointF* RouteWidget::pixelToGeoPoint(QPointF* pixelPoint){
+QPointF* RouteWidget::pixelToGeoPoint(QPointF* pixelPoint) {
 
     pixelPoint->setX((pixelPoint->x() / ((size.width()*zoomFactor) / chartBoundaries.width())) +  chartBoundaries.left());
     pixelPoint->setY((pixelPoint->y() / ((size.height()*zoomFactor) /  chartBoundaries.height())) + chartBoundaries.top());
@@ -53,19 +45,14 @@ QPointF* RouteWidget::pixelToGeoPoint(QPointF* pixelPoint){
     return pixelPoint;
 }
 
-void RouteWidget::setZoomFactor(qreal zoomFactor)
-{
+void RouteWidget::setZoomFactor(qreal zoomFactor) {
     this->zoomFactor = zoomFactor;
     prepareGeometryChange();
 }
 
 void RouteWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-
-	(void)option;
-	(void)widget;
-
-
-    qDebug()<<Q_FUNC_INFO;
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
 
     painter->setPen(longroute_pen);
     painter->setBrush(longroute_brush);
@@ -100,6 +87,7 @@ void RouteWidget::rotateRight() {
     rotateAngle += 1;
     prepareGeometryChange();
 }
+
 void RouteWidget::expand() {
     resetTransform();
     rotateAngle = 0.0;
@@ -111,39 +99,35 @@ void RouteWidget::setZoomMode(bool active) {
     zoomMode = active;
 }
 
-void RouteWidget::setSimMode(bool activate)
-{
+void RouteWidget::setSimMode(bool activate) {
     simMode = activate;
 }
 
-void RouteWidget::drawRoute(bool activate)
-{
+void RouteWidget::drawRoute(bool activate) {
     drawMode = activate;
 }
 
 void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    qDebug() << Q_FUNC_INFO;
+    QPointF end;
 
-   QPointF end;
+    //Boat position?
+    start = uwScene->getBoat()->getGeoPosition();
 
-   //Boat position?
-   start = uwScene->getBoat()->getGeoPosition();
+    end = event->pos();
 
-   end = event->pos();
+    //geoPointToPixel(&start);
+    pixelToGeoPoint(&end);
 
-   //geoPointToPixel(&start);
-   pixelToGeoPoint(&end);
+    Route* route = uwScene->getRoute();
+    path = route->path(start, end, 0);
 
-   Route* route = uwScene->getRoute();
-   path = route->path(start, end, 0);
+    for (int i = 0; i < path.size(); i++) {
+        geoPointToPixel(&path[i]);
+    }
 
-   for (int i = 0; i < path.size(); i++) {
-       geoPointToPixel(&path[i]);
-   }
+    routepoints = QPolygonF(path);
 
-   routepoints = QPolygonF(path);
-
-   this->update(boundingRect());
+    this->update(boundingRect());
 
     /*if(simMode)
     {
@@ -170,9 +154,7 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     }*/
 }
 
-
-void RouteWidget::prepareGeometryChange()
-{
+void RouteWidget::prepareGeometryChange() {
     longroute_pen.setWidthF(penWidthZoomFactor / zoomFactor);
     QGraphicsItem::prepareGeometryChange();
 }
