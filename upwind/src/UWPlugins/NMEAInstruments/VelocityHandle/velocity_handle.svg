@@ -150,7 +150,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -162,8 +162,8 @@
        transform="translate(-4.5351673e-8,158.99803)"
        id="g3915"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943">
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999">
       <rect
          style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#5d5d5d;stroke-width:11.35999966;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
          id="rect3917"
@@ -185,8 +185,8 @@
        id="g3891"
        transform="translate(0,39.800034)"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943">
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999">
       <rect
          ry="23.233509"
          y="168.93721"
@@ -210,8 +210,8 @@
        id="path3913"
        inkscape:connector-curvature="0"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943" />
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999" />
     <rect
        style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:11.35999966;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3873"
@@ -221,8 +221,8 @@
        y="499.9183"
        ry="4.5456862"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943" />
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999" />
     <rect
        ry="4.5456862"
        y="271.30954"
@@ -232,8 +232,8 @@
        id="rect3883"
        style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:13.44133282;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943" />
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999" />
     <rect
        style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:12.44425583;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3885"
@@ -243,8 +243,8 @@
        y="385.59216"
        ry="4.5456862"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943" />
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999" />
     <rect
        ry="4.5456862"
        y="614.302"
@@ -254,8 +254,8 @@
        id="rect3887"
        style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:10.16069221;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943" />
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999" />
     <rect
        style="color:#000000;fill:#cdcdd3;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:8.7994175;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3889"
@@ -265,8 +265,8 @@
        y="728.76666"
        ry="4.5456862"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943" />
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999" />
     <text
        xml:space="preserve"
        style="font-size:56px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
@@ -275,8 +275,8 @@
        id="text3895"
        sodipodi:linespacing="125%"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943"><tspan
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999"><tspan
          sodipodi:role="line"
          id="tspan3897"
          x="254.37842"
@@ -289,8 +289,8 @@
        style="font-size:56px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
        xml:space="preserve"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943"><tspan
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999"><tspan
          y="260.40256"
          x="238.79248"
          id="tspan3901"
@@ -303,8 +303,8 @@
        style="font-size:56px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
        xml:space="preserve"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943"><tspan
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999"><tspan
          y="720.02191"
          x="268.52057"
          id="tspan3907"
@@ -336,7 +336,10 @@
     <g
        id="g4098"
        style="opacity:0.80973451;fill:#000000;fill-opacity:1;filter:url(#filter4134)"
-       transform="translate(1.5152288,2.0203051)">
+       transform="translate(1.5152288,2.0203051)"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999">
       <g
          id="g4100"
          inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
@@ -390,7 +393,10 @@
       </g>
     </g>
     <g
-       id="g4087">
+       id="g4087"
+       inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999">
       <g
          inkscape:export-ydpi="43.617943"
          inkscape:export-xdpi="43.617943"
@@ -517,8 +523,8 @@
     <g
        id="g4032"
        inkscape:export-filename="C:\Qt\Project\devel\upwind\src\UWPlugins\NMEAInstruments\VelocityHandle\background.png"
-       inkscape:export-xdpi="43.617943"
-       inkscape:export-ydpi="43.617943">
+       inkscape:export-xdpi="43.619999"
+       inkscape:export-ydpi="43.619999">
       <text
          xml:space="preserve"
          style="font-size:32px;font-style:normal;font-weight:normal;line-height:75.99999905%;letter-spacing:0px;word-spacing:0px;opacity:0.79203539;color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter3993);enable-background:accumulate;font-family:Sans"

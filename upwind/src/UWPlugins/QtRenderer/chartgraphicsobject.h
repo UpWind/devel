@@ -1,22 +1,22 @@
-#ifndef CHARTWIDGET_H
-#define CHARTWIDGET_H
+#ifndef CHARTGRAPHICSOBJECT_H
+#define CHARTGRAPHICSOBJECT_H
 
 #include <QObject>
 #include <QVector>
 #include <QPoint>
 #include <QGraphicsItem>
-#include "../UpWindScene/Scene/route.h" //tomi: testing
+#include "../UpWindScene/Scene/route.h"
 
 class CoreChartProvider;
 class ChartObjectInterface;
 
-class ChartWidget : public QObject, public QGraphicsItem
+class ChartGraphicsObject : public QGraphicsObject
 {
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 public:
-    explicit ChartWidget(QSize size);
-    ~ChartWidget();
+    explicit ChartGraphicsObject(QSize size);
+    ~ChartGraphicsObject();
     void setModel(CoreChartProvider *model);
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
     QRectF boundingRect() const;
@@ -51,7 +51,8 @@ private:
     QSize size;
     Route *route;
 
+    bool m_zoomEventReceived;
     bool zoomMode;
 };
 
-#endif // CHARTWIDGET_H
+#endif // CHARTGRAPHICSOBJECT_H

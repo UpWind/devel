@@ -19,14 +19,14 @@ DEPENDPATH += ../ViewRenderer \
 
 HEADERS += \
     qtrenderer.h \
-    chartwidget.h \
     routewidget.h \
     ../ViewRenderer/coreviewrenderer.h \
     ../ViewRenderer/viewrendererinterface.h \
     ../UpWindScene/Scene/boat.h \
     ../shared/uwmath.h \
     boatwidget.h \
-    ../shared/uwmath.h
+    ../shared/uwmath.h \
+    chartgraphicsobject.h
     #../ChartProviderInterface/corechartprovider.h \
     #../ChartProviderInterface/objects/coastline.h \
     #../ChartProviderInterface/objects/deptharea.h \
@@ -42,12 +42,12 @@ HEADERS += ../UpWindScene/Scene/naviglineinfo.h \
 
 SOURCES += \
     qtrenderer.cpp \
-    chartwidget.cpp \
     routewidget.cpp \
     ../ViewRenderer/coreviewrenderer.cpp \
     ../UpWindScene/Scene/boat.cpp \
     ../shared/uwmath.cpp \
-    boatwidget.cpp
+    boatwidget.cpp \
+    chartgraphicsobject.cpp
     #../ChartProviderInterface/objects/coastline.cpp \
     #../ChartProviderInterface/objects/deptharea.cpp \
     #../ChartProviderInterface/objects/rock.cpp \

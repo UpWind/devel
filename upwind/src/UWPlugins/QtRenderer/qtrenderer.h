@@ -5,7 +5,7 @@
 #include <QObject>
 #include "boatwidget.h"
 
-class ChartWidget;
+class ChartGraphicsObject;
 class RouteWidget;
 class BoatWidget;
 
@@ -42,7 +42,7 @@ protected slots:
     void handleBoatPositionChanged();
 
 private:
-    ChartWidget *chartWidget;
+    ChartGraphicsObject *chartWidget;
     RouteWidget *routeWidget;
     BoatWidget *boatWidget;
     QGraphicsView *view;

@@ -7,21 +7,22 @@
 
 #include "corechartprovider.h"
 #include "chartobjectinterface.h"
-#include "chartwidget.h"
+#include "chartgraphicsobject.h"
 #include "../shared/uwmath.h"
 
-ChartWidget::ChartWidget(QSize size) :
+ChartGraphicsObject::ChartGraphicsObject(QSize size) :
     zoomFactor(1.0),
     rotateAngle(0.0),
     size(size)
+  , m_zoomEventReceived(false)
 {
     qDebug()<<Q_FUNC_INFO;
     this->setCacheMode(QGraphicsItem::ItemCoordinateCache);
 }
 
-ChartWidget::~ChartWidget(){}
+ChartGraphicsObject::~ChartGraphicsObject(){}
 
-void ChartWidget::setModel(CoreChartProvider *model) {
+void ChartGraphicsObject::setModel(CoreChartProvider *model) {
     qDebug()<<Q_FUNC_INFO;
 
     this->model = model;
@@ -29,16 +30,16 @@ void ChartWidget::setModel(CoreChartProvider *model) {
     model->setAreaFilter(QRect(20,60,5,5));
 }
 
-void ChartWidget::fetchChartObjects() {
+void ChartGraphicsObject::fetchChartObjects() {
     chartObjects = model->getChartObjects();
     update();
 }
 
-QRectF ChartWidget::boundingRect() const {
+QRectF ChartGraphicsObject::boundingRect() const {
     return QRectF(0,0, size.width()*zoomFactor, size.height()*zoomFactor);
 }
 
-void ChartWidget::drawChartSymbol(QPainter *painter, const QString &resource, const QPointF &point) {
+void ChartGraphicsObject::drawChartSymbol(QPainter *painter, const QString &resource, const QPointF &point) {
     painter->save();
 
     /*
@@ -59,7 +60,16 @@ void ChartWidget::drawChartSymbol(QPainter *painter, const QString &resource, co
     painter->restore();
 }
 
-void ChartWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+void ChartGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    static bool running = false;
+
+    if (running) {
+        qDebug() << "ALERTSKI";
+    }
+
+    running = true;
+    m_zoomEventReceived = false;
 
     Q_UNUSED(option);
     Q_UNUSED(widget);
@@ -96,64 +106,75 @@ void ChartWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         break;
         default:
         break;
+
         }
+//        QApplication::processEvents();
+        if (m_zoomEventReceived) {
+            qDebug() << "BREAKING ZOOM";
+            break;
+        }
+
     }
 
     QRectF selectionArea(mouseButtonPressedPositition, currentMouseCursorPosition);
     painter->setBrush(Qt::gray);
     painter->setOpacity(0.5);
     painter->drawRect(selectionArea);
+
+    running = false;
 }
 
-void ChartWidget::zoomIn() {
+void ChartGraphicsObject::zoomIn() {
+    m_zoomEventReceived = true;
     qDebug() << Q_FUNC_INFO;
     zoomFactor += 0.1;
     prepareGeometryChange();
 }
 
-void ChartWidget::zoomOut() {
+void ChartGraphicsObject::zoomOut() {
     qDebug() << Q_FUNC_INFO;
     zoomFactor -= 0.1;
     prepareGeometryChange();
 }
 
-void ChartWidget::rotateLeft() {
+void ChartGraphicsObject::rotateLeft() {
     qDebug() << Q_FUNC_INFO;
     rotateAngle -= 1;
     prepareGeometryChange();
 }
 
-void ChartWidget::rotateRight() {
+void ChartGraphicsObject::rotateRight() {
     qDebug() << Q_FUNC_INFO;
     rotateAngle += 1;
     prepareGeometryChange();
 }
 
-void ChartWidget::expand() {
+void ChartGraphicsObject::expand() {
     resetTransform();
     rotateAngle = 0.0;
     zoomFactor = 1.0;
     prepareGeometryChange();
 }
 
-void ChartWidget::setZoomMode(bool active) {
+void ChartGraphicsObject::setZoomMode(bool active) {
     zoomMode = active;
 }
 
-void ChartWidget::setZoomFactor(qreal zoomFactor)
+void ChartGraphicsObject::setZoomFactor(qreal zoomFactor)
 {
+    m_zoomEventReceived = true;
     this->zoomFactor = zoomFactor;
     prepareGeometryChange();
 }
 
-void ChartWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void ChartGraphicsObject::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     qDebug() << Q_FUNC_INFO << "Mousepressed";
 
     if(zoomMode)
         mouseButtonPressedPositition = event->pos();
 }
 
-void ChartWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+void ChartGraphicsObject::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     qDebug() << Q_FUNC_INFO << "mouseMoveEvent";
     if(zoomMode) {
         currentMouseCursorPosition = event->pos();
@@ -169,7 +190,7 @@ void ChartWidget::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     }
 }
 
-void ChartWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+void ChartGraphicsObject::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 
 	(void)event;
 

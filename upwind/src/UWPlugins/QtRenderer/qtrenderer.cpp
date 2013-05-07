@@ -30,7 +30,7 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
     qDebug()<<Q_FUNC_INFO<<"Chart drawing area size: "<<frame->size();
     QGraphicsScene *graphicsScene = new QGraphicsScene;
     QRectF chartBoundaries = model->getChartBoundaries();
-    chartWidget = new ChartWidget(frame->size());
+    chartWidget = new ChartGraphicsObject(frame->size());
     routeWidget = new RouteWidget(frame->size(),scene,chartBoundaries);
     boatWidget = new BoatWidget(frame->size(), scene, chartBoundaries);
 
