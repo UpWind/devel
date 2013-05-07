@@ -1,8 +1,7 @@
-
-
 #include "qtrenderer.h"
 #include "chartwidget.h"
 #include "routewidget.h"
+#include "chartview.h"
 #include "../UpWindScene/Scene/boat.h"
 #include "../UpWindScene/coreupwindscene.h"
 #include <QRect>
@@ -27,17 +26,19 @@ QString QtRenderer::getName()
 
 void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, CoreChartProvider* model ){
     CoreViewRenderer::ConnectPlugin(scene, frame, model);
-    qDebug()<<Q_FUNC_INFO<<"Chart drawing area size: "<<frame->size();
     QGraphicsScene *graphicsScene = new QGraphicsScene;
     QRectF chartBoundaries = model->getChartBoundaries();
     chartWidget = new ChartGraphicsObject(frame->size());
     routeWidget = new RouteWidget(frame->size(),scene,chartBoundaries);
     boatWidget = new BoatWidget(frame->size(), scene, chartBoundaries);
 
+    // Make sure the view gets mouse events for dragging
+    chartWidget->setAcceptedMouseButtons(Qt::NoButton);
+    // Set routepoints with right mouse buttons
+    routeWidget->setAcceptedMouseButtons(Qt::RightButton);
+
     graphicsScene->addItem(chartWidget);
     graphicsScene->addItem(routeWidget);
-    //271112 Do we need this
-//    graphicsScene->addItem(boatWidget);
 
     Boat *boat = new Boat(frame->size(), chartBoundaries);
     scene->setBoat(boat);
@@ -53,7 +54,7 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
     boatWidget->setBoat(scene->getBoat());
     boatWidget->updateBoatPosition();
 
-    /*QGraphicsView **/view = new QGraphicsView(graphicsScene, frame);
+    view = new ChartView(graphicsScene, frame);
     view->setResizeAnchor(QGraphicsView::AnchorViewCenter);
 
     view->setGeometry(0, 0, frame->size().width(), frame->size().height());
@@ -63,7 +64,6 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setDragMode(QGraphicsView::ScrollHandDrag);
     view->setInteractive(true);
-//    view->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
     view->setScene(graphicsScene);
 
     QPixmapCache::setCacheLimit(1024 * 320);

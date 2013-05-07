@@ -27,6 +27,7 @@ HEADERS += \
     boatwidget.h \
     ../shared/uwmath.h \
     chartgraphicsobject.h
+    chartview.h
     #../ChartProviderInterface/corechartprovider.h \
     #../ChartProviderInterface/objects/coastline.h \
     #../ChartProviderInterface/objects/deptharea.h \
@@ -48,6 +49,7 @@ SOURCES += \
     ../shared/uwmath.cpp \
     boatwidget.cpp \
     chartgraphicsobject.cpp
+    chartview.cpp
     #../ChartProviderInterface/objects/coastline.cpp \
     #../ChartProviderInterface/objects/deptharea.cpp \
     #../ChartProviderInterface/objects/rock.cpp \
