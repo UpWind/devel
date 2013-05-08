@@ -42,7 +42,7 @@ protected slots:
     void handleBoatPositionChanged();
 
 private:
-    ChartGraphicsObject *chartWidget;
+    ChartGraphicsObject *n_chartGraphicsObject;
     RouteWidget *routeWidget;
     BoatWidget *boatWidget;
     QGraphicsView *view;

@@ -1,5 +1,5 @@
 #include "qtrenderer.h"
-#include "chartwidget.h"
+#include "chartgraphicsobject.h"
 #include "routewidget.h"
 #include "chartview.h"
 #include "../UpWindScene/Scene/boat.h"
@@ -8,7 +8,7 @@
 #include <QGLWidget>
 
 QtRenderer::QtRenderer() :
-    chartWidget(0),
+    n_chartGraphicsObject(0),
     routeWidget(0),
     boatWidget(0) //271112
   , m_zoomFactor(1.0)
@@ -28,16 +28,16 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
     CoreViewRenderer::ConnectPlugin(scene, frame, model);
     QGraphicsScene *graphicsScene = new QGraphicsScene;
     QRectF chartBoundaries = model->getChartBoundaries();
-    chartWidget = new ChartGraphicsObject(frame->size());
+    n_chartGraphicsObject = new ChartGraphicsObject(frame->size());
     routeWidget = new RouteWidget(frame->size(),scene,chartBoundaries);
     boatWidget = new BoatWidget(frame->size(), scene, chartBoundaries);
 
     // Make sure the view gets mouse events for dragging
-    chartWidget->setAcceptedMouseButtons(Qt::NoButton);
+    n_chartGraphicsObject->setAcceptedMouseButtons(Qt::NoButton);
     // Set routepoints with right mouse buttons
     routeWidget->setAcceptedMouseButtons(Qt::RightButton);
 
-    graphicsScene->addItem(chartWidget);
+    graphicsScene->addItem(n_chartGraphicsObject);
     graphicsScene->addItem(routeWidget);
 
     Boat *boat = new Boat(frame->size(), chartBoundaries);
@@ -55,10 +55,12 @@ void QtRenderer::ConnectPlugin( UpWindSceneInterface* scene, QWidget* frame, Cor
     boatWidget->updateBoatPosition();
 
     view = new ChartView(graphicsScene, frame);
+    connect(view, SIGNAL(wheelUp()), this, SLOT(zoomOut()));
+    connect(view, SIGNAL(wheelDown()), this, SLOT(zoomIn()));
     view->setResizeAnchor(QGraphicsView::AnchorViewCenter);
 
     view->setGeometry(0, 0, frame->size().width(), frame->size().height());
-    chartWidget->setModel(model);
+    n_chartGraphicsObject->setModel(model);
     view->lower();
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -91,13 +93,13 @@ void QtRenderer::zoomOut()
 
 void QtRenderer::rotateLeft()
 {
-    chartWidget->rotateLeft();
+    n_chartGraphicsObject->rotateLeft();
     routeWidget->rotateLeft();
 }
 
 void QtRenderer::rotateRight()
 {
-    chartWidget->rotateRight();
+    n_chartGraphicsObject->rotateRight();
     routeWidget->rotateRight();
 }
 
@@ -115,7 +117,7 @@ void QtRenderer::expand()
 
 void QtRenderer::zoomToolActivated(bool activate)
 {
-    chartWidget->setZoomMode(activate);
+    n_chartGraphicsObject->setZoomMode(activate);
     routeWidget->setZoomMode(activate);
 }
 void QtRenderer::simModeChanged(bool activate)
@@ -135,7 +137,7 @@ void QtRenderer::setZoomFactor(qreal zoomFactor)
 
     m_zoomFactor = zoomFactor;
 
-    chartWidget->setZoomFactor(m_zoomFactor);
+    n_chartGraphicsObject->setZoomFactor(m_zoomFactor);
     routeWidget->setZoomFactor(m_zoomFactor);
     boatWidget->setZoomFactor(m_zoomFactor);
 

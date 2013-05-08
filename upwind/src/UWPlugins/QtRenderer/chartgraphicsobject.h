@@ -51,7 +51,6 @@ private:
     QSize size;
     Route *route;
 
-    bool m_zoomEventReceived;
     bool zoomMode;
 };
 

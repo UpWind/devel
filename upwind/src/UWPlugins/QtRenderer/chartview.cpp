@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QWheelEvent>
 #include "chartview.h"
 
 ChartView::ChartView(QGraphicsScene *scene, QWidget *parent)
@@ -9,5 +10,13 @@ ChartView::ChartView(QGraphicsScene *scene, QWidget *parent)
 void ChartView::wheelEvent(QWheelEvent *event)
 {
     qDebug() << Q_FUNC_INFO;
-    QGraphicsView::wheelEvent(event);
+    if (event->delta() > 0 ) {
+        emit wheelDown();
+    } else if (event->delta() < 0 ) {
+        emit wheelUp();
+    }
+
+    event->accept();
+
+//    QGraphicsView::wheelEvent(event);
 }

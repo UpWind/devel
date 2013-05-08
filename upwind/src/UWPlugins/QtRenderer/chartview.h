@@ -9,6 +9,10 @@ class ChartView : public QGraphicsView
 public:
     ChartView(QGraphicsScene *scene, QWidget *parent = 0);
 
+signals:
+    void wheelUp();
+    void wheelDown();
+
 protected:
     void wheelEvent(QWheelEvent *event);
 };

@@ -14,7 +14,6 @@ ChartGraphicsObject::ChartGraphicsObject(QSize size) :
     zoomFactor(1.0),
     rotateAngle(0.0),
     size(size)
-  , m_zoomEventReceived(false)
 {
     qDebug()<<Q_FUNC_INFO;
     this->setCacheMode(QGraphicsItem::ItemCoordinateCache);
@@ -62,15 +61,6 @@ void ChartGraphicsObject::drawChartSymbol(QPainter *painter, const QString &reso
 
 void ChartGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    static bool running = false;
-
-    if (running) {
-        qDebug() << "ALERTSKI";
-    }
-
-    running = true;
-    m_zoomEventReceived = false;
-
     Q_UNUSED(option);
     Q_UNUSED(widget);
 
@@ -108,24 +98,15 @@ void ChartGraphicsObject::paint(QPainter *painter, const QStyleOptionGraphicsIte
         break;
 
         }
-//        QApplication::processEvents();
-        if (m_zoomEventReceived) {
-            qDebug() << "BREAKING ZOOM";
-            break;
-        }
-
     }
 
     QRectF selectionArea(mouseButtonPressedPositition, currentMouseCursorPosition);
     painter->setBrush(Qt::gray);
     painter->setOpacity(0.5);
     painter->drawRect(selectionArea);
-
-    running = false;
 }
 
 void ChartGraphicsObject::zoomIn() {
-    m_zoomEventReceived = true;
     qDebug() << Q_FUNC_INFO;
     zoomFactor += 0.1;
     prepareGeometryChange();
@@ -162,7 +143,6 @@ void ChartGraphicsObject::setZoomMode(bool active) {
 
 void ChartGraphicsObject::setZoomFactor(qreal zoomFactor)
 {
-    m_zoomEventReceived = true;
     this->zoomFactor = zoomFactor;
     prepareGeometryChange();
 }
