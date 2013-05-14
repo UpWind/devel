@@ -44,6 +44,7 @@ public:
 
     static double mod(const double &x, const double &y);
     static double toRadians(const double &degrees);
+    static QPointF toRadians(const QPointF &pointDegrees);
     static double toDegrees(const double &radians);
 
     static float toPolar(const float &cartesianAngle);
@@ -59,7 +60,7 @@ public:
     static void toConformal(QPolygonF &object);
     static QPointF toConformal(const QPointF &object);
     static QPolygonF toConformal(const QPolygonF &object);
-    static void toConformalInverted(QPointF &object);
+    static void toConformalInverted(QPointF* object);
     static void toConformalInverted(QPolygonF &object);
     static QPointF toConformalInverted(const QPointF &object);
     static QPolygonF toConformalInverted(const QPolygonF &object);

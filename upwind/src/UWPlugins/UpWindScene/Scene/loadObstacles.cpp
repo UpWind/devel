@@ -94,227 +94,142 @@ LoadObstacles::~LoadObstacles()
     PQfinish(conn);
 }
 
+void LoadObstacles::clear()
+{
+    // TODO NOTE this was missing
+}
+
 void LoadObstacles::loadChartObjects(QVector<ChartObjectInterface*> cObjects) {
     this->chartObjects = cObjects;
     createObstaclesTables();
-
 }
 
+bool LoadObstacles::createObstaclesTables() {
+    qDebug()<<"bool LoadObstacles::createObstaclesTables()";
 
+    /// POINT_OFFSET is the area around the obstacle,
+    /// so is it's value is 5, it will draw 10 m^2
 
-bool LoadObstacles::createObstaclesTables()
-{
-    //    OGRLayer* layer;
-    status = true;
-    if ( !status==false ) {
-        qDebug()<<"bool LoadObstacles::createObstaclesTables()";
+    //float POINT_OFFSET = settingsManager->getPOffset();
+    float POINT_OFFSET = 5; //test values, above comment from old code
+    //float NOT_ALLOWED_DEPTH = settingsManager->getMinDepth();
+    float NOT_ALLOWED_DEPTH = 2; //test values, above comment from old code
 
-        /// POINT_OFFSET is the area around the obstacle,
-        /// so is it's value is 5, it will draw 10 m^2
+    /// signsound with depth from 0 to this value are
+    /// taken in consideration for the obstacles layer
 
-        //float POINT_OFFSET = settingsManager->getPOffset();
-        float POINT_OFFSET = 5; //test values, above comment from old code
-        //float NOT_ALLOWED_DEPTH = settingsManager->getMinDepth();
-        float NOT_ALLOWED_DEPTH = 2; //test values, above comment from old code
+    //float SIGNSOUND_THRESHOLD = settingsManager->getSignsound();
+    float SIGNSOUND_THRESHOLD = 1; //test values, above comment from old code
 
-        /// signsound with depth from 0 to this value are
-        /// taken in consideration for the obstacles layer
+    // ##################################################
+    // list of polygon layers considered obstacles
+    QList<QString> polygon_layers;
+    polygon_layers.append("generarea_r");
+    // list of point layers to be considered as obstacles
+    QList<QString> point_layers;
+    point_layers.append("rock_p");
+    point_layers.append("wreck_p");
+    point_layers.append("navaid_p");
+    point_layers.append("signsound_p");
+    // line layers to be considered as obstacles
+    QList<QString> line_layers;
+    line_layers.append("depthcont_l");
+    //####################################################
 
-        //float SIGNSOUND_THRESHOLD = settingsManager->getSignsound();
-        float SIGNSOUND_THRESHOLD = 1; //test values, above comment from old code
+    for (int i = 0 ; i < this->chartObjects.size(); i++) {
+        if(this->chartObjects.at(i)->getTableName() == "signsound_p") {
+            // CREATE NEW TABLES
+            QString sql = "CREATE TABLE obstacles_r (ogc_fid serial);";
+            sql.append( "CREATE TABLE obstacles_l (ogc_fid serial);" );
+            sql.append( "SELECT AddGeometryColumn ('obstacles_r','wkb_geometry',-1,'POLYGON',2);" );
+            sql.append( "SELECT AddGeometryColumn ('obstacles_l','wkb_geometry',-1,'LINESTRING',2);" );
+            sql.append( "ALTER TABLE obstacles_r ADD COLUMN source_table char(11);" );
+            sql.append( "ALTER TABLE obstacles_l ADD COLUMN source_table char(11);" );
+            res = PQexec(conn, sql.toAscii() );
+            PQclear(res);
 
+            // INSERT POLYGON LAYERS
+            sql.clear();
+            // DIRECT VERSION, WITHOUT ADDING THE OFFSET
 
-
-        // ##################################################
-        // list of polygon layers considered obstacles
-        QList<QString> polygon_layers;
-        polygon_layers.append("generarea_r");
-        // list of point layers to be considered as obstacles
-        QList<QString> point_layers;
-        point_layers.append("rock_p");
-        point_layers.append("wreck_p");
-        point_layers.append("navaid_p");
-        point_layers.append("signsound_p");
-        // line layers to be considered as obstacles
-        QList<QString> line_layers;
-        line_layers.append("depthcont_l");
-        //####################################################
-
-        for (int i = 0 ; i < this->chartObjects.size(); i++) {
-            //        qDebug() << "chartObjects size" << chartObjects.size();
-
-            if(this->chartObjects.at(i)->getTableName() == "generarea_r") {
-                for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
-                    this->polyObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j));
-                }
+            for ( int i = 0; i < polygon_layers.size(); i++ ) {
+                sql.append( "INSERT INTO obstacles_r( wkb_geometry, source_table) SELECT wkb_geometry, '");
+                sql.append( polygon_layers[i] );
+                sql.append( "' AS source_table FROM " );
+                sql.append( polygon_layers[i] );
+                sql.append( ";" );
+                if (debug) qDebug() << QString("UwShort: Adding obstacles of %1").arg( polygon_layers[i]);
             }
-            if(this->chartObjects.at(i)->getTableName() == "depthcont_l") {
-                for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) { //TODO: parse line from polygon
-                    //this->lineObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j)); //Not used in LoadObstacles -> can be removed!
-                }
-            }
-            if(this->chartObjects.at(i)->getTableName() == "rock_p") {
-                for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) { //need to check how vectors are written from DB. is getfeaturecount = polygonvector.size ?
-                    for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
-                        this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
-                    }
-                }
-            }
-            if(this->chartObjects.at(i)->getTableName() == "wreck_p") {
-                for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
-                    for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
-                        this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
-                    }
-                }
-            }
-            if(this->chartObjects.at(i)->getTableName() == "navaid_p") {
-                for (int j = 0 ; j < this->chartObjects.at(i)->getCoordinateGeometry().size();j++) {
-                    for(int k = 0; k < this->chartObjects.at(i)->getCoordinateGeometry().at(j).size();k++) {
-                        this->pointObstacles.append(this->chartObjects.at(i)->getCoordinateGeometry().at(j).at(k));
+            // WARNING: very long string:
+            res = PQexec(conn, sql.toAscii() );
+            PQclear(res);
 
-                    }
-                }
-            }
-            if(this->chartObjects.at(i)->getTableName() == "signsound_p") {
-
-                QVector<QPolygonF> qpoint;
-                QList<QPointF> listqpoint;
-                OGRLayer* layer;
-                OGRFeatureDefn *poFDefn;
-                OGRFeature *poFeature;
-
-                qpoint = this->chartObjects.at(i)->getCoordinateGeometry();
-                for(int n = 0; n < qpoint.size(); n++){
-                    listqpoint = qpoint.value(n).toList();
-                }
-
-                layer = this->chartObjects.at(i)->getFeatureData();
-                layer->ResetReading();
-
-                QString /*sql("SELECT * FROM *"); //FIX THIS! //*/ sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
-                for(int m= 0; m < layer->GetFeatureCount();m++ ) {
-                    poFDefn = layer->GetLayerDefn();
-                    poFeature = layer->GetNextFeature();
-                    for(int j = 0; j < poFDefn->GetFieldCount(); j++ ){
-                        OGRFieldDefn *poFieldDefn = poFDefn->GetFieldDefn( j );
-                        QString str = poFieldDefn->GetNameRef();
-                        if(str.contains("depth") == true) {
-                            if (poFeature->GetFieldAsDouble(j) < SIGNSOUND_THRESHOLD) { //parse out depths above signsound threshold since they are not obstacles
-                                pointObstacles.append(listqpoint.at(m));
-                            }
-                        }
-                    }
-                }
-
-
-                //            // CREATE NEW TABLES
-                sql = "CREATE TABLE obstacles_r (ogc_fid serial);";
-                sql.append( "CREATE TABLE obstacles_l (ogc_fid serial);" );
-                sql.append( "SELECT AddGeometryColumn ('obstacles_r','wkb_geometry',-1,'POLYGON',2);" );
-                sql.append( "SELECT AddGeometryColumn ('obstacles_l','wkb_geometry',-1,'LINESTRING',2);" );
-                sql.append( "ALTER TABLE obstacles_r ADD COLUMN source_table char(11);" );
-                sql.append( "ALTER TABLE obstacles_l ADD COLUMN source_table char(11);" );
+            qDebug() << "for in 1";            // INSERT POINT LAYERS WITH OFFSET
+            for ( int i = 0; i < point_layers.size(); i++ ) {
+                bool signsound = ( point_layers[i] == "signsound_p" );
+                sql = "SELECT X(wkb_geometry),Y(wkb_geometry)";
+                if ( signsound)
+                    sql.append( ",depth");
+                sql.append( " FROM ");
+                sql.append( point_layers[i] );
+                if ( signsound)
+                    sql.append( QString(" WHERE depth < %1 ").arg( QString::number( SIGNSOUND_THRESHOLD)));
+                sql.append( ";");
                 res = PQexec(conn, sql.toAscii() );
-                PQclear(res);
-
-                // INSERT POLYGON LAYERS
+                if (debug) qDebug() << QString("UwShort: Adding obstacles of %1 (%2/%3): %4 obstacles").arg( point_layers[i], QString::number(i+1), QString::number(point_layers.size()), QString::number(PQntuples(res)));
                 sql.clear();
-                // DIRECT VERSION, WITHOUT ADDING THE OFFSET
 
-                for ( int i = 0; i < polygon_layers.size(); i++ ) {
-                    sql.append( "INSERT INTO obstacles_r( wkb_geometry, source_table) SELECT wkb_geometry, '");
-                    sql.append( polygon_layers[i] );
-                    sql.append( "' AS source_table FROM " );
-                    sql.append( polygon_layers[i] );
-                    sql.append( ";" );
-                    if (debug) qDebug() << QString("UwShort: Adding obstacles of %1").arg( polygon_layers[i]);
+                for ( int j = 0; j < PQntuples(res); j++ ) {
+                    QPointF point( QString( PQgetvalue( res, j, 0)).toDouble(), QString( PQgetvalue( res, j, 1)).toDouble()); //forms a qpoint double precision
+                    sql.append( "INSERT INTO obstacles_r ( wkb_geometry, source_table) VALUES ( ");
+                    if ( point_layers[i] == "rock_p")
+                        sql.append( LoadObstacles::buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
+                    else if ( point_layers[i] == "wreck_p" )
+                        sql.append( LoadObstacles::buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
+                    else if ( signsound)
+                        // for signsound POINT_OFFSET = POINT_OFFSET / ( depth of signsound / factor )
+                        // the bigger the signsound is, the bigger the point offset gets
+                        sql.append( LoadObstacles::buildWKTPolygon( point, POINT_OFFSET / ( QString( PQgetvalue( res, j, 2)).toDouble() / POINT_OFFSET_FACTOR_SIGNSOUND ) ));
+                    else
+                        sql.append( LoadObstacles::buildWKTPolygon( point, POINT_OFFSET));
+                    sql.append( ", '");
+                    sql.append( point_layers[i]);
+                    sql.append( "'); ");
+
                 }
-                // WARNING: very long string:
-                res = PQexec(conn, sql.toAscii() );
                 PQclear(res);
 
-                qDebug() << "for in 1";            // INSERT POINT LAYERS WITH OFFSET
-                for ( int i = 0; i < point_layers.size(); i++ ) {
-                    bool signsound = ( point_layers[i] == "signsound_p" );
-                    sql = "SELECT X(wkb_geometry),Y(wkb_geometry)";
-                    if ( signsound)
-                        sql.append( ",depth");
-                    sql.append( " FROM ");
-                    sql.append( point_layers[i] );
-                    if ( signsound)
-                        sql.append( QString(" WHERE depth < %1 ").arg( QString::number( SIGNSOUND_THRESHOLD)));
+                res = PQexec( conn, sql.toAscii());
+                PQclear(res);
+
+                //INSERT LINE LAYERS
+                sql.clear();
+                for ( int i = 0; i < line_layers.size(); i++ ) {
+                    sql.append( "INSERT INTO obstacles_l( wkb_geometry, source_table) SELECT wkb_geometry, '");
+                    sql.append( line_layers[i]);
+                    sql.append( "' AS source_table FROM " );
+                    sql.append( line_layers[i] );
+                    if ( line_layers[i] == "depthcont_l" ) {
+                        sql.append( " WHERE valdco<=" );
+                        sql.append( QString::number( NOT_ALLOWED_DEPTH));
+                    }
                     sql.append( ";");
+                    if (debug) {
+                        // WARNING: very long string:
+                        qDebug() << QString("UwShort: Adding obstacles of ").append( line_layers[i]);
+                    }
                     res = PQexec(conn, sql.toAscii() );
-                    if (debug) qDebug() << QString("UwShort: Adding obstacles of %1 (%2/%3): %4 obstacles").arg( point_layers[i], QString::number(i+1), QString::number(point_layers.size()), QString::number(PQntuples(res)));
-                    sql.clear();
-
-                    for ( int j = 0; j < PQntuples(res); j++ ) {
-                        QPointF point( QString( PQgetvalue( res, j, 0)).toDouble(), QString( PQgetvalue( res, j, 1)).toDouble()); //forms a qpoint double precision
-                        sql.append( "INSERT INTO obstacles_r ( wkb_geometry, source_table) VALUES ( ");
-                        if ( point_layers[i] == "rock_p")
-                            sql.append( LoadObstacles::buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
-                        else if ( point_layers[i] == "wreck_p" )
-                            sql.append( LoadObstacles::buildWKTPolygon( point, POINT_OFFSET * POINT_OFFSET_FACTOR_ROCK ));
-                        else if ( signsound)
-                            // for signsound POINT_OFFSET = POINT_OFFSET / ( depth of signsound / factor )
-                            // the bigger the signsound is, the bigger the point offset gets
-                            sql.append( LoadObstacles::buildWKTPolygon( point, POINT_OFFSET / ( QString( PQgetvalue( res, j, 2)).toDouble() / POINT_OFFSET_FACTOR_SIGNSOUND ) ));
-                        else
-                            sql.append( LoadObstacles::buildWKTPolygon( point, POINT_OFFSET));
-                        sql.append( ", '");
-                        sql.append( point_layers[i]);
-                        sql.append( "'); ");
-
-                    }
                     PQclear(res);
-
-                    res = PQexec( conn, sql.toAscii());
-                    PQclear(res);
-
-
-                    //INSERT LINE LAYERS
-                    sql.clear();
-                    for ( int i = 0; i < line_layers.size(); i++ ) {
-                        sql.append( "INSERT INTO obstacles_l( wkb_geometry, source_table) SELECT wkb_geometry, '");
-                        sql.append( line_layers[i]);
-                        sql.append( "' AS source_table FROM " );
-                        sql.append( line_layers[i] );
-                        if ( line_layers[i] == "depthcont_l" ) {
-                            sql.append( " WHERE valdco<=" );
-                            sql.append( QString::number( NOT_ALLOWED_DEPTH));
-                        }
-                        sql.append( ";");
-                        if (debug) {
-                            // WARNING: very long string:
-                            qDebug() << QString("UwShort: Adding obstacles of ").append( line_layers[i]);
-                        }
-                        res = PQexec(conn, sql.toAscii() );
-                        PQclear(res);
-                    }
-
-
-                    //  for loop for testing
-                    //                for (int s=0; s<pointObstacles.size();s++){
-                    //                    qDebug() << " index: " << s << "point x" << pointObstacles.at(s).x() << "y" << pointObstacles.at(s).y();
-                    //                }
-
-                    // tables are done
-                    this->obstaclesTablesCreated = true;
-                    qDebug("createObstaclesTables() returns = true");
-                    return true;
                 }
 
+                // tables are done
+                qDebug("createObstaclesTables() returns = true");
+                return true;
             }
-
         }
-    }else {
-        // tables are not done
-        this->obstaclesTablesCreated = false;
-        return false;
-
     }
-
 }
+
 QString LoadObstacles::buildWKTPolygon( const QPointF &epoint, const float &offset ) {
 
     QPointF point = epoint;

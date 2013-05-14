@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml
+QT       += core gui xml opengl
 
 TARGET = Anemometer
 TEMPLATE = lib

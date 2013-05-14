@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: cpl_conv.h 13340 2007-12-14 18:20:02Z warmerdam $
+ * $Id: cpl_conv.h 23431 2011-11-27 15:02:24Z rouault $
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  Convenience functions declarations.
@@ -50,18 +50,20 @@ CPL_C_START
 void CPL_DLL CPLVerifyConfiguration(void);
 
 const char CPL_DLL * CPL_STDCALL
-CPLGetConfigOption( const char *, const char * );
+CPLGetConfigOption( const char *, const char * ) CPL_WARN_UNUSED_RESULT;
 void CPL_DLL CPL_STDCALL CPLSetConfigOption( const char *, const char * );
+void CPL_DLL CPL_STDCALL CPLSetThreadLocalConfigOption( const char *pszKey, 
+                                                        const char *pszValue );
 void CPL_DLL CPL_STDCALL CPLFreeConfig(void);
 
 /* -------------------------------------------------------------------- */
 /*      Safe malloc() API.  Thin cover over VSI functions with fatal    */
 /*      error reporting if memory allocation fails.                     */
 /* -------------------------------------------------------------------- */
-void CPL_DLL *CPLMalloc( size_t );
-void CPL_DLL *CPLCalloc( size_t, size_t );
-void CPL_DLL *CPLRealloc( void *, size_t );
-char CPL_DLL *CPLStrdup( const char * );
+void CPL_DLL *CPLMalloc( size_t ) CPL_WARN_UNUSED_RESULT;
+void CPL_DLL *CPLCalloc( size_t, size_t ) CPL_WARN_UNUSED_RESULT;
+void CPL_DLL *CPLRealloc( void *, size_t ) CPL_WARN_UNUSED_RESULT;
+char CPL_DLL *CPLStrdup( const char * ) CPL_WARN_UNUSED_RESULT;
 char CPL_DLL *CPLStrlwr( char *);
 
 #define CPLFree VSIFree
@@ -71,7 +73,8 @@ char CPL_DLL *CPLStrlwr( char *);
 /* -------------------------------------------------------------------- */
 char CPL_DLL *CPLFGets( char *, int, FILE *);
 const char CPL_DLL *CPLReadLine( FILE * );
-const char CPL_DLL *CPLReadLineL( FILE * );
+const char CPL_DLL *CPLReadLineL( VSILFILE * );
+const char CPL_DLL *CPLReadLine2L( VSILFILE * , int nMaxCols, char** papszOptions);
 
 /* -------------------------------------------------------------------- */
 /*      Convert ASCII string to floationg point number                  */
@@ -149,6 +152,8 @@ char CPL_DLL      **CPLCorrespondingPaths( const char *pszOldFilename,
                                            char **papszFileList );
 int CPL_DLL CPLCheckForFile( char *pszFilename, char **papszSiblingList );
 
+const char CPL_DLL *CPLGenerateTempFilename( const char *pszStem );
+
 /* -------------------------------------------------------------------- */
 /*      Find File Function                                              */
 /* -------------------------------------------------------------------- */
@@ -205,6 +210,17 @@ int CPL_DLL CPLUnlinkTree( const char * );
 int CPL_DLL CPLCopyFile( const char *pszNewPath, const char *pszOldPath );
 int CPL_DLL CPLMoveFile( const char *pszNewPath, const char *pszOldPath );
 
+/* -------------------------------------------------------------------- */
+/*      ZIP Creation.                                                   */
+/* -------------------------------------------------------------------- */
+#define CPL_ZIP_API_OFFERED
+void CPL_DLL  *CPLCreateZip( const char *pszZipFilename, char **papszOptions );
+CPLErr CPL_DLL CPLCreateFileInZip( void *hZip, const char *pszFilename, 
+                                   char **papszOptions );
+CPLErr CPL_DLL CPLWriteFileInZip( void *hZip, const void *pBuffer, int nBufferSize );
+CPLErr CPL_DLL CPLCloseFileInZip( void *hZip );
+CPLErr CPL_DLL CPLCloseZip( void *hZip );
+                            
 CPL_C_END
 
 /* -------------------------------------------------------------------- */
@@ -213,14 +229,18 @@ CPL_C_END
 
 #if defined(__cplusplus) && !defined(CPL_SUPRESS_CPLUSPLUS)
 
-class CPLLocaleC
+class CPL_DLL CPLLocaleC
 {
-  private:
-    char *pszOldLocale;
-
-  public:
+public:
     CPLLocaleC();
     ~CPLLocaleC();
+
+private:
+    char *pszOldLocale;
+
+    // Make it non-copyable
+    CPLLocaleC(CPLLocaleC&);
+    CPLLocaleC& operator=(CPLLocaleC&);
 };
 
 #endif /* def __cplusplus */

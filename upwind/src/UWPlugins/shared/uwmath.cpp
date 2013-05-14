@@ -43,6 +43,14 @@ double UwMath::toRadians(const double &degrees){
     return degrees * M_PI / 180.0;
 }
 
+/** Translate QPointF from degrees to radians
+  * @param radians
+  * @return degrees
+  */
+QPointF UwMath::toRadians(const QPointF &pointDegrees){
+    return QPointF(toRadians(pointDegrees.x()), toRadians(pointDegrees.y()));
+}
+
 /** Translate from radians to degrees
   * @param radians
   * @return degrees
@@ -58,35 +66,33 @@ double UwMath::toDegrees(const double &radians){
   * @return angle in degrees (Polar Format)
   */
 float UwMath::toPolar(const float &cartesianAngle){
+    Q_ASSERT(cartesianAngle >= 0.0 && cartesianAngle <= 360.0);
     float polarAngle;
 
-    if(cartesianAngle < 0)
-        polarAngle =  90 + (cartesianAngle * (-1));
-    else if (cartesianAngle > 90)
-        polarAngle = (180 - cartesianAngle) + 270;
+    if(cartesianAngle <= 90.0)
+        polarAngle =  90.0 - cartesianAngle;
     else
-        polarAngle = 90 - cartesianAngle;
+        polarAngle =  450.0 - cartesianAngle;
 
     return polarAngle;
 }
 
 /** Translate an angle in degrees from Polar Format (ranges from 0° to 360°
   * where 0° is 12 o'clock) to Cartesian Format (0° is 3 o'clock,
-  * movement clockwise is negative, movement counter clockwise is positive)
+  * in Polar movement clockwise is negative, movement counter clockwise is positive)
+  * in cartesian movement is opposite
   * @param angle in degrees (Cartesian Format)
   * @return angle in degrees (Polar Format)
   */
 float UwMath::toCartesian(const float &polarAngle){
+    Q_ASSERT(polarAngle >= 0.0 && polarAngle <= 360.0);
     float cartAngle;
 
-    if(polarAngle <= 90)
-        cartAngle = 90 - polarAngle;
-    else if(polarAngle > 90 && polarAngle <= 180)
-        cartAngle = (polarAngle - 90) * (-1);
-    else if(polarAngle > 180 && polarAngle <= 270)
-        cartAngle = (polarAngle - 90) * (-1);
+    if(polarAngle <= 90.0)
+        cartAngle = 90.0 - polarAngle;
     else
-        cartAngle = 450 - polarAngle;
+        cartAngle = 450.0 - polarAngle;
+
     return cartAngle;
 }
 
@@ -178,9 +184,9 @@ QPolygonF UwMath::toConformal(const QPolygonF &eobject){
     return object;
 }
 
-void UwMath::toConformalInverted(QPointF &object){
-    object.setX(UwMath::toRadians(object.x()));
-    object.setY(UwMath::toMercator(object.y()) * (-1));
+void UwMath::toConformalInverted(QPointF* object){
+    object->setX(UwMath::toRadians(object->x()));
+    object->setY(UwMath::toMercator(object->y()) * (-1));
 }
 
 void UwMath::toConformalInverted(QPolygonF &object){
@@ -195,7 +201,7 @@ void UwMath::toConformalInverted(QPolygonF &object){
 QPointF UwMath::toConformalInverted(const QPointF &eobject){
     QPointF object(eobject);
 
-    UwMath::toConformalInverted(object);
+    UwMath::toConformalInverted(&object);
     return object;
 }
 
@@ -339,6 +345,19 @@ double UwMath::getCartesianAngleWithDestiny(const double &elon1, const double &e
             ((lat1 < 0 && lat2 < 0) && (lat1 > lat2)) ||
             (((lat1 < 0 && lat2 > 0) || (lat1 > 0 && lat2 < 0)) && (lat1 > lat2)))
         angle = angle * (-1);
+
+
+    // NOTE In some cases this could return a value outside the range and it would cause
+    // Q_ASSERT crash in UwMath::toPolar function, which defines cartesian angle as to be in
+    // the range, the problem lies in the algorithm or in the input.
+
+    while (angle >= 360.0) {
+        angle -= 360.0;
+    }
+    while (angle <= 0.0) {
+        angle += 360.0;
+    }
+
     return angle;
 }
 

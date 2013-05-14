@@ -71,7 +71,7 @@ void Compass::initializeImages(){
 }
 
 void Compass::setAngle(int angle){
-    angle = 180 - angle;
+//    angle = 180 - angle;
     hand->resetTransform();
     hand->rotate(angle);
     this->parsedNMEAValues.clear();

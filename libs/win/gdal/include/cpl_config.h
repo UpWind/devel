@@ -2,10 +2,10 @@
 /* port/cpl_config.h.in.  Generated from configure.in by autoheader.  */
 
 /* Define if you want to use pthreads based multiprocessing support */
-/* #undef CPL_MULTIPROC_PTHREAD */
+#define CPL_MULTIPROC_PTHREAD 1
 
-/* Define to 1 if you want to use the -fvisibility GCC flag */
-/* #undef USE_GCC_VISIBILITY_FLAG */
+/* Define to 1 if you have the `PTHREAD_MUTEX_RECURSIVE' constant. */
+#define HAVE_PTHREAD_MUTEX_RECURSIVE 1
 
 /* --prefix directory for GDAL install */
 #define GDAL_PREFIX "/usr/local"
@@ -16,24 +16,15 @@
 /* Define to 1 if you have the `atoll' function. */
 #define HAVE_ATOLL 1
 
-/* Define to 1 if you have the `copysign' function. */
-#define HAVE_COPYSIGN 1
-
-/* Define to 1 if you have the `copysignf' function. */
-#define HAVE_COPYSIGNF 1
-
 /* Define to 1 if you have the <csf.h> header file. */
 /* #undef HAVE_CSF_H */
 
 /* Define to 1 if you have the <dbmalloc.h> header file. */
 /* #undef HAVE_DBMALLOC_H */
 
-/* Define to 1 if you have the declaration of `nan', and to 0 if you don't. */
-#define HAVE_DECL_NAN 0
-
-/* Define to 1 if you have the declaration of `nanf', and to 0 if you don't.
+/* Define to 1 if you have the declaration of `strtof', and to 0 if you don't.
    */
-#define HAVE_DECL_NANF 0
+#define HAVE_DECL_STRTOF 1
 
 /* Define to 1 if you have the <direct.h> header file. */
 #define HAVE_DIRECT_H 1
@@ -55,6 +46,9 @@
 
 /* Define to 1 if you have the `getcwd' function. */
 #define HAVE_GETCWD 1
+
+/* Define if you have the iconv() function and it works. */
+#define HAVE_ICONV 1
 
 /* Define as 0 or 1 according to the floating point format suported by the
    machine */
@@ -99,12 +93,6 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
 
-/* Define to 1 if you have the `nan' function. */
-#define HAVE_NAN 1
-
-/* Define to 1 if you have the `nanf' function. */
-#define HAVE_NANF 1
-
 /* Define to 1 if you have the <png.h> header file. */
 /* #undef HAVE_PNG_H */
 
@@ -144,8 +132,17 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #define HAVE_VSNPRINTF 1
 
+/* Define to 1 if you have the `readlink' function. */
+/* #undef HAVE_READLINK */
+
 /* Set the native cpu bit order (FILLORDER_LSB2MSB or FILLORDER_MSB2LSB) */
 #define HOST_FILLORDER FILLORDER_LSB2MSB
+
+/* Define as const if the declaration of iconv() needs const. */
+#define ICONV_CONST 
+
+/* For .cpp files, define as const if the declaration of iconv() needs const. */
+#define ICONV_CPP_CONST 
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
@@ -154,48 +151,59 @@
 /* Define for Mac OSX Framework build */
 /* #undef MACOSX_FRAMEWORK */
 
-/* The size of a `int', as computed by sizeof. */
+/* The size of `int', as computed by sizeof. */
 #define SIZEOF_INT 4
 
-/* The size of a `long', as computed by sizeof. */
-#define SIZEOF_LONG 4
+/* The size of `long', as computed by sizeof. */
+/* #undef SIZEOF_LONG */
 
-/* The size of a `unsigned long', as computed by sizeof. */
+/* The size of `unsigned long', as computed by sizeof. */
 #define SIZEOF_UNSIGNED_LONG 4
 
-/* The size of a `void*', as computed by sizeof. */
+/* The size of `void*', as computed by sizeof. */
 #define SIZEOF_VOIDP 4
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Define to 1 if you have fseek64, ftell64 */
-#define UNIX_STDIO_64 1
+/* #undef UNIX_STDIO_64 */
 
-/* Define to 1, if you have GNU C compiler */
-/* #undef USE_GNUCC */
+/* Define to 1 if you want to use the -fvisibility GCC flag */
+/* #undef USE_GCC_VISIBILITY_FLAG */
+
+/* Define to 1 if GCC atomic builtins are available */
+#define HAVE_GCC_ATOMIC_BUILTINS 1
 
 /* Define to name of 64bit fopen function */
-#define VSI_FOPEN64 fopen64
+/* #undef VSI_FOPEN64 */
+
+/* Define to name of 64bit ftruncate function */
+/* #undef VSI_FTRUNCATE64 */
 
 /* Define to name of 64bit fseek func */
-#define VSI_FSEEK64 fseeko64
+/* #undef VSI_FSEEK64 */
 
 /* Define to name of 64bit ftell func */
-#define VSI_FTELL64 ftello64
+/* #undef VSI_FTELL64 */
 
 /* Define to 1, if you have 64 bit STDIO API */
-#define VSI_LARGE_API_SUPPORTED 1
+/* #undef VSI_LARGE_API_SUPPORTED */
 
 /* Define to 1, if you have LARGEFILE64_SOURCE */
 /* #undef VSI_NEED_LARGEFILE64_SOURCE */
 
 /* Define to name of 64bit stat function */
-#define VSI_STAT64 stat
+#define VSI_STAT64 _stat64
 
 /* Define to name of 64bit stat structure */
-#define VSI_STAT64_T stat
+#define VSI_STAT64_T __stat64
 
 /* Define to 1 if your processor stores words with the most significant byte
    first (like Motorola and SPARC, unlike Intel and VAX). */
 /* #undef WORDS_BIGENDIAN */
+
+/* Use this file to override settings in instances where you're doing FAT compiles
+   on Apple.  It is currently off by default because it doesn't seem to work with 
+   newish ( XCode >= 3/28/11) XCodes */
+/* #include "cpl_config_extras.h" */

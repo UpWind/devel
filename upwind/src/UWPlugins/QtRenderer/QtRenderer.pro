@@ -1,5 +1,5 @@
 
-QT += core gui svg
+QT += core gui svg opengl
 
 TARGET = QtRenderer
 
@@ -19,14 +19,15 @@ DEPENDPATH += ../ViewRenderer \
 
 HEADERS += \
     qtrenderer.h \
-    chartwidget.h \
     routewidget.h \
     ../ViewRenderer/coreviewrenderer.h \
     ../ViewRenderer/viewrendererinterface.h \
     ../UpWindScene/Scene/boat.h \
     ../shared/uwmath.h \
     boatwidget.h \
-    ../shared/uwmath.h
+    ../shared/uwmath.h \
+    chartgraphicsobject.h \
+    chartview.h
     #../ChartProviderInterface/corechartprovider.h \
     #../ChartProviderInterface/objects/coastline.h \
     #../ChartProviderInterface/objects/deptharea.h \
@@ -42,12 +43,13 @@ HEADERS += ../UpWindScene/Scene/naviglineinfo.h \
 
 SOURCES += \
     qtrenderer.cpp \
-    chartwidget.cpp \
     routewidget.cpp \
     ../ViewRenderer/coreviewrenderer.cpp \
     ../UpWindScene/Scene/boat.cpp \
     ../shared/uwmath.cpp \
-    boatwidget.cpp
+    boatwidget.cpp \
+    chartgraphicsobject.cpp \
+    chartview.cpp
     #../ChartProviderInterface/objects/coastline.cpp \
     #../ChartProviderInterface/objects/deptharea.cpp \
     #../ChartProviderInterface/objects/rock.cpp \
@@ -75,11 +77,11 @@ else:unix {
 }
 
 win32 {
-    INCLUDEPATH += "C:\\gdal\\gdal\\include"
-    LIBS += "C:\\gdal\\gdal\\bin\\libgdal-1.dll"
+    INCLUDEPATH += "$$PWD/../../../../libs/win/PostgreSQL9.2/include"
+    LIBS += -L$$PWD/../../../../libs/win/PostgreSQL9.2/lib -lpq
 
-    INCLUDEPATH += "C:\\Program Files (x86)\\PostgreSQL\\8.4\\include"
-    LIBS += "C:\\Program Files (x86)\\PostgreSQL\\8.4\\bin\\libpq.dll"
+    INCLUDEPATH += "$$PWD/../../../../libs/win/gdal/include"
+    LIBS += -L$$PWD/../../../../libs/win/gdal/lib -lgdal-1
 }
 
 

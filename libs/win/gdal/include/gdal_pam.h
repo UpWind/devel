@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: gdal_pam.h 12184 2007-09-17 21:07:00Z warmerdam $
+ * $Id: gdal_pam.h 22920 2011-08-10 21:08:07Z rouault $
  *
  * Project:  GDAL Core
  * Purpose:  Declaration for Peristable Auxilary Metadata classes.
@@ -51,6 +51,7 @@ class GDALPamRasterBand;
 #define GCIF_BAND_METADATA      0x040000
 #define GCIF_RAT                0x080000
 #define GCIF_MASK               0x100000
+#define GCIF_BAND_DESCRIPTION   0x200000
 
 #define GCIF_ONLY_IF_MISSING    0x10000000
 #define GCIF_PROCESS_BANDS      0x20000000
@@ -62,9 +63,11 @@ class GDALPamRasterBand;
                                  GCIF_UNITTYPE | GCIF_COLORTABLE |         \
                                  GCIF_COLORINTERP | GCIF_BAND_METADATA |   \
                                  GCIF_RAT | GCIF_MASK |                    \
-                                 GCIF_ONLY_IF_MISSING | GCIF_PROCESS_BANDS )
+                                 GCIF_ONLY_IF_MISSING | GCIF_PROCESS_BANDS|\
+                                 GCIF_BAND_DESCRIPTION) 
 
 /* GDAL PAM Flags */
+/* ERO 2011/04/13 : GPF_AUXMODE seems to be unimplemented */
 #define GPF_DIRTY		0x01  // .pam file needs to be written on close
 #define GPF_TRIED_READ_FAILED   0x02  // no need to keep trying to read .pam.
 #define GPF_DISABLED            0x04  // do not try any PAM stuff. 
@@ -95,6 +98,7 @@ public:
 
     CPLString   osPhysicalFilename;
     CPLString   osSubdatasetName;
+    CPLString   osAuxFilename;
 };
 
 /* ******************************************************************** */
@@ -105,6 +109,9 @@ class CPL_DLL GDALPamDataset : public GDALDataset
 {
     friend class GDALPamRasterBand;
 
+  private:
+    int IsPamFilenameAPotentialSiblingFile();
+
   protected:
                 GDALPamDataset(void);
 
@@ -114,10 +121,10 @@ class CPL_DLL GDALPamDataset : public GDALDataset
     virtual CPLXMLNode *SerializeToXML( const char *);
     virtual CPLErr      XMLInit( CPLXMLNode *, const char * );
     
-    virtual CPLErr TryLoadXML();
+    virtual CPLErr TryLoadXML(char **papszSiblingFiles = NULL);
     virtual CPLErr TrySaveXML();
 
-    CPLErr  TryLoadAux();
+    CPLErr  TryLoadAux(char **papszSiblingFiles = NULL);
     CPLErr  TrySaveAux();
 
     virtual const char *BuildPamFilename();
@@ -126,7 +133,9 @@ class CPL_DLL GDALPamDataset : public GDALDataset
     void   PamClear();
 
     void   SetPhysicalFilename( const char * );
+    const char *GetPhysicalFilename();
     void   SetSubdatasetName( const char *);
+    const char *GetSubdatasetName();
 
   public:
     virtual     ~GDALPamDataset();
@@ -150,10 +159,19 @@ class CPL_DLL GDALPamDataset : public GDALDataset
     virtual CPLErr      SetMetadataItem( const char * pszName,
                                          const char * pszValue,
                                          const char * pszDomain = "" );
+    virtual char      **GetMetadata( const char * pszDomain = "" );
+    virtual const char *GetMetadataItem( const char * pszName,
+                                         const char * pszDomain = "" );
 
     virtual char      **GetFileList(void);
 
     virtual CPLErr CloneInfo( GDALDataset *poSrcDS, int nCloneInfoFlags );
+
+    virtual CPLErr IBuildOverviews( const char *pszResampling, 
+                                    int nOverviews, int *panOverviewList, 
+                                    int nListBands, int *panBandList,
+                                    GDALProgressFunc pfnProgress, 
+                                    void * pProgressData );
 
 
     // "semi private" methods.
@@ -221,6 +239,8 @@ class CPL_DLL GDALPamRasterBand : public GDALRasterBand
   public:
                 GDALPamRasterBand();
     virtual     ~GDALPamRasterBand();
+
+    virtual void        SetDescription( const char * );
 
     virtual CPLErr SetNoDataValue( double );
     virtual double GetNoDataValue( int *pbSuccess = NULL );

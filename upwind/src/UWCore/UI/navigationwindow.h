@@ -3,8 +3,6 @@
 
 #include <QWidget>
 #include <QPushButton>
-#include <QPainter>
-class CoastLine;
 
 namespace Ui {
 class NavigationWindow;
@@ -17,21 +15,21 @@ class NavigationWindow : public QWidget
 public:
     explicit NavigationWindow(QWidget *parent = 0);
     ~NavigationWindow();
-    void addButtons();
+
+protected:
+    void resizeEvent(QResizeEvent *event);
 
 public slots:
     void back();
-    void toolboxButton_clicked();
+    void toggleToolbox();
 
 signals:
     void goBack();
-    void toggleToolbox();
+    void toolboxButtonClicked();
 
 private:
-    Ui::NavigationWindow *ui;
-    QPushButton *backButton;
-    QPushButton *toolboxButton;
-    CoastLine *coastLine;
+    QPushButton *m_backButton;
+    QPushButton *m_toolboxButton;
 };
 
 #endif // NAVIGATIONWINDOW_H

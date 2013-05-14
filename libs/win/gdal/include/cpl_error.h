@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: cpl_error.h 11965 2007-08-26 21:35:51Z mloskot $
+ * $Id: cpl_error.h 24706 2012-07-24 19:03:37Z mloskot $
  *
  * Name:     cpl_error.h
  * Project:  CPL - Common Portability Library
@@ -54,24 +54,29 @@ typedef enum
     CE_Fatal = 4
 } CPLErr;
 
-void CPL_DLL CPLError(CPLErr eErrClass, int err_no, const char *fmt, ...);
+void CPL_DLL CPLError(CPLErr eErrClass, int err_no, const char *fmt, ...)  CPL_PRINT_FUNC_FORMAT (3, 4);
 void CPL_DLL CPLErrorV(CPLErr, int, const char *, va_list );
+void CPL_DLL CPLEmergencyError( const char * );
 void CPL_DLL CPL_STDCALL CPLErrorReset( void );
 int CPL_DLL CPL_STDCALL CPLGetLastErrorNo( void );
 CPLErr CPL_DLL CPL_STDCALL CPLGetLastErrorType( void );
 const char CPL_DLL * CPL_STDCALL CPLGetLastErrorMsg( void );
+void CPL_DLL * CPL_STDCALL CPLGetErrorHandlerUserData(void);
 
 typedef void (CPL_STDCALL *CPLErrorHandler)(CPLErr, int, const char*);
 
 void CPL_DLL CPL_STDCALL CPLLoggingErrorHandler( CPLErr, int, const char * );
 void CPL_DLL CPL_STDCALL CPLDefaultErrorHandler( CPLErr, int, const char * );
 void CPL_DLL CPL_STDCALL CPLQuietErrorHandler( CPLErr, int, const char * );
+void CPLTurnFailureIntoWarning(int bOn );
 
 CPLErrorHandler CPL_DLL CPL_STDCALL CPLSetErrorHandler(CPLErrorHandler);
+CPLErrorHandler CPL_DLL CPL_STDCALL CPLSetErrorHandlerEx(CPLErrorHandler, void*);
 void CPL_DLL CPL_STDCALL CPLPushErrorHandler( CPLErrorHandler );
+void CPL_DLL CPL_STDCALL CPLPushErrorHandlerEx( CPLErrorHandler, void* );
 void CPL_DLL CPL_STDCALL CPLPopErrorHandler(void);
 
-void CPL_DLL CPL_STDCALL CPLDebug( const char *, const char *, ... );
+void CPL_DLL CPL_STDCALL CPLDebug( const char *, const char *, ... )  CPL_PRINT_FUNC_FORMAT (2, 3);
 void CPL_DLL CPL_STDCALL _CPLAssert( const char *, const char *, int );
 
 #ifdef DEBUG

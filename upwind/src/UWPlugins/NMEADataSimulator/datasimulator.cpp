@@ -1,12 +1,28 @@
+#define QT_NO_DEBUG_OUTPUT
 #include "datasimulator.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <QMessageBox>
+#include <qmath.h>
+#include "../shared/uwmath.h"
+#include "../shared/polardiagram.h"
 
 const static double KNOT_TO_METER_MULTI = 0.514444444;
 
-dataSimulator::dataSimulator(){
+dataSimulator::dataSimulator() :
+    m_currentGpsPositionLatitude(0)
+  , m_currentGpsPositionLongitude(0)
+  , m_currentCompassHeading(0.0)
+  , m_currentVelocity(0.0)
+  , m_defaultMotorVelocity(0.0)
+  , m_polarDiagram(0)
+  , m_windAngle(0.0)
+  , m_windSpeed(0.0)
+  , m_velocityMultiplier(0.0)
+  , m_isAnchored(false)
+  , m_isSailing(false)
+{
     delay = 1000;
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(generate()));
@@ -21,6 +37,22 @@ dataSimulator::dataSimulator(){
     anonemeter = settingsUI->getAnenomter();
     clock = settingsUI->getClock();
     gps = settingsUI->getGPS();
+    m_currentGpsPositionLongitude = settingsUI->boatPositionLongitude();
+    m_currentGpsPositionLatitude = settingsUI->boatPositionLatitude();
+
+    m_currentCompassHeading = 0; // clockwise degrees from north
+    m_currentVelocity = 0.0; // knots per hour
+    m_defaultMotorVelocity = 20.0; // knots per hour, two knots. Default motor speed.
+    m_currentSteeringSpeed = 0.0;
+    m_velocityMultiplier = 1.0;
+    m_isAnchored = false;
+    m_isSailing = false;
+
+    m_windAngle = 45.0;
+    m_windSpeed = 20; // 20 knots or roughly 10m/s
+
+    m_polarDiagram = new PolarDiagram();
+    m_polarDiagram->populateWithFinngulf36();
 }
 
 dataSimulator::~dataSimulator(){}
@@ -33,27 +65,31 @@ void dataSimulator::setDelay(int newDelay){
 void dataSimulator::run() {}
 
 void dataSimulator::generate(){
-    if(compass || anonemeter || clock || gps){
-        bool repeat = true;
-        int value;
-        while(repeat){
-            value = randInt(0,3);
-            switch(value){
-            case 0: if(compass) repeat = false; break;
-            case 1: if(gps) repeat = false; break;
-            case 2: if(anonemeter) repeat = false; break;
-            case 3: if(clock) repeat = false; break;
-            default: break;
-            }
-        }
-        switch(value){
-        case 0: simulateNMEACompass(); break;
-        case 1: simulateNMEAGPS(); break;
-        case 2: simulateNMEAAngleAndWindSpeed(); break;
-        case 3: simulateNMEAClock(); break;
-        default: break;
-        }
-    }
+//    if(compass || anonemeter || clock || gps){
+//        bool repeat = true;
+//        int value;
+//        while(repeat){
+//            value = randInt(0,3);§
+//            switch(value){
+//            case 0: if(compass) repeat = false; break;
+//            case 1: if(gps) repeat = false; break;
+//            case 2: if(anonemeter) repeat = false; break;
+//            case 3: if(clock) repeat = false; break;
+//            default: break;
+//            }
+//        }
+//        switch(value){
+//        case 0: simulateNMEACompass(); break;
+//        case 1: simulateNMEAGPS(); break;
+//        case 2: simulateNMEAAngleAndWindSpeed(); break;
+//        case 3: simulateNMEAClock(); break;
+//        default: break;
+//        }
+//    }
+    simulateNMEACompass();
+    simulateNMEAGPS();
+    simulateNMEAAngleAndWindSpeed();
+    simulateNMEAClock();
 }
 
 bool dataSimulator::getDisplay(){
@@ -110,19 +146,13 @@ void dataSimulator::simulateNMEAAngleAndWindSpeed(){
     6. Checksum
     **/
 
-    int windAngle = 0;
-    int windSpeed = 10; // knotSpeed
-    int simAngle = randInt(-15, 15);
-    windAngle += simAngle;
-    int simSpeed = randInt(-3, 3);
-    windSpeed += simSpeed;
-    float windSpeedMS = convertWindSpeed(windSpeed); // M/s Speed
+    float windSpeedMS = convertWindSpeed(m_windSpeed); // M/s Speed
 
     QString str;
     str = "$IIMWV,";
-    str += QString::number(windAngle);
+    str += QString::number(m_windAngle);
     str += ",T,";
-    str += QString::number(windSpeed);
+    str += QString::number(m_windSpeed);
     str += ",K,";
     str += QString::number(windSpeedMS);
     str+= ",M,";
@@ -141,12 +171,21 @@ void dataSimulator::simulateNMEACompass(){
              ,,       deviation (no data)
              7.1,W    variation
     **/
+    qDebug() << Q_FUNC_INFO << m_currentCompassHeading << timer->interval();
+
+    double timeDeltaSeconds = (float)timer->interval() / 1000;
+
+    m_currentCompassHeading += timeDeltaSeconds * m_currentSteeringSpeed;
+    if (m_currentCompassHeading >= 360.0)
+        m_currentCompassHeading -= 360.0;
+    else if (m_currentCompassHeading < 0.0)
+        m_currentCompassHeading += 360.0;
 
     int heading = 180;
     int sim = randInt(-10,10);
     heading = heading + sim;
 
-    QString NMEAString = "$IIHDG," + QString::number(heading) + ",,,7.1,W";
+    QString NMEAString = "$IIHDG," + QString::number(m_currentCompassHeading, 'f', 1) + ",,,7.1,W";
     NMEAString = NMEAString + "*" + generateChecksum(NMEAString);
 
     emit newNMEAString(NMEAString);
@@ -168,34 +207,96 @@ void dataSimulator::simulateNMEAGPS(){
             *6A          The checksum data, always begins with
     **/
 
+    if (qFuzzyCompare(m_currentGpsPositionLatitude, 0.0)
+            || qFuzzyCompare(m_currentGpsPositionLongitude, 0.0)) {
+        return;
+    }
+
     QString str = "$IIRMC,";
     str += getTime() + ",";
     str += "A,";
 
-    double latitude = 65.013026;
-    double longitude = 25.109253; //Oulu coordinates
-    int simla = randInt(-2, 2);
-    int simlo = randInt(-2, 2);
+//    int simla = randInt(-2, 2);
+//    int simlo = randInt(-2, 2);
     // antti
-    latitude += simla * 0.001; // 10km
-    longitude += simlo * 0.001;
+//    latitude += simla * 0.001; // 10km
+//    longitude += simlo * 0.001;
 
-    QString slatitude= QString::number(latitude);
-    QString slongitude= QString::number(longitude);
+    float trigonometricAngle = UwMath::toRadians(UwMath::toCartesian(m_currentCompassHeading));
+//    if (m_currentCompassHeading > 90)
+//        trigonometricAngle = (m_currentCompassHeading -90.0) / 180.0 * M_PI;
+//    else
+//        trigonometricAngle = (m_currentCompassHeading + 270.0) / 180.0 * M_PI;
+
+    float twa = (m_windAngle - m_currentCompassHeading);//+ UwMath::toCartesian(m_currentCompassHeading);
+    while (twa < -180.0)
+        twa += 360;
+    while (twa > 180.0)
+        twa -= 360;
+
+    twa = qAbs(twa);
+    if (m_isSailing) {
+        m_currentVelocity = m_isAnchored ? 0.0 : (float)3600.0 / m_polarDiagram->getTA(m_windSpeed, twa) * m_velocityMultiplier;
+    } else {
+        m_currentVelocity = m_isAnchored ? 0.0 : m_defaultMotorVelocity * m_velocityMultiplier;
+    }
+//    m_currentVelocity = m_currentVelocity *
+//            * m_currentVelocity;
+
+//    float scaleFactor = 0.03;
+    double velocityInDegrees = m_currentVelocity / 60;
+    double timeDeltaHours = (float)timer->interval() / 1000 / 3600;
+    double longitudeCorrection = 1 / sin(m_currentGpsPositionLatitude * M_PI / 180);
+
+    QPointF translate(qCos( trigonometricAngle ) * timeDeltaHours * velocityInDegrees,
+                      -qSin( trigonometricAngle ) * timeDeltaHours * velocityInDegrees
+                      * longitudeCorrection );
+
+    translate = UwMath::toRadians(translate);
+
+    QPointF currentGPs(m_currentGpsPositionLongitude, m_currentGpsPositionLatitude);
+    UwMath::toConformalInverted(&currentGPs);
+
+//    UwMath::toConformalInverted(translate);
+
+    currentGPs += translate;
+
+    UwMath::fromConformalInverted(currentGPs);
+
+    m_currentGpsPositionLongitude = currentGPs.x();
+    m_currentGpsPositionLatitude = currentGPs.y();
+
+    /*QPointF fixed = *//*UwMath::fromConformalInverted(translate);*/
+//    QPointF fixed = translate;
+
+//    m_currentGpsPositionLatitude += translate.x();
+//    m_currentGpsPositionLongitude += translate.y();
+
+    QString slatitude= QString::number(m_currentGpsPositionLatitude, 'f', 6);
+    QString slongitude= QString::number(m_currentGpsPositionLongitude, 'f', 6);
     str += slatitude + ",";
-    if(latitude >= 0)
+    if(m_currentGpsPositionLatitude >= 0)
         str += "N,";
     else
         str += "S,";
 
     str += slongitude + ",";
-    if(longitude < 0)
+    if(m_currentGpsPositionLongitude < 0)
         str += "W,";
     else
         str+= "E,";
 
-    str += "022.4,"; // Speed over the ground in knots
-    str += "084.4,"; //track angle
+    QString velocityString = QString::number(m_currentVelocity, 'f', 1);
+    while (velocityString.length() < 5) // example "022.4"
+        velocityString.prepend("0");
+    str += velocityString + ",";
+
+    QString headingString = QString::number(m_currentCompassHeading, 'f', 1);
+    while (headingString.length() < 5) // example "084.4"
+        headingString.prepend("0");
+    str += headingString + ",";
+//    str += "022.4,"; // Speed over the ground in knots
+//    str += "084.4,"; //track angle
     str += getDate() + ","; //date
     str += "003.1,W"; // Magnetic Variation
     str = str + "*" + generateChecksum(str);
@@ -217,7 +318,35 @@ void dataSimulator::initializeSettings(){
         settings->setSetting("Compass", "true");
         settings->setSetting("Clock", "true");
         settings->setSetting("Timer", "600");
+        // Init boat position to Oulu area
+        settings->setSetting("boatPosLongitude", "25.109253");
+        settings->setSetting("boatPosLatitude", "65.013026");
     }
+}
+
+void dataSimulator::setTurningSpeed(int degreesPerSecond)
+{
+    m_currentSteeringSpeed = degreesPerSecond;
+}
+
+void dataSimulator::setVelocityMultiplier(float velocityMultiplier)
+{
+    m_velocityMultiplier = velocityMultiplier;
+}
+
+void dataSimulator::setAnchor(bool anchor)
+{
+    m_isAnchored = anchor;
+}
+
+void dataSimulator::setSail(bool sailing)
+{
+    m_isSailing = sailing;
+}
+
+dataSimulator::operator QObject *()
+{
+    return this;
 }
 
 void dataSimulator::addPluginSettingsToLayout(QLayout *layout){
@@ -333,6 +462,14 @@ void dataSimulator::changeSpeed(int speed){
 
 int dataSimulator::randInt(int low, int high){
     return qrand() % ((high + 1) - low) + low;
+}
+
+void dataSimulator::setBoatPositionLon(double longitude) {
+    m_currentGpsPositionLongitude = longitude;
+}
+
+void dataSimulator::setBoatPositionLat(double latitude) {
+    m_currentGpsPositionLatitude = latitude;
 }
 
 Q_EXPORT_PLUGIN2(datasimulator, dataSimulator)

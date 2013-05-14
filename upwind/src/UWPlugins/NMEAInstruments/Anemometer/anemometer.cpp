@@ -25,7 +25,7 @@ Anemometer::Anemometer(QWidget *parent){
     setDefaultStyleSheet();
     changeWidgetSize();
 
-    angle = 0;
+    m_angle = 0;
 
     connect(this->instrumentView, SIGNAL(mouseMoved(QMouseEvent*)), this, SLOT(mouseMoveEvent(QMouseEvent*)));
     connect(this->instrumentView, SIGNAL(mousePressed(QMouseEvent*)), this, SLOT(mousePressEvent(QMouseEvent*)));
@@ -91,9 +91,8 @@ void Anemometer::initializeImages(){
 }
 
 void Anemometer::setAngle(int angle){
-    angle = 180 - angle;
-    hand->resetTransform();
-    hand->rotate(angle);
+    m_angle = angle;
+    hand->setRotation(angle);
 }
 
 void Anemometer::setParsedNMEAValues(QString angle, QString windSpeedMS, QString windSpeedKnots){
@@ -114,11 +113,7 @@ void Anemometer::parseNMEAString(const QString & text){
         QStringList strList = text.split(",");
         QString angleString=(QString)strList.at(1);
         if(!angleString.isEmpty()){
-            double dialValueFloat = angleString.toDouble();
-            int dialValue = (int)dialValueFloat;
-            angle = dialValue;
-            dialValue >= 180 ? dialValue -=180 : dialValue += 180;
-            setAngle(angle);
+            setAngle(angleString.toDouble() + 180.0);
             if(strList.size() > 6){
                 knots->setText((QString)strList.at(3));
                 ms->setText((QString)strList.at(5));

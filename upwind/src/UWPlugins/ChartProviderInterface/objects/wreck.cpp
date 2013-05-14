@@ -10,6 +10,13 @@ Wreck::Wreck(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinate
     setupGraphicProperties();
 }
 
+Wreck::Wreck(QList<ChartObjectInterface::ChartElement> rocks, OGRLayer *feat, QString tabName)
+    : ChartObjectInterface(QVector<QPolygonF>(), QVector<QPolygonF>(), feat, tabName) {
+    tableName = tabName;
+    featureData = feat;
+    mElements = rocks;
+}
+
 Wreck::~Wreck(){}
 
 void Wreck::setupGraphicProperties() {

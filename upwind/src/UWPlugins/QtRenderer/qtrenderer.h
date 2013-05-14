@@ -5,7 +5,7 @@
 #include <QObject>
 #include "boatwidget.h"
 
-class ChartWidget;
+class ChartGraphicsObject;
 class RouteWidget;
 class BoatWidget;
 
@@ -21,6 +21,11 @@ public:
     QString getName();
     void ConnectPlugin(UpWindSceneInterface* scene,QWidget* frame, CoreChartProvider* model);
 
+    bool getFollowBoat() const;
+
+public slots:
+    void setFollowBoat(bool follow);
+
 protected slots:
     void zoomIn();
     void zoomOut();
@@ -32,10 +37,20 @@ protected slots:
     void simModeChanged(bool);
     void drawRoute(bool);
 
+    void setZoomFactor(qreal zoomFactor);
+
+    void handleBoatPositionChanged();
+
 private:
-    ChartWidget *chartWidget;
+    ChartGraphicsObject *n_chartGraphicsObject;
     RouteWidget *routeWidget;
     BoatWidget *boatWidget;
+    QGraphicsView *view;
+
+    qreal m_zoomFactor;
+    qreal m_zoomSpeed;
+
+    bool m_followBoat;
 };
 
 #endif // QTRENDERER_H

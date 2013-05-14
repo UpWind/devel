@@ -358,4 +358,4 @@ Settings* CoreNMEAReader::getSettings(){
     return settings;
 }
 
-//Q_EXPORT_PLUGIN2(corenmeareader, CoreNMEAReader)
+//Q_EXPORT_PLUGIN2(NMEAReader, CoreNMEAReader)

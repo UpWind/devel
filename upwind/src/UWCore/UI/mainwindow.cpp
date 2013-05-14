@@ -1,22 +1,30 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QIcon>
+#include <QStackedLayout>
 #include <QString>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::MainWindow)
+    QWidget(parent)
 {
-    ui->setupUi(this);
+    setWindowTitle("UpWind Navigator");
+    setWindowIcon(QIcon(":/buttons/Upwind Icon.svg"));
     this->setWindowState(Qt::WindowFullScreen);
 
-    QGridLayout *layout = new QGridLayout();
+#ifdef Q_OS_LINUX
+    setGeometry(QApplication::desktop()->screenGeometry());
+#endif //Q_OS_LINUX
+
+    QStackedLayout *layout = new QStackedLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    this->setLayout(layout);
+    setLayout(layout);
 }
 
-MainWindow::~MainWindow(){
-    delete ui;
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    emit geometryChanged(geometry());
+    QWidget::resizeEvent(event);
 }

@@ -1,4 +1,5 @@
 #include "instrumentview.h"
+#include <QGLWidget>
 
 InstrumentView::InstrumentView(QWidget *parent){
     this->setParent(parent);
@@ -7,6 +8,7 @@ InstrumentView::InstrumentView(QWidget *parent){
     setFrameShape(QFrame::NoFrame);
 
     setMouseTracking(false);
+//    setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
     m_handling = false;
 }
 
@@ -26,5 +28,5 @@ void InstrumentView::mousePressEvent(QMouseEvent *event){
 
 void InstrumentView::mouseReleaseEvent (QMouseEvent *event){
     m_handling = false;
-	(void)event;
+    emit mouseReleased(event);
 }

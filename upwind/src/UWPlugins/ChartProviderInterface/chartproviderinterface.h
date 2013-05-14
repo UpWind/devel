@@ -9,7 +9,7 @@ class ChartObjectInterface;
 class ChartProviderInterface : public UWPluginInterface{
 public:
     explicit ChartProviderInterface(){}
-    virtual void initialize(QString host, uint port, QString dbName, QString username, QString password) = 0;
+    virtual void initialize(QString host, uint port, QString dbName, QString username, QString password, int detailLevel) = 0;
     virtual void setAreaFilter(QRectF area) = 0;
     virtual void setZoomLevel(int level) = 0;
     virtual void setChartWidgetSize(QSize size) = 0;

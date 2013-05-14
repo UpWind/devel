@@ -1,12 +1,10 @@
 #include "route.h"
 #include "../../Settings/settings.h"
-#include "../../UWCore/uwcore.h"
 #include "../shared/uwmath.h"
 #include "../UpWindScene/Scene/projection.h"
-//#include "../UpWindScene/Scene/polardiagram.h"
 
 #include <math.h>
-#include <ogrsf_frmts.h>
+#include "ogrsf_frmts.h"
 
 //Default Chart Error (in metres)
 #define CHARTERROR 15
@@ -961,7 +959,7 @@ void Route::addStaticWeather(double angleWind,double speedWind)
     if(debug)time1=time1.currentTime();
 
     PolarDiagram pDiagram;
-    pDiagram.populate();
+    pDiagram.populateWithFinngulf36();
     qDebug()<<"Add static weather called";
 
     for(int i=0;i<adMatrix.size();i++){

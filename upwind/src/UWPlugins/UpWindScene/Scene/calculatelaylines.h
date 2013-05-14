@@ -10,7 +10,7 @@
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
-#include "/usr/include/postgresql/libpq-fe.h"
+#include "libpq-fe.h"
 #include "../shared/uwmath.h"
 #include "polardiagram.h"
 
@@ -45,7 +45,6 @@ public:
 public Q_SLOTS:
     void start();
 public slots:
-        void calculationComplete();
         void startCalc();
         void receiveData(QVector<QPointF> route, QPointF startpoint);
 Q_SIGNALS:

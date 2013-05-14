@@ -1,3 +1,4 @@
+#define QT_NO_DEBUG_OUTPUT
 /**
  * \file polardiagram.cpp
  * \author Carles Escrig i Royo
@@ -45,6 +46,76 @@ PolarDiagram & PolarDiagram::populate(){
     this->diagram[10].insert(150.0, 700.0);
     this->diagram[16].insert(41.0, 800.0);
     this->diagram[16].insert(175.0, 500.0);
+    return *this;
+}
+
+PolarDiagram & PolarDiagram::populateWithFinngulf36(){
+    // FAIL SAFE POLAR DIAGRAM
+    this->name = "generic";
+    this->TWA = true;
+    this->diagram.clear();
+    this->diagram[6].insert(52, 710);
+    this->diagram[6].insert(60, 650.1);
+    this->diagram[6].insert(75, 606.8);
+    this->diagram[6].insert(90, 604.7);
+    this->diagram[6].insert(110, 619.7);
+    this->diagram[6].insert(120, 665.3);
+    this->diagram[6].insert(135, 768.1);
+    this->diagram[6].insert(150, 915.8);
+
+    this->diagram[8].insert(52, 605.1);
+    this->diagram[8].insert(60, 573.2);
+    this->diagram[8].insert(75, 550.1);
+    this->diagram[8].insert(90, 540.5);
+    this->diagram[8].insert(110, 548.9);
+    this->diagram[8].insert(120, 565);
+    this->diagram[8].insert(135, 613.1);
+    this->diagram[8].insert(150, 723.7);
+
+    this->diagram[10].insert(52, 547.1);
+    this->diagram[10].insert(60, 546.7);
+    this->diagram[10].insert(75, 521.2);
+    this->diagram[10].insert(90, 510.5);
+    this->diagram[10].insert(110, 513.1);
+    this->diagram[10].insert(120, 523.3);
+    this->diagram[10].insert(135, 551.8);
+    this->diagram[10].insert(150, 604.3);
+
+    this->diagram[12].insert(52, 557.4);
+    this->diagram[12].insert(60, 532.2);
+    this->diagram[12].insert(75, 503.9);
+    this->diagram[12].insert(90, 494.9);
+    this->diagram[12].insert(110, 489.5);
+    this->diagram[12].insert(120, 495.6);
+    this->diagram[12].insert(135, 515.9);
+    this->diagram[12].insert(150, 550.9);
+
+    this->diagram[14].insert(52, 547.2);
+    this->diagram[14].insert(60, 522.8);
+    this->diagram[14].insert(75, 494.9);
+    this->diagram[14].insert(90, 485.2);
+    this->diagram[14].insert(110, 472.3);
+    this->diagram[14].insert(120, 475.3);
+    this->diagram[14].insert(135, 490.8);
+    this->diagram[14].insert(150, 516.8);
+
+    this->diagram[16].insert(52, 541);
+    this->diagram[16].insert(60, 516.9);
+    this->diagram[16].insert(75, 488.8);
+    this->diagram[16].insert(90, 474.5);
+    this->diagram[16].insert(110, 458.6);
+    this->diagram[16].insert(120, 457.3);
+    this->diagram[16].insert(135, 470.8);
+    this->diagram[16].insert(150, 492.2);
+
+    this->diagram[20].insert(52, 537.3);
+    this->diagram[20].insert(60, 512);
+    this->diagram[20].insert(75, 481.8);
+    this->diagram[20].insert(90, 462.3);
+    this->diagram[20].insert(110, 442.1);
+    this->diagram[20].insert(120, 430.3);
+    this->diagram[20].insert(135, 435.1);
+    this->diagram[20].insert(150, 453.8);
     return *this;
 }
 
@@ -317,6 +388,7 @@ float PolarDiagram::getBeatAngle( const float & speed){
 }
 
 float PolarDiagram::getTA(const float & speed, const float & angle){
+    Q_ASSERT(angle >= 0.0);
     if(!contains(speed)){
         int i = 0;
         // List of ALL the speeds avilable in de diagram
@@ -357,8 +429,14 @@ float PolarDiagram::getTA(const float & speed, const float & angle){
     if(i == angles.size() - 1)
         return aux.value(angles.last());
     // input angle is smaller than any available
-    else if(i == 0)
-        return aux.value(angles.first());
+    else if(i == 0) {
+        float zeroSpeed = 3600; // 0.1 knot speed
+        float smallestSpeed = aux.value(angles.first());
+        float smallestAngle = angles.first();
+        // note, can't be zero as it wouldn't enter here in that case.
+        return (smallestSpeed - zeroSpeed) / (smallestAngle) * angle + zeroSpeed;
+//        return aux.value(angles.first());
+    }
     // input angle is between other available angles
     else
         return (aux.value(angles.at(i - 1)) + aux.value(angles.at(i))) / 2;

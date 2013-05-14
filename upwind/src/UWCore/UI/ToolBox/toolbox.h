@@ -44,6 +44,7 @@ signals:
     void zoomBoat();
     void unsetDestiny();
     void zoomToolActivated(bool);
+    void followBoat(bool);
 
     // Instruments
     void compassStateChangedS(int);

@@ -30,11 +30,6 @@ public:
     NavigationWindow * getMap();
 
     /**
-     * Initializes the user interface.
-     */
-    void initialize();
-
-    /**
      * Getter for the SettingsForm ui object.
      * @return pointer to the SettingsForm.
      */
@@ -51,6 +46,9 @@ private:
     MainWindow *mainWindow;
     NavigationWindow *navigationWindow;
     ToolBox *toolbox;
+
+private slots:
+    void mainWindowGeometryChanged(QRect rect);
 
 public slots:
 

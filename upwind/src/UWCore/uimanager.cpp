@@ -4,51 +4,46 @@
 #include <QGridLayout>
 #include <QLayout>
 
-UIManager::UIManager(){
+UIManager::UIManager() {
     mainWindow = new MainWindow();
     mainMenu = new MainMenu(mainWindow);
-    mainWindow->layout()->addWidget(mainMenu);
     navigationWindow = new NavigationWindow(mainWindow);
-    navigationWindow->layout()->setEnabled(false);
-    navigationWindow->hide();
+    settingsWindow = new SettingsForm(mainWindow);
 
+    mainWindow->layout()->addWidget(mainMenu);
     mainWindow->layout()->addWidget(navigationWindow);
-    mainWindow->show();
+    mainWindow->layout()->addWidget(settingsWindow);
+    toolbox = new ToolBox(navigationWindow);
 
+    QObject::connect(mainWindow, SIGNAL(geometryChanged(QRect)), this, SLOT(mainWindowGeometryChanged(QRect)));
     QObject::connect(navigationWindow, SIGNAL(goBack()), this, SLOT(showMainMenu()));
-    QObject::connect(navigationWindow, SIGNAL(toggleToolbox()), this, SLOT(toggleToolbox()));
+    QObject::connect(navigationWindow, SIGNAL(toolboxButtonClicked()), this, SLOT(toggleToolbox()));
     QObject::connect(mainMenu, SIGNAL(close()), this, SLOT(close()));
     QObject::connect(mainMenu, SIGNAL(showChart()), this, SLOT(showChartWindow()));
     QObject::connect(mainMenu, SIGNAL(showSettings()), this, SLOT(showSettingsWindow()));
-}
-
-void UIManager::initialize(){
-    settingsWindow = new SettingsForm(mainWindow);
-
-    mainWindow->layout()->addWidget(settingsWindow);
-    settingsWindow->hide();
     QObject::connect(settingsWindow, SIGNAL(goBack()), this, SLOT(showMainMenu()));
 
-    toolbox = new ToolBox(navigationWindow);
-
-//    Antti: Why not get the real screen geometry? not window geometry
-//    QRect screenGeometry = navigationWindow->geometry();
-    QRect screenGeometry =  QApplication::desktop()->screenGeometry();
-
-    toolbox->setGeometry((screenGeometry.topRight().x() - toolbox->width()), 50, toolbox->width(), screenGeometry.bottomRight().y() - 120);
-    navigationWindow->addButtons();
-
     connectInstruments();
+    mainWindow->show();
 }
 
 void UIManager::connectInstruments(){
     //if the instruments are loaded, connect them
     QList<NMEAInstrumentInterface*> instruments = UWCore::getInstance()->getPluginManager()->getInstruments();
     foreach(NMEAInstrumentInterface* instrument,instruments){
-        navigationWindow->layout()->addWidget(instrument->getGUI());
+        instrument->getGUI()->setParent(navigationWindow);
         instrument->showPlugin();
     }
 }
+
+void UIManager::mainWindowGeometryChanged(QRect geometry)
+{
+    navigationWindow->setGeometry(geometry);
+    toolbox->setGeometry((geometry.right() - toolbox->width()), 50,
+                         toolbox->width(), geometry.bottom() - 120);
+}
+
+
 
 SettingsForm* UIManager::getSettingsForm(){
     return settingsWindow;
@@ -70,18 +65,18 @@ NavigationWindow * UIManager::getMap(){
 }
 
 void UIManager::showChartWindow(){
-    navigationWindow->show();
+    (qobject_cast<QStackedLayout*>(mainWindow->layout()))->setCurrentWidget(navigationWindow);
 }
 
 void UIManager::showMainMenu(){
     UWCore::getInstance()->getPluginManager()->savePluginSettings();
     UWCore::getInstance()->getPluginManager()->saveInstrumentPositions();
 
-    mainMenu->show();
+    (qobject_cast<QStackedLayout*>(mainWindow->layout()))->setCurrentWidget(mainMenu);
 }
 
 void UIManager::showSettingsWindow(){
-    settingsWindow->showSettings();
+    (qobject_cast<QStackedLayout*>(mainWindow->layout()))->setCurrentWidget(settingsWindow);
 }
 
 void UIManager::close(){

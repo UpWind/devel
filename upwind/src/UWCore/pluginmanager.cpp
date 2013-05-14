@@ -12,6 +12,9 @@ PluginManager::PluginManager(){
     upWindScene = 0;
     routeManager = 0;
     logger = 0;
+    simulatorWheel = 0;
+    velocityHandle = 0;
+    dataSimulatorControlInterface = 0;
 }
 
 PluginManager::~PluginManager(){}
@@ -124,6 +127,7 @@ void PluginManager::connectViewRenderer(ViewRendererInterface *viewR){
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(zoomOutS()), render, SLOT(zoomOut()), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(zoomBoat()), render, SLOT(zoomBoat()), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(zoomChart()), render, SLOT(expand()), Qt::QueuedConnection);
+    connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(followBoat(bool)), render, SLOT(setFollowBoat(bool)), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(rotateLeftS()), render, SLOT(rotateLeft()), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(rotateRightS()), render, SLOT(rotateRight()), Qt::QueuedConnection);
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(zoomToolActivated(bool)), render, SLOT(zoomToolActivated(bool)), Qt::QueuedConnection);
@@ -148,6 +152,20 @@ void PluginManager::disconnectViewRenderer(ViewRendererInterface *viewR){
     disconnect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(zoomChart()), render, SLOT(expand()));
 
     //the plugin's chart view should be removed here..
+}
+
+void PluginManager::connectWheelAndSimulator()
+{
+    if (simulatorWheel && dataSimulatorControlInterface) {
+        simulatorWheel->connectToSimulator(dataSimulatorControlInterface, dataSimulatorControlInterface->operator QObject *());
+    }
+}
+
+void PluginManager::connectHandleAndSimulator()
+{
+    if (velocityHandle && dataSimulatorControlInterface) {
+        velocityHandle->connectToSimulator(dataSimulatorControlInterface, dataSimulatorControlInterface->operator QObject *());
+    }
 }
 
 void PluginManager::savePluginSettings(){
@@ -193,7 +211,7 @@ void PluginManager::loadPlugins(){
         // THIS HAS NO SECURITY WATSOEVER AND CAN BE EXPLOITED BADLY
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
-        qDebug() << Q_FUNC_INFO << fileName << " " << plugin;
+        qDebug() << Q_FUNC_INFO << fileName << " " << plugin << (plugin == 0 ? pluginLoader.errorString() : "Success");
 
         if(plugin) {
             if(qobject_cast<UWPluginInterface *>(plugin))
@@ -205,8 +223,14 @@ void PluginManager::loadPlugins(){
             else if(qobject_cast<ChartProviderInterface *>(plugin))
                 loadedChartProviders.insert(qobject_cast<ChartProviderInterface *>(plugin));
 
-            else if(qobject_cast<NMEAReaderInterface *>(plugin))
+            else if(qobject_cast<NMEAReaderInterface *>(plugin)) {
                 loadedNmeaProviders.insert(qobject_cast<NMEAReaderInterface *>(plugin));
+                if (qobject_cast<DataSimulatorControlInterface*>(plugin)) {
+                    dataSimulatorControlInterface = qobject_cast<DataSimulatorControlInterface*>(plugin);
+                    connectWheelAndSimulator();
+                    connectHandleAndSimulator();
+                }
+            }
 
             else if(qobject_cast<UpWindSceneInterface *>(plugin))
                 loadedScenes.insert(qobject_cast<UpWindSceneInterface *>(plugin));
@@ -217,6 +241,14 @@ void PluginManager::loadPlugins(){
             else if(qobject_cast<NMEAInstrumentInterface *>(plugin)){
                 NMEAInstrumentInterface *instrument = qobject_cast<NMEAInstrumentInterface *>(plugin);
                 instruments.insert(instrument->getName(), instrument);
+                if (qobject_cast<SimulatorWheelInterface*>(plugin)) {
+                    simulatorWheel = qobject_cast<SimulatorWheelInterface*>(plugin);
+                    connectWheelAndSimulator();
+                } else if (qobject_cast<VelocityHandleInterface*>(plugin)) {
+                    velocityHandle = qobject_cast<VelocityHandleInterface*>(plugin);
+                    connectHandleAndSimulator();
+                }
+
             }
         }
     }

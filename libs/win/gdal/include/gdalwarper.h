@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: gdalwarper.h 11407 2007-05-03 17:30:09Z dron $
+ * $Id: gdalwarper.h 20819 2010-10-13 15:59:44Z warmerdam $
  *
  * Project:  GDAL High Performance Warper
  * Purpose:  Prototypes, and definitions for warping related work.
@@ -76,6 +76,18 @@ GDALWarpSrcAlphaMasker( void *pMaskFuncArg, int nBandCount, GDALDataType eType,
                         int nXOff, int nYOff, int nXSize, int nYSize,
                         GByte ** /*ppImageData */,
                         int bMaskIsFloat, void *pValidityMask );
+
+CPLErr CPL_DLL 
+GDALWarpSrcMaskMasker( void *pMaskFuncArg, int nBandCount, GDALDataType eType,
+                       int nXOff, int nYOff, int nXSize, int nYSize,
+                       GByte ** /*ppImageData */,
+                       int bMaskIsFloat, void *pValidityMask );
+
+CPLErr CPL_DLL 
+GDALWarpCutlineMasker( void *pMaskFuncArg, int nBandCount, GDALDataType eType,
+                       int nXOff, int nYOff, int nXSize, int nYSize,
+                       GByte ** /* ppImageData */,
+                       int bMaskIsFloat, void *pValidityMask );
 
 /************************************************************************/
 /*                           GDALWarpOptions                            */
@@ -162,6 +174,12 @@ typedef struct {
     
     CPLErr              (*pfnPostWarpChunkProcessor)( void *pKern, void *pArg);
     void               *pPostWarpProcessorArg;
+
+    /*! Optional OGRPolygonH for a masking cutline. */
+    void               *hCutline;
+
+    /*! Optional blending distance to apply across cutline in pixels, default is zero. */
+    double              dfCutlineBlendDist;
 
 } GDALWarpOptions;
 
@@ -258,6 +276,8 @@ public:
     double              dfYFilter;
     int                 nXRadius;   // Size of window to filter.
     int                 nYRadius;
+    int                 nFiltInitX; // Filtering offset
+    int                 nFiltInitY;
     
     int                 nSrcXOff;
     int                 nSrcYOff;
@@ -273,6 +293,8 @@ public:
 
     double              dfProgressBase;
     double              dfProgressScale;
+    
+    double              *padfDstNoDataReal;
 
                        GDALWarpKernel();
     virtual           ~GDALWarpKernel();
@@ -294,9 +316,6 @@ public:
 class CPL_DLL GDALWarpOperation {
 private:
     GDALWarpOptions *psOptions;
-
-    double          dfProgressBase;
-    double          dfProgressScale;
 
     void            WipeOptions();
     int             ValidateOptions();
@@ -341,14 +360,16 @@ public:
     CPLErr          WarpRegion( int nDstXOff, int nDstYOff, 
                                 int nDstXSize, int nDstYSize,
                                 int nSrcXOff=0, int nSrcYOff=0,
-                                int nSrcXSize=0, int nSrcYSize=0 );
+                                int nSrcXSize=0, int nSrcYSize=0,
+                                double dfProgressBase=0.0, double dfProgressScale=1.0);
     
     CPLErr          WarpRegionToBuffer( int nDstXOff, int nDstYOff, 
                                         int nDstXSize, int nDstYSize, 
                                         void *pDataBuf, 
                                         GDALDataType eBufDataType,
                                         int nSrcXOff=0, int nSrcYOff=0,
-                                        int nSrcXSize=0, int nSrcYSize=0 );
+                                        int nSrcXSize=0, int nSrcYSize=0,
+                                        double dfProgressBase=0.0, double dfProgressScale=1.0);
 };
 
 #endif /* def __cplusplus */

@@ -10,6 +10,9 @@ QT += core gui\
     webkit\
     svg
 
+unix:INCLUDEPATH += "/usr/include/postgresql"
+unix:INCLUDEPATH += "/usr/include/gdal/"
+
 TARGET = UWCore
 TEMPLATE = app
 
@@ -65,11 +68,9 @@ HEADERS += \
 FORMS += \
     UI/mainmenu.ui \
     UI/settingswindow.ui \
-    UI/mainwindow.ui \
     UI/settingsform.ui \
     UI/ToolBox/toolBox.ui \
-    UI/pluginselect.ui \
-    UI/navigationwindow.ui
+    UI/pluginselect.ui
 
 RESOURCES += \
     resources/resources.qrc
@@ -81,7 +82,7 @@ win32 {
 #  DESTDIR = C:/myQt/bin
 #  MOC_DIR      = C:/tmp/moc
 #  OBJECTS_DIR  = C:/tmp/obj
-
+    INCLUDEPATH += "$$PWD/../../../libs/win/PostgreSQL9.2/include"
 }
 
 

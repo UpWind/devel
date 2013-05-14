@@ -1,46 +1,41 @@
 #include "navigationwindow.h"
-#include "ui_navigationwindow.h"
+
+#include <QResizeEvent>
 
 NavigationWindow::NavigationWindow(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::NavigationWindow)
+    QWidget(parent)
 {
-    ui->setupUi(this);
-    this->setParent(parent);
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
+
+    m_backButton = new QPushButton("<", this);
+    m_toolboxButton = new QPushButton("Hide ToolBox", this);
+    m_toolboxButton->adjustSize();
+
+    QObject::connect(m_backButton, SIGNAL(clicked()), this, SLOT(back()));
+    QObject::connect(m_toolboxButton, SIGNAL(clicked()), this, SLOT(toggleToolbox()));
 }
 
 NavigationWindow::~NavigationWindow(){
-    delete ui;
 }
 
 void NavigationWindow::back(){
-    this->hide();
     emit goBack();
 }
 
-void NavigationWindow::toolboxButton_clicked(){
-    if(toolboxButton->text() == "Hide ToolBox")
-        toolboxButton->setText("Show ToolBox");
+void NavigationWindow::toggleToolbox(){
+    if(m_toolboxButton->text() == "Hide ToolBox")
+        m_toolboxButton->setText("Show ToolBox");
     else
-        toolboxButton->setText("Hide ToolBox");
+        m_toolboxButton->setText("Hide ToolBox");
 
-    emit toggleToolbox();
+    m_toolboxButton->adjustSize();
+    m_toolboxButton->move(QPoint(geometry().bottomRight().x() - 8 - m_toolboxButton->width(), geometry().bottomRight().y() - 48));
+    emit toolboxButtonClicked();
 }
 
-void NavigationWindow::addButtons(){
-    QRect screenGeometry = this->geometry();
-    QPoint pos(screenGeometry.bottomLeft().x() + 8, screenGeometry.bottomLeft().y() - 48);
-    backButton= new QPushButton("<", this);
-    backButton->move(pos);
-    backButton->resize(131, 41);
-
-    toolboxButton= new QPushButton("Hide ToolBox", this);
-    toolboxButton->resize(131, 41);
-    QPoint pos2(screenGeometry.bottomRight().x() - 8 - toolboxButton->width(), screenGeometry.bottomRight().y() - 48);
-    toolboxButton->move(pos2);
-
-    QObject::connect(backButton, SIGNAL(clicked()), this, SLOT(back()));
-    QObject::connect(toolboxButton, SIGNAL(clicked()), this, SLOT(toolboxButton_clicked()));
+void NavigationWindow::resizeEvent(QResizeEvent *event) {
+    m_backButton->move(QPoint(geometry().bottomLeft().x() + 8, geometry().bottomLeft().y() - 48));
+    m_toolboxButton->move(QPoint(geometry().bottomRight().x() - 8 - m_toolboxButton->width(), geometry().bottomRight().y() - 48));
+    QWidget::resizeEvent(event);
 }

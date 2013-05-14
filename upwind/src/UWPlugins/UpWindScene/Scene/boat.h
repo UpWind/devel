@@ -32,11 +32,11 @@ public:
     QString getName();
     void setGeoPosition(QPointF position);
     void setGeoPosition(float longitude, float latitude);
-    QPointF *getGeoPosition();
+    QPointF getGeoPosition();
 
     void setView(QGraphicsView *view);
-    QPointF *geoPointToPixel(QPointF *geoPoint);
-    QPointF *pixelToGeoPoint(QPointF* pixelPoint);
+    QPointF geoPointToPixel(const QPointF &geoPoint);
+    QPointF* pixelToGeoPoint(QPointF* pixelPoint);
     void updateBoatPosition();
     void setHeading(float hdg);
     float getHeading();
@@ -45,15 +45,25 @@ public:
     void zoomIn();
     void zoomOut();
 
+    void setZoomFactor(qreal zoomFactor);
+
+    QPointF getBoatScenePosition() const;
+
+signals:
+    void boatPositionChanged();
+
 private:
 
      QTransform transformers;
     QGraphicsView *view;
     QGraphicsSvgItem *boatImage;
     QString boatName;
-    QPointF *boatScenePosition, *boatGeoPosition;
-    QPointF firstScenePosition, secondScenePosition;
-    QPointF firstPoint, secondPoint;
+    QPointF boatScenePosition;
+    QPointF boatGeoPosition;
+    QPointF firstScenePosition;
+    QPointF secondScenePosition;
+    QPointF firstPoint;
+    QPointF secondPoint;
     QPointF endCompassPoint;
     QPointF endSceneCompassPoint;
     QGraphicsLineItem *compass;

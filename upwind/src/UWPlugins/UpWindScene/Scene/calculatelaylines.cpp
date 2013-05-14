@@ -34,11 +34,6 @@ void CalculateLaylines::start(){
     timer->start();
 }
 
-void CalculateLaylines::calculationComplete(){
-    emit emitLaylines(this->layLines);
-}
-
-
 void CalculateLaylines::setRoutePoints(QPolygonF routePoints){
 
     this->pathPoints = routePoints;
@@ -87,8 +82,7 @@ void CalculateLaylines::startCalc(){
             layLines.append(leftpath.at(i));
         }
 
-        this->layLines = layLines;
-        emit emitLaylines(this->layLines);
+        emit emitLaylines(layLines);
     }
 
 }
@@ -747,7 +741,7 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
         //Note: This doesn't work correctly. Here the search for the route fails instantly when obstacles
         //are found on the route. What if there is obstacle-free route on the next route interval:
 
-        while ( !obs_r && !obs_l &&  i < (route.size()/* - 2*/ )) {
+        while ( !obs_r && !obs_l &&  i < (route.size() - 1 )) {
 
             triangle.clear();
 
@@ -810,7 +804,7 @@ void CalculateLaylines::updateCheckPoint()
     // Find the destiny check point in geographical format:
     geoDestinyPos = this->getNextPoint( this->pathPoints, geoBoatPos, ACCU_OFFSET);
 
-    destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
+    destinyPos = UwMath::toConformalInverted(geoDestinyPos);
 
 }
 
@@ -818,7 +812,7 @@ void CalculateLaylines::updateLayLines()
 {
     QTime timeUpdateLayLines;
     timeUpdateLayLines.start();
-    this->pPolarDiagram->populate();
+    this->pPolarDiagram->populateWithFinngulf36();
 
     // LayLines are not calculated with the actual TWA,
     // but the TWA that we will have when heading towards our destiny.

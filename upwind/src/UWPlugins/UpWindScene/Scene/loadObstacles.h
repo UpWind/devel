@@ -25,7 +25,7 @@
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
-#include "/usr/include/postgresql/libpq-fe.h"
+#include "libpq-fe.h"
 #include "../shared/uwmath.h"
 #include "polardiagram.h"
 #include "../../UWCore/pluginmanager.h"
@@ -55,19 +55,15 @@ private:
     static QString buildWKTPolygon( const QPolygonF &polygon, const QPointF &centroid,
                                     const double &perimeter, const float &offset );
     static QString buildWKTPolygon( const QPointF &point, const float &offset );
-    QVector<QPolygonF > polyObstacles;
-    QVector<QPointF > pointObstacles;
-    QVector<QLineF > lineObstacles;
     QVector<ChartObjectInterface*> chartObjects;
     QVector<QPolygonF> rock;
     QVector<QPolygonF> wreck;
     QVector<QPolygonF> signsound;
     QVector<QPolygonF> offset;
-    QList<QPoint> listqpoint;
     static LoadObstacles *instance;
     bool createObstaclesTables();
 
-    bool debug, new_data, obstaclesTablesCreated, status;
+    bool debug, new_data, status;
 
 };
 

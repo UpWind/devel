@@ -10,6 +10,13 @@ SignSound::SignSound(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCo
     setupGraphicProperties();
 }
 
+SignSound::SignSound(QList<ChartObjectInterface::ChartElement> rocks, OGRLayer *feat, QString tabName)
+    : ChartObjectInterface(QVector<QPolygonF>(), QVector<QPolygonF>(), feat, tabName) {
+    tableName = tabName;
+    featureData = feat;
+    mElements = rocks;
+}
+
 SignSound::~SignSound(){}
 
 void SignSound::setupGraphicProperties() {

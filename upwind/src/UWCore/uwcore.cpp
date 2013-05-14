@@ -7,11 +7,9 @@ UWCore::UWCore(){}
 void UWCore::initialize(){
     settingsManager = new SettingsManager();
     pluginManager = new PluginManager();
-    uiManager = new UIManager();
     fileManager = new FileManager();
     pluginManager->loadPlugins();
-    uiManager->initialize();
-
+    uiManager = new UIManager();
 
     // tämä on väärin
     // tämä yhdistää SLOTIT ja SIGNALIT

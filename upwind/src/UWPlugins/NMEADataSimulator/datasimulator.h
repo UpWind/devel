@@ -6,13 +6,16 @@
 #include "../NMEAReader/corenmeareader.h"
 #include "time.h"
 #include "settingsui.h"
+#include "datasimulatorcontrolinterface.h"
+
+class PolarDiagram;
 
 /**
   The dataSimulator class simulate the NMEA Strings from 4 boat sail's instruments.
   It generates one of them periodically in a interval of time (Timer delay)
   */
 
-class dataSimulator: public CoreNMEAReader
+class dataSimulator: public CoreNMEAReader, public DataSimulatorControlInterface
 {
     Q_OBJECT
 public:
@@ -72,6 +75,16 @@ public:
       */
     void initializeSettings();
 
+    virtual void setTurningSpeed(int degreesPerSecond);
+
+    virtual void setVelocityMultiplier(float velocityMultiplier);
+
+    virtual void setAnchor(bool anchor);
+
+    virtual void setSail(bool sailing);
+
+    virtual operator QObject*();
+
 private slots:
     /** Choose one of the active instruments and call its simulate method to generate a NMEAString
       */
@@ -99,11 +112,17 @@ private slots:
      */
     void changeSpeed(int s);
 
+    void setBoatPositionLon(double longitude);
+    void setBoatPositionLat(double latitude);
+
 private:
     bool display;
     time_t UCT;
     tm * ptm;
     int delay;
+
+    float m_windAngle;
+    float m_windSpeed;
 
     int randInt(int a, int b);
 
@@ -122,6 +141,23 @@ private:
 
     //settings
     SettingsUI* settingsUI;
+
+    double m_currentGpsPositionLongitude;
+    double m_currentGpsPositionLatitude;
+    double m_currentCompassHeading;
+    double m_currentVelocity; // Speed over the ground in knots
+    double m_defaultMotorVelocity;
+    double m_currentSteeringSpeed; // Unit degrees per second
+    double m_velocityMultiplier;
+
+    bool m_isSailing;
+    bool m_isAnchored;
+
+
+    PolarDiagram* m_polarDiagram;
+    // controls
+
+    QPointF* test;
 };
 
 #endif // DATASIMULATOR_H

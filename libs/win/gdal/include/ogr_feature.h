@@ -1,5 +1,5 @@
 /******************************************************************************
- * $Id: ogr_feature.h 10645 2007-01-18 02:22:39Z warmerdam $
+ * $Id: ogr_feature.h 22368 2011-05-13 17:59:41Z rouault $
  *
  * Project:  OpenGIS Simple Features Reference Implementation
  * Purpose:  Class for representing a whole feature, and layer schemas.
@@ -32,6 +32,7 @@
 
 #include "ogr_geometry.h"
 #include "ogr_featurestyle.h"
+#include "cpl_atomic_ops.h"
 
 /**
  * \file ogr_feature.h
@@ -56,6 +57,8 @@ class CPL_DLL OGRFieldDefn
     int                 nWidth;                 /* zero is variable */
     int                 nPrecision;
     OGRField            uDefault;
+    
+    int                 bIgnore;
 
     void                Initialize( const char *, OGRFieldType );
     
@@ -87,6 +90,9 @@ class CPL_DLL OGRFieldDefn
 
     void                SetDefault( const OGRField * );
     const OGRField     *GetDefaultRef() { return &uDefault; }
+    
+    int                 IsIgnored() { return bIgnore; }
+    void                SetIgnored( int bIgnore ) { this->bIgnore = bIgnore; }
 };
 
 /************************************************************************/
@@ -112,7 +118,7 @@ class CPL_DLL OGRFieldDefn
 class CPL_DLL OGRFeatureDefn
 {
   private:
-    int         nRefCount;
+    volatile int nRefCount;
     
     int         nFieldCount;
     OGRFieldDefn **papoFieldDefn;
@@ -120,6 +126,9 @@ class CPL_DLL OGRFeatureDefn
     OGRwkbGeometryType eGeomType;
 
     char        *pszFeatureClassName;
+    
+    int         bIgnoreGeometry;
+    int         bIgnoreStyle;
     
   public:
                 OGRFeatureDefn( const char * pszName = NULL );
@@ -132,16 +141,23 @@ class CPL_DLL OGRFeatureDefn
     int         GetFieldIndex( const char * );
 
     void        AddFieldDefn( OGRFieldDefn * );
+    OGRErr      DeleteFieldDefn( int iField );
+    OGRErr      ReorderFieldDefns( int* panMap );
 
     OGRwkbGeometryType GetGeomType() { return eGeomType; }
     void        SetGeomType( OGRwkbGeometryType );
 
     OGRFeatureDefn *Clone();
 
-    int         Reference() { return ++nRefCount; }
-    int         Dereference() { return --nRefCount; }
+    int         Reference() { return CPLAtomicInc(&nRefCount); }
+    int         Dereference() { return CPLAtomicDec(&nRefCount); }
     int         GetReferenceCount() { return nRefCount; }
     void        Release();
+
+    int         IsGeometryIgnored() { return bIgnoreGeometry; }
+    void        SetGeometryIgnored( int bIgnore ) { bIgnoreGeometry = bIgnore; }
+    int        IsStyleIgnored() { return bIgnoreStyle; }
+    void        SetStyleIgnored( int bIgnore ) { bIgnoreStyle = bIgnore; }
 
     static OGRFeatureDefn  *CreateFeatureDefn( const char *pszName = NULL );
     static void         DestroyFeatureDefn( OGRFeatureDefn * );
@@ -189,11 +205,7 @@ class CPL_DLL OGRFeature
     int                 GetFieldIndex( const char * pszName)
                                       { return poDefn->GetFieldIndex(pszName);}
 
-    int                 IsFieldSet( int iField ) const
-                        { return
-                              pauFields[iField].Set.nMarker1 != OGRUnsetMarker
-                           || pauFields[iField].Set.nMarker2 != OGRUnsetMarker;
-                              }
+    int                 IsFieldSet( int iField ) const;
     
     void                UnsetField( int iField );
     
@@ -267,9 +279,10 @@ class CPL_DLL OGRFeature
     long                GetFID() { return nFID; }
     virtual OGRErr      SetFID( long nFID );
 
-    void                DumpReadable( FILE * );
+    void                DumpReadable( FILE *, char** papszOptions = NULL );
 
     OGRErr              SetFrom( OGRFeature *, int = TRUE);
+    OGRErr              SetFrom( OGRFeature *, int *, int = TRUE );
 
     OGRErr              RemapFields( OGRFeatureDefn *poNewDefn, 
                                      int *panRemapSource );

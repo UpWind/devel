@@ -5,6 +5,7 @@
 SettingsUI::SettingsUI(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SettingsUI)
+  , initializing(false)
 {
     ui->setupUi(this);
     ui->lineEdit_password->setEchoMode(QLineEdit::Password);
@@ -17,9 +18,9 @@ SettingsUI::~SettingsUI(){
 
 void SettingsUI::save(){
     qDebug() << Q_FUNC_INFO;
-    updateSettings();
+//    updateSettings();
     getChartNames();
-    updateSettings();
+//    updateSettings();
 }
 
 void SettingsUI::getChartNames(){
@@ -27,7 +28,8 @@ void SettingsUI::getChartNames(){
         ui->comboBox_databases->clear();
 
     QString driver = "PG:";
-    driver.append("dbname=chart57");
+    driver.append("dbname=");
+    driver.append("chart57");
     driver.append(" user=");
     driver.append(pgchart->getConUser());
     driver.append(" password=");
@@ -78,10 +80,13 @@ void SettingsUI::getChartNames(){
 void SettingsUI::setupSettings(Settings *s){
     settings = s;
 
+    initializing = true;
+
     ui->lineEdit_user->setText(s->getSetting("User"));
     ui->lineEdit_password->setText(s->getSetting("Password"));
     ui->lineEdit_port->setText(s->getSetting("Port"));
     ui->lineEdit_host->setText(s->getSetting("Host"));
+    ui->level_edit->setText(s->getSetting(("DetailLevel")));
 
     ui->comboBox_databases->addItem(s->getSetting("DBName"));
 
@@ -89,22 +94,31 @@ void SettingsUI::setupSettings(Settings *s){
                         s->getSetting(("Port")).toInt(),
                         s->getSetting(("DBName")),
                         s->getSetting(("User")),
-                        s->getSetting(("Password")));
+                        s->getSetting(("Password")),
+                        s->getSetting(("DetailLevel")).toInt());
+
+    initializing = false;
 }
 
 void SettingsUI::updateSettings(){
+    if (initializing)
+        return;
+
     settings->setSetting("User", ui->lineEdit_user->text());
     settings->setSetting("Password", ui->lineEdit_password->text());
     settings->setSetting("Port", ui->lineEdit_port->text());
     settings->setSetting("Host", ui->lineEdit_host->text());
     settings->setSetting("DBName", ui->comboBox_databases->currentText());
+    settings->setSetting("DetailLevel", ui->level_edit->text());
 
     settings->saveSettings();
 
+    pgchart->setConName(ui->comboBox_databases->currentText());
     pgchart->setConHost(ui->lineEdit_host->text());
     pgchart->setConPass(ui->lineEdit_password->text());
     pgchart->setConPort((ui->lineEdit_port->text()).toInt());
     pgchart->setConUser(ui->lineEdit_user->text());
+    pgchart->setDetailLevel(ui->level_edit->text().toInt());
 }
 
 
@@ -169,4 +183,18 @@ bool SettingsUI::testDBType(QString databaseName){
     OGRDataSource::DestroyDataSource(dSource);
 
     return valid;
+}
+
+void SettingsUI::on_level_edit_textChanged(const QString &arg1)
+{
+    bool ok;
+    int number = arg1.toInt(&ok);
+    if (ok) {
+        updateSettings();
+    }
+}
+
+void SettingsUI::on_comboBox_databases_currentIndexChanged(int index)
+{
+    updateSettings();
 }

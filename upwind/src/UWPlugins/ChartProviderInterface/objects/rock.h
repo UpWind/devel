@@ -10,6 +10,7 @@ class Rock: public ChartObjectInterface
 
 public:
     explicit Rock(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinateData,OGRLayer* feat, QString tabName);
+    Rock(QList<ChartElement> rocks, OGRLayer *feat, QString tabName);
     ~Rock();
     ChartObjectInterface::ChartObjectType getType() const;
     QVector<QPolygonF> getPixelGeometry() const;
@@ -18,6 +19,7 @@ public:
     QBrush getBrush() const;
     QString getTableName() const;
     OGRLayer* getFeatureData() const;
+    const QString resourceName(ChartElement::Attributes attributes) const;
 
 private:
     void setupGraphicProperties();

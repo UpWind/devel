@@ -28,7 +28,8 @@ public:
                     uint port,
                     QString dbname,
                     QString username,
-                    QString password);
+                    QString password,
+                    int detailLevel);
 
     virtual void addPluginSettingsToLayout(QLayout *layout);
 
@@ -50,6 +51,7 @@ public:
     void setConPass(QString pass);
     void setConPort(uint port);
     void setConHost(QString host);
+    void setDetailLevel(int level);
 
     void setChartWidgetSize(QSize size);
 
@@ -84,7 +86,7 @@ private:
       * the latitudes have been inverted, so the north
       * pole has the lowest value of all for easier rendering.
       */
-    void getPoints(OGRLayer *layer);
+    QList<ChartObjectInterface::ChartElement> getPoints(OGRLayer *layer);
 
     /** This method creates a list of lines contained in an ogr layer
       * the layer can contain a spacial filter, so there's no need for setting

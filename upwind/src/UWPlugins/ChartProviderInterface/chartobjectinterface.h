@@ -6,9 +6,8 @@
 #include <QPen>
 #include <QBrush>
 #include <QString>
-
-
-//#include "ogrsf_frmts.h"
+#include <QHash>
+#include <QVariant>
 
 class OGRLayer;
 
@@ -20,10 +19,19 @@ public:
         Polygon
     } typedef ChartObjectType;
 
+    class ChartElement {
+    public:
+        typedef QHash<QString, QVariant> Attributes;
+        QString name;
+        QPointF geoPoint;
+        QPointF pixelPoint;
+        Attributes attributes;
+    };
+
     explicit ChartObjectInterface(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinateData, OGRLayer* feat, QString tabName)
     {
-        (void)geomPixelData;
-        (void)geomCoordinateData;
+        pGeometry = geomPixelData;
+        cGeometry = geomCoordinateData;
         (void)feat;
         (void)tabName;
     }
@@ -34,6 +42,15 @@ public:
     virtual QBrush getBrush() const = 0;
     virtual QString getTableName() const = 0;
     virtual OGRLayer* getFeatureData() const = 0;
+    virtual const QString resourceName(ChartElement::Attributes attributes) const {
+        Q_UNUSED(attributes); return QString();
+    }
+    virtual QList<ChartElement> elements() const { return mElements; }
+
+protected:
+    QList<ChartElement> mElements;
+    QVector<QPolygonF> pGeometry;
+    QVector<QPolygonF> cGeometry;
 };
 
 #endif // CHARTOBJECTINTERFACE_H

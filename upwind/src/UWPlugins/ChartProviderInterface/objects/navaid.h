@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "../chartobjectinterface.h"
-
+#include<QtGui>
 
 class NavaId: public ChartObjectInterface
 {
@@ -11,6 +11,7 @@ class NavaId: public ChartObjectInterface
 
 public:
     explicit NavaId(QVector<QPolygonF> geomPixelData, QVector<QPolygonF> geomCoordinateData,OGRLayer* feat, QString tabName);
+    NavaId(QList<ChartObjectInterface::ChartElement> rocks, OGRLayer *feat, QString tabName);
     ~NavaId();
     ChartObjectInterface::ChartObjectType getType() const;
     QVector<QPolygonF> getPixelGeometry() const;
@@ -19,6 +20,7 @@ public:
     QBrush getBrush() const;
     QString getTableName() const;
     OGRLayer* getFeatureData() const;
+    const QString resourceName(ChartElement::Attributes attributes) const;
 
 private:
     void setupGraphicProperties();

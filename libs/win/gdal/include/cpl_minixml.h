@@ -1,5 +1,5 @@
 /**********************************************************************
- * $Id: cpl_minixml.h 12112 2007-09-11 13:54:49Z warmerdam $
+ * $Id: cpl_minixml.h 15686 2008-11-06 18:46:11Z rouault $
  *
  * Project:  CPL - Common Portability Library
  * Purpose:  Declarations for MiniXML Handler.
@@ -109,7 +109,7 @@ typedef struct CPLXMLNode
      *
      * Pointer to first child node, if any.  Only CXT_Element and CXT_Attribute
      * nodes should have children.  For CXT_Attribute it should be a single
-     * CXT_Text value node, while CXT_Attribute can have any kind of child. 
+     * CXT_Text value node, while CXT_Element can have any kind of child. 
      * The full list of children for a node are identified by walking the 
      * psNext's starting with the psChild node. 
      */

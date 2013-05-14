@@ -80,6 +80,10 @@ public:
       */
     PolarDiagram& populate();
 
+    /** Fills a PolarDiagram with Finngulf36 data.
+      */
+    PolarDiagram& populateWithFinngulf36();
+
     /** Clears a a polar diagram, by clearing the name and the Diagram
       */
     void clear();
