@@ -64,9 +64,6 @@ public slots:
 Q_SIGNALS:
    void injectData(QVector<QPointF> route, QPointF startpoint);
 
-Q_SIGNALS:
-   void injectData(QVector<QPointF> route, QPointF startpoint);
-
 signals:
     void finished();
 
