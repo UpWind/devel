@@ -348,7 +348,7 @@ void PostgreChartProvider::initializeSettings(){
         settings->setSetting("User", "postgres");
         settings->setSetting("Password", "upwind");
         settings->setSetting("Port", "5432");
-        settings->setSetting("Host", "localhost");
+        settings->setSetting("Host", "192.168.56.101");
         settings->setSetting("DBName", "chart57");
         settings->setSetting("DetailLevel", "0");
     }
