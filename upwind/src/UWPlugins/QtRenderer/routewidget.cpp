@@ -111,7 +111,8 @@ void RouteWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QPointF end;
 
     //Boat position?
-    start = uwScene->getBoat()->getGeoPosition();
+    QPointF *boatPosition = uwScene->getBoat()->getGeoPosition();
+    start = *boatPosition;
 
     end = event->pos();
 

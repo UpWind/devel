@@ -2,8 +2,7 @@
 #include "../../shared/uwmath.h"
 #include "../UpWindScene/Scene/projection.h"
 
-Boat::Boat(QSize size, QRectF chartBoundaries)
-{
+Boat::Boat(QSize size, QRectF chartBoundaries){
 
     this->boatImage = new QGraphicsSvgItem(":sailboat2.svg");
     this->boatImage->setPos(0, 0);
@@ -33,6 +32,7 @@ Boat::Boat(QSize size, QRectF chartBoundaries)
     starBoardLaylineItem->setPen(starBoardLayline_pen);
     portLaylineItem->setPen(portLayline_pen);
 
+
     // compass->setLine(boatImage->x(),boatImage->y(),100,100);
     compass_pen.setColor(Qt::green);
     compass_pen.setWidth(4);
@@ -45,7 +45,7 @@ Boat::Boat(QSize size, QRectF chartBoundaries)
     gps->setOpacity(0.7);
 
     // Initial position Oulu
-    this->boatGeoPosition = QPointF(/*25.109253, 65.013026*/ 25.2715, 65.1126);
+    this->boatGeoPosition = new QPointF(/*25.109253, 65.013026*/ 25.2715, 65.1126);
 
     if(boatImage != NULL)
     {
@@ -99,13 +99,13 @@ QString Boat::getName()
 
 void Boat::setGeoPosition(float longitude, float latitude)
 {
-    this->boatGeoPosition = QPointF(longitude, latitude);
+    this->boatGeoPosition = new QPointF(longitude, latitude);
     updateBoatPosition();
 }
 
 void Boat::setGeoPosition(QPointF position)
 {
-    this->boatGeoPosition = position;
+    this->boatGeoPosition = &position;
     updateBoatPosition();
 }
 
@@ -114,8 +114,8 @@ void Boat::setGPSLine(){
     //Wait until there is at least two points in the vector
     //then prepend and append the vector with incoming values
 
-    if (boatPositionVector.empty() || boatPositionVector.at(0) != boatGeoPosition) {
-        boatPositionVector.push_front(QPointF(boatGeoPosition));
+    if (boatPositionVector.empty() || boatPositionVector.at(0) != *boatGeoPosition) {
+        boatPositionVector.push_front(QPointF(*boatGeoPosition));
         while (boatPositionVector.size() > 2) {
             boatPositionVector.pop_back();
         }
@@ -124,17 +124,22 @@ void Boat::setGPSLine(){
     if (boatPositionVector.size() == 2) {
         firstPoint = boatPositionVector.at(0);
         secondPoint = boatPositionVector.at(1);
-        this->firstScenePosition = geoPointToPixel(firstPoint);
-        this->secondScenePosition = geoPointToPixel(secondPoint);
+        this->firstScenePosition = *geoPointToPixel(&firstPoint);
+        this->secondScenePosition = *geoPointToPixel(&secondPoint);
 
-        QLineF gpsLineGeoPointToPixel(firstScenePosition,secondScenePosition);
+        float angle =  UwMath::getPolarAngleWithDestiny(this->firstPoint, this->secondPoint) - 180;
+        QRectF boatRect = boatImage->mapRectToScene(boatImage->boundingRect());
+        QPointF startPoint(boatRect.center().x(), boatRect.center().y());
+        QPointF endPoint = this->calculateEndPoint(angle, 50, startPoint);
+
+        QLineF gpsLineGeoPointToPixel(startPoint,endPoint);
         gpsLineGeoPointToPixel.setLength(50);
 
         gps->setLine(gpsLineGeoPointToPixel);
     } else {
         //atm line goes from boat to middle of screen, before boat have moved and it get new boatGeoPositions
-        firstPoint = boatGeoPosition;
-        this->firstScenePosition = geoPointToPixel(firstPoint);
+        firstPoint = *boatGeoPosition;
+        this->firstScenePosition = *geoPointToPixel(&firstPoint);
         QPointF screenMiddlePoint;
         float middlepointX = ((QApplication::desktop()->screenGeometry().width())/2);
         float middlepointY = ((QApplication::desktop()->screenGeometry().height())/2);
@@ -148,7 +153,7 @@ void Boat::setGPSLine(){
 
 void Boat::setOffSet(){
 
-     boatImage->setPos(boatScenePosition.x() - 10, boatScenePosition.y() - 20);
+    boatImage->setPos(boatScenePosition->x() - 10, boatScenePosition->y() - 20);
 }
 
 void Boat::updateBoatPosition()
@@ -164,41 +169,47 @@ void Boat::updateBoatPosition()
     QPointF startPoint(boatRect.center().x(), boatRect.center().y());
 
     float angle = this->heading;
-    float endx = 0;
-    float endy = 0;
     int lineLength=50;
+    QPointF endPoint = this->calculateEndPoint(angle, lineLength, startPoint);
+
+    compass->setLine(boatRect.center().x(), boatRect.center().y(), endPoint.x(), endPoint.y());
+    setLaylines();
+}
+
+QPointF Boat::calculateEndPoint(float angle, float lineLength, QPointF startPoint){
+
 
     // math to start from found at:
     // http://mathhelpforum.com/geometry/86432-endpoint-based-length-angle.html
     //Adjusted to conform with radians
+    QPointF endPoint;
     if (angle > 0 && angle < 90){
-        endx = startPoint.x() + (lineLength * sin((angle)/180*M_PI));
-        endy = startPoint.y() - (lineLength * cos((angle)/180*M_PI));
+        endPoint.setX(startPoint.x() + (lineLength * sin((angle)/180*M_PI)));
+        endPoint.setY(startPoint.y() - (lineLength * cos((angle)/180*M_PI)));
     } else if (angle > 90 && angle < 180){
-        endx = startPoint.x() - (lineLength * sin((angle-180)/180*M_PI));
-        endy = startPoint.y() + (lineLength * cos((angle-180)/180*M_PI));
+        endPoint.setX(startPoint.x() - (lineLength * sin((angle-180)/180*M_PI)));
+        endPoint.setY(startPoint.y() + (lineLength * cos((angle-180)/180*M_PI)));
     } else if (angle > 180 && angle < 270){
-        endx = startPoint.x() - (lineLength * sin((angle-180)/180*M_PI));
-        endy = startPoint.y() + (lineLength * cos((angle-180)/180*M_PI));
+        endPoint.setX(startPoint.x() - (lineLength * sin((angle-180)/180*M_PI)));
+        endPoint.setY(startPoint.y() + (lineLength * cos((angle-180)/180*M_PI)));
     } else if (angle > 270 && angle < 360){
-        endx = startPoint.x() + (lineLength * sin((angle)/180*M_PI));
-        endy = startPoint.y() - (lineLength * cos((angle)/180*M_PI)) ;
+        endPoint.setX(startPoint.x() + (lineLength * sin((angle)/180*M_PI)));
+        endPoint.setY(startPoint.y() - (lineLength * cos((angle)/180*M_PI)));
     } else if (angle == 0 || angle == 360) {
-        endx = startPoint.x();
-        endy = startPoint.y() - lineLength;
+        endPoint.setX(startPoint.x());
+        endPoint.setY(startPoint.y() - lineLength);
     } else if (angle == 90){
-        endx = startPoint.x() + lineLength;
-        endy = startPoint.y();
+        endPoint.setX(startPoint.x() + lineLength);
+        endPoint.setY(startPoint.y());
     } else if (angle == 180){
-        endx = startPoint.x();
-        endy = startPoint.y() + lineLength;
+        endPoint.setX(startPoint.x());
+        endPoint.setY(startPoint.y() + lineLength);
     } else if (angle == 270){
-        endx = startPoint.x() - lineLength;
-        endy = startPoint.y();
+        endPoint.setX(startPoint.x() - lineLength);
+        endPoint.setY(startPoint.y());
     }
 
-    compass->setLine(boatRect.center().x(), boatRect.center().y(), endx, endy );
-    setLaylines();
+    return endPoint;
 
     emit boatPositionChanged();
 }
@@ -218,6 +229,7 @@ void Boat::injectLaylines(QVector<QPointF> laylines){
 
     pathPort.clear();
     pathStarBoard.clear();
+
 
     for (int i = 0; i < layLinePoints.size(); i++) {
         if((layLinePoints.at(i)!=startPath || i==0) && !startFound){
@@ -241,11 +253,14 @@ void Boat::injectLaylines(QVector<QPointF> laylines){
     }
     starBoardLayline = QPolygonF(pathStarBoard);
 
+
+   // this->writeToFile("Drawing to ui: " + QString::number(this->timer->nsecsElapsed()/1E6) + '\t');
+
 }
 
 void Boat::geoLaylineToPixel(QPointF *geoPoint){
 
-    UwMath::toConformalInverted(geoPoint);
+    UwMath::toConformalInverted(*geoPoint);
     geoPoint->setX((geoPoint->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width()));
     geoPoint->setY((geoPoint->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height()));
 
@@ -262,14 +277,14 @@ float Boat::getHeading(){
     return this->heading;
 }
 //The following line is a copied from postgrechartprovider.cpp:
-QPointF Boat::geoPointToPixel(const QPointF& geoPoint){
+QPointF* Boat::geoPointToPixel(QPointF *geoPoint){
 
-    QPointF scenePos(geoPoint.x(), geoPoint.y());
+    QPointF *scenePos = new QPointF(geoPoint->x(), geoPoint->y());
     //    QPointF *scenePos = geoPoint;
 
-    UwMath::toConformalInverted(&scenePos);
-    scenePos.setX((scenePos.x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width() * zoomFactor));
-    scenePos.setY((scenePos.y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height() * zoomFactor));
+    UwMath::toConformalInverted(*scenePos);
+    scenePos->setX((scenePos->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width() * zoomFactor));
+    scenePos->setY((scenePos->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height() * zoomFactor));
 
     return scenePos;
 }
@@ -282,13 +297,14 @@ QPointF* Boat::pixelToGeoPoint(QPointF* pixelPoint){
     return pixelPoint;
 }
 
+
 void Boat::setView(QGraphicsView *view)
 {
-    qDebug() << "Set view!";
+    //    qDebug() << "Set view!";
     this->view = view;
 }
 
-QPointF Boat::getGeoPosition()
+QPointF *Boat::getGeoPosition()
 {
     return boatGeoPosition;
 }
@@ -311,8 +327,8 @@ void Boat::setZoomFactor(qreal zoomFactor)
     updateBoatPosition();
 }
 
-QPointF Boat::getBoatScenePosition() const
-{
-    return boatScenePosition;
-}
+//QPointF Boat::getBoatScenePosition() const
+//{
+//    return boatScenePosition;
+//}
 

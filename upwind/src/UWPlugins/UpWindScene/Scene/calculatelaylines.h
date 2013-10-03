@@ -7,7 +7,8 @@
 #include <QLineF>
 #include <QVector>
 #include <QObject>
-
+#include <stdlib.h>
+#include <stdio.h>
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
 #include "libpq-fe.h"
@@ -23,12 +24,13 @@ public:
 
     CalculateLaylines(QObject* parent = 0);
     ~CalculateLaylines();
+    // QVector<QPointF> startCalc(QPolygonF routepoints, QPointF start); //called from RouteWidget when layLine data is asked from *this
 
-    void processData( const QVector<QPointF> * geoRoute,
-                      QPointF &geoBoatPos, float &twd, float &wspeed,
-                      PolarDiagram * pd, QThread::Priority = QThread::InheritPriority);
+    //    void processData( const QVector<QPointF> * geoRoute,
+    //                      QPointF &geoBoatPos, float &twd, float &wspeed,
+    //                      PolarDiagram * pd, QThread::Priority = QThread::InheritPriority); //09032013 removed: method not used in the class
 
-    static QPointF getFromWKTPoint( QString wkt_geometry);
+    //static QPointF getFromWKTPoint( QString wkt_geometry); //rauno 09032013 removed: not used in calculation
     static QString buildWKTPolygon( const QPolygonF &rhomboid );
     static QString buildWKTPolygon( const QPolygonF &polygon, const QPointF &centroid,
                                     const double &perimeter, const float &offset );
@@ -37,19 +39,23 @@ public:
     static QString buildWKTPoint( const QPointF &p1 );
     void setPolarDiagram(PolarDiagram *diagram);
 
-    bool publicCheckIntersection( const QString &layerName, const QPointF &point );
-    void setStartPoint(QPointF start);
-    void setRoutePoints(QPolygonF routePoints);
+    bool publicCheckIntersection( const QString &layerName, const QPointF &point );//rauno 09032013 removed: not used in calculation
+    //    void setStartPoint(QPointF start); //rauno 09032013 removed: not used in calculation
+    //    void setRoutePoints(QPolygonF routePoints); //rauno 09032013 removed: not used in calculation
 
 
 public Q_SLOTS:
     void start();
 public slots:
-        void startCalc();
-        void receiveData(QVector<QPointF> route, QPointF startpoint);
+    void calculationComplete();
+
+    void executeDataQuery();
+    void receiveData(QVector<QPointF> route, QPointF startpoint);
 Q_SIGNALS:
+    //    void calculationComplete(QVector<QPointF> layLines);//rauno 09032013 removed: not used in calculation
     void emitLaylines(QVector<QPointF> layLines);
     void finished();
+    void dataQuery();
 
 private:
 
@@ -75,6 +81,8 @@ private:
     void openPostgreConnection();
     void updateCheckPoint();
     void updateLayLines();
+    void startCalc();
+    void closepostgreConnection();
 
     PGresult *res;
     PGconn *conn;
@@ -93,7 +101,10 @@ private:
     float layLinesAngle;
     QVector<QPointF> pathPoints;
     QPointF startPoint;
+    QVector<QPointF> layLines;
 
+    bool calculationOnGoing;
+    bool obstacleFound;
 
 };
 

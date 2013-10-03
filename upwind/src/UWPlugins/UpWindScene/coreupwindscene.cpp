@@ -98,6 +98,10 @@ Settings * CoreUpWindScene::getSettings(){
     return settings;
 }
 
+void CoreUpWindScene::receiveDataQuery(){
+    emit injectData(this->route->getRoute(), *this->boat->getGeoPosition());
+}
+
 void CoreUpWindScene::parseNMEAString( const QString & text){
     //$IIRMC,,A,2908.38,N,16438.18,E,0.0,0.0,251210,,*06
     if(text[3] == QChar('R') && text[4] == QChar('M') && text[5] == QChar('C')){
@@ -128,11 +132,9 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
 
         calculateLaylines = new CalculateLaylines();
         calculateLaylines->setPolarDiagram(this->pDiagram);
-        calculateLaylines->setRoutePoints(this->route->getRoute());
-        calculateLaylines->setStartPoint(this->boat->getGeoPosition());
-        qDebug() << "ROUTE IN CORE:" << this->route->getRoute();
-
-        if (this->threadingStarted == 0){
+        /*calculateLaylines->setRoutePoints(this->route->getRoute());
+        calculateLaylines->setStartPoint(*this->boat->getGeoPosition());*/
+        if (this->route->getRoute().size() > 0 && this->threadingStarted == 0){
             this->threadingStarted = 1;
             QThread* thread = new QThread;
 
@@ -140,6 +142,7 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
 
             connect(thread, SIGNAL(started()), calculateLaylines, SLOT(start()));
             connect(calculateLaylines, SIGNAL(emitLaylines(QVector<QPointF>)), this, SLOT(receiveData(QVector<QPointF>)));
+            connect(calculateLaylines, SIGNAL(dataQuery()), this, SLOT(receiveDataQuery()));
             connect(this, SIGNAL(injectData(QVector<QPointF>,QPointF)), calculateLaylines, SLOT(receiveData(QVector<QPointF>,QPointF)));
     //        connect(calculateLaylines, SIGNAL(finished()), thread, SLOT(quit()));
     //        connect(calculateLaylines, SIGNAL(finished()), calculateLaylines, SLOT(deleteLater()));
@@ -147,7 +150,7 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
 
             thread->start();
         }else{
-            emit injectData(this->route->getRoute(), this->boat->getGeoPosition());
+            //emit injectData(this->route->getRoute(), *this->boat->getGeoPosition());
         }
 
     }
@@ -156,7 +159,8 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
     if(text[3] == QChar('H') && text[4] == QChar('D') && (text[5] == QChar('G') || text[5] == QChar('T'))){
         QStringList strList = text.split(",");
         float heading = ((QString)strList.at(1)).toFloat();
-        this->boat->setHeading(heading );
+
+        this->boat->setHeading(heading);
 
     }
 }

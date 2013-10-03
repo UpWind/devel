@@ -1,4 +1,7 @@
 #include "calculatelaylines.h"
+#include <QFile>
+#include <QCoreApplication>
+#include <QTextStream>
 
 
 CalculateLaylines::CalculateLaylines(QObject* parent)
@@ -7,9 +10,8 @@ CalculateLaylines::CalculateLaylines(QObject* parent)
 
 void CalculateLaylines::openPostgreConnection(){
 
-    qDebug() << Q_FUNC_INFO;
-    conn = PQconnectdb("hostaddr = '192.168.56.102' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
-    qDebug() << "Connection ok!";
+    conn = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
+    //  qDebug() << "Connection ok!";
     if (PQstatus(conn) != CONNECTION_OK){
         qDebug() << "Connection not ok: " << PQerrorMessage(conn);
     }
@@ -22,6 +24,10 @@ CalculateLaylines::~CalculateLaylines()
     PQfinish(conn);
 }
 
+void CalculateLaylines::closepostgreConnection(){
+    PQfinish(conn);
+}
+
 void CalculateLaylines::setPolarDiagram(PolarDiagram *diagram){
     this->pPolarDiagram = diagram;
 }
@@ -30,61 +36,75 @@ void CalculateLaylines::start(){
 
     QTimer* timer = new QTimer;
     timer->setInterval(10000);
-    connect(timer, SIGNAL(timeout()), this, SLOT(startCalc()));
+    this->calculationOnGoing = false;
+    connect(timer, SIGNAL(timeout()), this, SLOT(executeDataQuery()));
     timer->start();
 }
 
-void CalculateLaylines::setRoutePoints(QPolygonF routePoints){
-
-    this->pathPoints = routePoints;
+void CalculateLaylines::calculationComplete(){
+    emit emitLaylines(this->layLines);
 }
 
-void CalculateLaylines::setStartPoint(QPointF startPoint){
-
-    this->startPoint = startPoint;
-}
-
-void CalculateLaylines::receiveData(QVector<QPointF> route, QPointF startpoint){
+void CalculateLaylines::receiveData(QVector<QPointF> route, QPointF startPoint){
     this->pathPoints = route;
     this->startPoint = startPoint;
 }
 
-void CalculateLaylines::startCalc(){
-    qDebug() << "Starting calculation...";
-    QVector<QPointF> layLines;
-    QVector<QPointF> rightpath;
-    QVector<QPointF> leftpath;
 
-    QPolygonF routepoints = this->pathPoints;
-    QPointF start = this->startPoint;
+void CalculateLaylines::executeDataQuery(){
 
-    if (routepoints.size() > 0){
-        this->openPostgreConnection();
+    emit this->dataQuery();
 
-        this->ACCU_OFFSET = 1;
-        this->MAX_TURNING_POINTS = 3;
-
-        this->geoBoatPos = start;
-        this->pathPoints = routepoints;
-
-        //Start process of calculating laylines. First get the the destination point on long term route (no obstacles between baot and long term route point).
-        this->updateCheckPoint();
-        //then calculate the laylines that takes the boat to that destination point
-        this->updateLayLines();
-
-        rightpath = *pRightPath;
-        leftpath = *pLeftPath;
-        for(int i = 0; i < rightpath.size(); i++){
-            layLines.append(rightpath.at(i));
-        }
-
-        for(int i = 0; i < leftpath.size(); i++){
-            layLines.append(leftpath.at(i));
-        }
-
-        emit emitLaylines(layLines);
+    if (this->pathPoints.size() > 0 && !this->calculationOnGoing){
+        this->startCalc();
     }
+}
 
+void CalculateLaylines::startCalc(){
+
+    if (!this->calculationOnGoing){
+        this->calculationOnGoing = true;
+
+        this->obstacleFound = false;
+
+        QVector<QPointF> layLines;
+        QVector<QPointF> rightpath;
+        QVector<QPointF> leftpath;
+
+        if ( this->pathPoints.size() > 0 ){
+
+            this->openPostgreConnection();
+            this->ACCU_OFFSET = 1;
+            this->MAX_TURNING_POINTS = 5;
+
+            this->geoBoatPos = this->startPoint;
+            this->pathPoints =  this->pathPoints;
+
+            //Start process of calculating laylines. First get the the destination point on long term route (no obstacles between baot and long term route point).
+            this->updateCheckPoint();
+            //then calculate the laylines that takes the boat to that destination point
+            this->updateLayLines();
+            rightpath = *pRightPath;
+            leftpath = *pLeftPath;
+            for(int i = 0; i < rightpath.size(); i++){
+                layLines.append(rightpath.at(i));
+            }
+
+            for(int i = 0; i < leftpath.size(); i++){
+                layLines.append(leftpath.at(i));
+            }
+
+            this->layLines = layLines;
+
+        }
+
+        this->calculationOnGoing = false;
+        this->closepostgreConnection();
+
+        emit emitLaylines(this->layLines);
+    }else{
+        this->calculationOnGoing = false;
+    }
 }
 
 
@@ -119,20 +139,6 @@ QString CalculateLaylines::buildWKTPolygon( const QPointF &epoint, const float &
     return WKTPolygon;
 }
 
-
-QPointF CalculateLaylines::getFromWKTPoint( QString wkt_geometry)
-{
-    // POINT(25.0346075555951 65.2062704150903)
-
-    // remove the end and start
-    wkt_geometry.remove( wkt_geometry.size() - 1, 1);
-    wkt_geometry.remove( 0, 6);
-
-    return QPointF( wkt_geometry.section(" ",0,0).toDouble(),
-                    wkt_geometry.section(" ",1,1).toDouble() );
-}
-
-
 QString CalculateLaylines::buildWKTPolygon( const QPolygonF &rhomboid ) {
 
 
@@ -152,12 +158,12 @@ QString CalculateLaylines::buildWKTPolygon( const QPolygonF &rhomboid ) {
 }
 
 QString CalculateLaylines::buildWKTPolygon( const QPolygonF &epolygon, const QPointF &ecentroid,
-                                          const double &perimeter, const float &offset )
+                                            const double &perimeter, const float &offset )
 {
     // The intention of this was to make the polygons grow but it is not as simple as we thought.
     // Take a look into skeletons to continue developing this way
 
-    bool debug = 1;
+    bool debug = 0;
 
     if (debug) {
         qDebug() << "builtWKTPolygon(): add offset to a polygon";
@@ -275,8 +281,7 @@ QString CalculateLaylines::buildWKTPoint( const QPointF &p1 ) {
 
 bool CalculateLaylines::checkGeometriesIntersection( const QString &object1, const QString &object2 ) {
 
-
-    QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( "); //Try to Fix this, Where is Intersect table in database?
+    QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( ");
     sql.append( object1);
     sql.append( ", ");
     sql.append( object2);
@@ -291,7 +296,6 @@ bool CalculateLaylines::checkGeometriesIntersection( const QString &object1, con
 }
 
 bool CalculateLaylines::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() ) {
-
 
     QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
     sql.append( object);
@@ -308,10 +312,9 @@ bool CalculateLaylines::checkIntersection( const QString &layerName, const QStri
     }
     sql.append( " WHERE result = TRUE");
 
-    //sql = "SELECT DISTINCT Intersects( wkb_geometry, 'POINT(0.2511030137539 0.6501500010490)'";
     res = PQexec(conn, sql.toAscii() );
-
     bool intersection = ( PQntuples(res) > 0 );
+
     PQclear(res);
 
     return intersection;
@@ -336,10 +339,6 @@ bool CalculateLaylines::checkIntersection( const QString &layerName, const QPoin
 }
 
 bool CalculateLaylines::publicCheckIntersection( const QString &layerName, const QPointF &point ) {
-
-//Removed 02012012 Rauno
-//    if (obstaclesTablesCreated )
-//        this->createObstaclesTables();
 
     QString WKTPoint = buildWKTPoint( point );
     bool result = checkIntersection( layerName, WKTPoint);
@@ -410,9 +409,9 @@ bool CalculateLaylines::checkOffset( const QLineF &l1, const QLineF &l2, const f
 }
 
 void CalculateLaylines::getPath( const bool &side, const float &offset, const int &max_turns,
-                               const double &windAngle, const double &layLinesAngle,
-                               const QPointF &boatPos, const QPointF &destinyPos,
-                               const QPolygonF &obstacles_shape, QVector<QPointF> &Path )
+                                 const double &windAngle, const double &layLinesAngle,
+                                 const QPointF &boatPos, const QPointF &destinyPos,
+                                 const QPolygonF &obstacles_shape, QVector<QPointF> &Path )
 {
     //Input has to be Geographical data because we check against PostGIS
 
@@ -429,8 +428,8 @@ void CalculateLaylines::getPath( const bool &side, const float &offset, const in
 
     // While the last point in the path is not the destiny
     // AND we don't exceed the maximum turning points setting we'll execute following:
-    while ( Path.last() != destinyPos && count < max_turns ) {
 
+    while ( Path.last() != destinyPos && count < max_turns ) {
         // Clear triangle:
         present_triangle.clear();
 
@@ -451,7 +450,7 @@ void CalculateLaylines::getPath( const bool &side, const float &offset, const in
         obs_l = checkIntersection( "obstacles_l", present_triangle, obstacles_shape );
 
         if ( obs_r || obs_l ) {
-
+            obstacleFound = true;
             // Obstacles found: let's reduce the triangle until they disapear:
             ready = false;
 
@@ -460,7 +459,6 @@ void CalculateLaylines::getPath( const bool &side, const float &offset, const in
             present_triangle = UwMath::triangleToHalf( present_triangle );
 
             while ( !ready ) {
-
                 // Check again, put booleans first and checkIntersection won't even be called:
                 if ( ( obs_r && checkIntersection( "obstacles_r", present_triangle, obstacles_shape ) ) ||
                      ( obs_l && checkIntersection( "obstacles_l", present_triangle, obstacles_shape ) ) ) {
@@ -497,7 +495,6 @@ void CalculateLaylines::getPath( const bool &side, const float &offset, const in
 
 int CalculateLaylines::getNearestPoint( const QVector<QPointF> &route, const QPointF &boatPos){
 
-
     // Input should be in GEOGRAPHICAL format.
     // We receive a route here as a list of points.
     // Let's see at what point of the route we are:
@@ -519,7 +516,6 @@ int CalculateLaylines::getNearestPoint( const QVector<QPointF> &route, const QPo
         }
     }
 
-    qDebug() << "Nearest point: " << route.at(nearest_point) << ", at; " << nearest_point;
     return nearest_point;
 }
 
@@ -529,7 +525,6 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
     if ( checkIntersection( "obstacles_r", boatPos ) ) {
         // if we are inside an obstacle, don't even try
-
         return boatPos;
     }
 
@@ -549,7 +544,6 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
         // If nearest is the last one:
         if ( route.size() - nearest_point == 1 ) {
 
-
             a = UwMath::toConformal( route.at( nearest_point - 1 ) );
             b = UwMath::toConformal( route.at( nearest_point ) );
             c = UwMath::toConformal( (const QPointF)boatPos );
@@ -562,9 +556,8 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
             projection_line.setP1( boatPos);
             projection_line.setP2( projection_point);
 
-        // If nearest is the first one:
+            // If nearest is the first one:
         } else if ( nearest_point == 0 ) {
-
 
             a = UwMath::toConformal( route.at( nearest_point) );
             b = UwMath::toConformal( route.at( nearest_point + 1) );
@@ -578,9 +571,8 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
             projection_line.setP1( boatPos);
             projection_line.setP2( projection_point);
 
-        // If nearest is not first or last one:
+            // If nearest is not first or last one:
         } else {
-
 
             a = UwMath::toConformal( route.at( nearest_point) );
             b = UwMath::toConformal( route.at( nearest_point + 1) );
@@ -596,7 +588,7 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
             // We must check if our position is between nearest and nearest + 1
             // or between nearest - 1 and nearest:
-            if ( !checkIntersection( route_line, projection_line) ) {
+            if ( !checkIntersection(route_line, projection_line) ) {
                 a = UwMath::toConformal( route.at( nearest_point - 1 ) );
                 b = UwMath::toConformal( route.at( nearest_point ) );
                 c = UwMath::toConformal( (const QPointF)boatPos );
@@ -611,10 +603,6 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
             }
         }
 
-        qDebug() << "Route Line" << route_line;
-        qDebug() << "Projection line: " << projection_line;
-        //It seems that projection point is not on the route:
-        qDebug() << "Is projection line on the route? " << UwMath::checkIfBetweenCoordinates(projection_point, route_line.p1(), route_line.p2());
     }
 
 
@@ -634,7 +622,7 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
         // Finetune checkpoint in the heading:
         if ( hobs_r || hobs_l ) {
-
+            this->obstacleFound = true;
             bool ready = false;
 
             QLineF last_heading;
@@ -663,7 +651,6 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
         }
 
     } else if ( route.size() > 1 ) {
-
         // Route to process has more than 1 point:
         int i = nearest_point;
 
@@ -689,46 +676,46 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
         //        // ########################################################################
         //        // SPECIAL CHECK to find obstacles in the heading of the first triangle  ##
         //        // ########################################################################'
-//                if ( triangle.at( 0 ) == boatPos ) { //vanity this value is forced at 939
-//                    QLineF heading( triangle.at( 0), triangle.at( 1));
-//                     QPolygonF last_triangle;
+        if ( triangle.at( 0 ) == boatPos ) {
+            QLineF heading( triangle.at( 0), triangle.at( 1));
+            QPolygonF last_triangle;
 
-//                    bool hobs_r = checkIntersection( "obstacles_r", heading, triangle );
-//                    bool hobs_l = checkIntersection( "obstacles_l", heading, triangle );
+            bool hobs_r = checkIntersection( "obstacles_r", heading, triangle );
+            bool hobs_l = checkIntersection( "obstacles_l", heading, triangle );
 
-//                    // FINETUNE CHECKPOINT IN THE HEADING
-//                    if ( hobs_r || hobs_l ) {
+            // FINETUNE CHECKPOINT IN THE HEADING
+            if ( hobs_r || hobs_l ) {
 
-//                        bool ready = false;
+                bool ready = false;
 
-//                        QLineF last_heading;
+                QLineF last_heading;
 
-//                        while ( !ready ) {
+                while ( !ready ) {
 
-//                            qDebug() <<"splitting segment";
+                    if ( ( hobs_r && checkIntersection( "obstacles_r", heading, triangle) ) ||
+                         ( hobs_l && checkIntersection( "obstacles_l", heading, triangle)) ) {
 
-//                            if ( ( hobs_r && checkIntersection( "obstacles_r", heading, triangle) ) ||
-//                                 ( hobs_l && checkIntersection( "obstacles_l", heading, triangle)) ) {
+                        last_heading = heading;
+                        heading = UwMath::lineToHalf( heading);
+                        last_triangle = triangle;
+                        triangle = UwMath::triangleToHalf(triangle);
 
-////                                last_heading = heading;
-////                                heading = UwMath::lineToHalf( heading);
-//                                last_triangle = triangle;
-//                                triangle = UwMath::triangleToHalf(triangle);
+                    } else {
+                        //  if (  checkOffset( heading, last_heading, offset ) )
+                        if ( checkOffset_OnePointVersion( last_triangle, triangle, offset ))
+                            ready = true;
+                        else
+                            triangle = UwMath::avgTriangle_OnePointVersion( triangle, last_triangle);
+                        //  heading = UwMath::avgLine( heading, last_heading);
+                    }
+                }
 
-//                            } else {
-//                              //  if (  checkOffset( heading, last_heading, offset ) )
-//                                if ( checkOffset_OnePointVersion( last_triangle, triangle, offset ))
-//                                    ready = true;
-//                                else
-//                                    triangle = UwMath::avgTriangle_OnePointVersion( triangle, last_triangle);
-//                                  //  heading = UwMath::avgLine( heading, last_heading);
-//                            }
-//                        }
-//                       // return heading.p2(); //Ei palauteteta veneen ja checkpointin välistä pistettä seuraavana checkpointina long term routella...
-//                        return triangle.at(2);
+                return heading.p2();  //We won't return the point between boat and checkpoint as the next checkpoint on long-term route:
+                // return triangle.at(2);
 
-//                    }
-//                }
+            }
+        }
+        //qDebug() << Q_FUNC_INFO << ": TriangleCount at specialCheck: " << triangleCount;
         // ########################################################################
         // END SPECIAL CHECK                                                     ##
         // ########################################################################
@@ -736,13 +723,9 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
         bool obs_r = checkIntersection( "obstacles_r", triangle, triangle );
         bool obs_l = checkIntersection( "obstacles_l", triangle, triangle );
 
-        qDebug() << "obs_r" << obs_r << "obs_l" << obs_l;
-
         //Note: This doesn't work correctly. Here the search for the route fails instantly when obstacles
         //are found on the route. What if there is obstacle-free route on the next route interval:
-
-        while ( !obs_r && !obs_l &&  i < (route.size() - 1 )) {
-
+        while ( !obs_r && !obs_l &&  i < (route.size()/* - 2*/ )) {
             triangle.clear();
 
             triangle << boatPos;
@@ -752,27 +735,25 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
             obs_r = checkIntersection( "obstacles_r", triangle, triangle );
             obs_l = checkIntersection( "obstacles_l", triangle, triangle );
 
-
             // Finetune checkpoint:
 
             if ( obs_r || obs_l ) {
-
 
                 bool ready = false;
 
                 QPolygonF last_triangle;
 
                 while ( !ready ) {
-
                     if ( obs_r && checkIntersection( "obstacles_r", triangle, triangle) ||
                          obs_l && checkIntersection( "obstacles_l", triangle, triangle) ) {
 
                         last_triangle = triangle;
                         triangle = UwMath::triangleToHalf_OnePointVersion( triangle);
 
+
                     } else {
 
-                        if (  checkOffset_OnePointVersion( last_triangle, triangle, offset ) ){
+                        if (checkOffset_OnePointVersion( last_triangle, triangle, offset ) ){
                             ready = true;
                         }
                         else{
@@ -784,12 +765,9 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
                     if(triangle.at(1) == triangle.at(2))
                         ready = true;
                 }
-
             }
             i++;
         }
-
-
         return triangle.at( 2);
 
     }
@@ -800,19 +778,18 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 void CalculateLaylines::updateCheckPoint()
 {
 
+
     // Let's find out which is the next point in our route.
     // Find the destiny check point in geographical format:
     geoDestinyPos = this->getNextPoint( this->pathPoints, geoBoatPos, ACCU_OFFSET);
 
-    destinyPos = UwMath::toConformalInverted(geoDestinyPos);
+    destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
 
 }
 
 void CalculateLaylines::updateLayLines()
 {
-    QTime timeUpdateLayLines;
-    timeUpdateLayLines.start();
-    this->pPolarDiagram->populateWithFinngulf36();
+    this->pPolarDiagram->populate();
 
     // LayLines are not calculated with the actual TWA,
     // but the TWA that we will have when heading towards our destiny.
@@ -829,10 +806,11 @@ void CalculateLaylines::updateLayLines()
     pLeftPath = new QVector<QPointF>;
     pRightPath = new QVector<QPointF>;
 
+
+
     if ( layLinesAngle != 0 ) {
 
         // Here we are not reaching:
-
         QPointF TPleft, TPright;
         // Get the turning point without taking care of obstacles:
         UwMath::getTurningPoints( TPleft, TPright,
@@ -871,7 +849,7 @@ void CalculateLaylines::updateLayLines()
 
             // If we don't have any obstacle in our area
             // use master turning points for the path:
-            qDebug() << "UPDATELAYLINES NO OBSTACLES";
+            //      qDebug() << "UPDATELAYLINES NO OBSTACLES";
 
             pRightPath->append( geoBoatPos);
             pRightPath->append( TPright );
@@ -896,7 +874,6 @@ void CalculateLaylines::updateLayLines()
         pLeftPath->append( geoDestinyPos);
 
     }
-
 }
 
 

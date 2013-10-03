@@ -32,13 +32,14 @@ public:
     QString getName();
     void setGeoPosition(QPointF position);
     void setGeoPosition(float longitude, float latitude);
-    QPointF getGeoPosition();
+    QPointF *getGeoPosition();
 
     void setView(QGraphicsView *view);
-    QPointF geoPointToPixel(const QPointF &geoPoint);
-    QPointF* pixelToGeoPoint(QPointF* pixelPoint);
+    QPointF *geoPointToPixel(QPointF *geoPoint);
+    QPointF *pixelToGeoPoint(QPointF* pixelPoint);
     void updateBoatPosition();
     void setHeading(float hdg);
+    void receiveTimer(QElapsedTimer *timer);
     float getHeading();
     void injectLaylines(QVector<QPointF> laylines);
 
@@ -58,12 +59,9 @@ private:
     QGraphicsView *view;
     QGraphicsSvgItem *boatImage;
     QString boatName;
-    QPointF boatScenePosition;
-    QPointF boatGeoPosition;
-    QPointF firstScenePosition;
-    QPointF secondScenePosition;
-    QPointF firstPoint;
-    QPointF secondPoint;
+    QPointF *boatScenePosition, *boatGeoPosition;
+    QPointF firstScenePosition, secondScenePosition;
+    QPointF firstPoint, secondPoint;
     QPointF endCompassPoint;
     QPointF endSceneCompassPoint;
     QGraphicsLineItem *compass;
@@ -94,6 +92,7 @@ private:
     QPolygonF starBoardLayline;
     QPolygonF portLayline;
     QVector<QPolygonF> navcorrected;
+    QPointF calculateEndPoint(float angle, float lineLength, QPointF startPoint);
 
     void setLaylines();
     void geoLaylineToPixel(QPointF* pixelPoint);
