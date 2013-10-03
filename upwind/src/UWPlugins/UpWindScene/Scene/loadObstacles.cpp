@@ -72,7 +72,7 @@ PGconn *PQsetdbLogin(const char *pghost,
 
     */
 
-    conn = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
+    conn = PQconnectdb("hostaddr = '192.168.56.102' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
 
     if (PQstatus(conn) != CONNECTION_OK){
         qDebug() << "Connection not ok: " << PQerrorMessage(conn);

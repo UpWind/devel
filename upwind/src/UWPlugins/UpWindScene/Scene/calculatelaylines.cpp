@@ -8,7 +8,7 @@ CalculateLaylines::CalculateLaylines(QObject* parent)
 void CalculateLaylines::openPostgreConnection(){
 
     qDebug() << Q_FUNC_INFO;
-    conn = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
+    conn = PQconnectdb("hostaddr = '192.168.56.102' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
     qDebug() << "Connection ok!";
     if (PQstatus(conn) != CONNECTION_OK){
         qDebug() << "Connection not ok: " << PQerrorMessage(conn);
