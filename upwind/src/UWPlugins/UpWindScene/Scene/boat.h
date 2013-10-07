@@ -19,14 +19,14 @@ class Boat: public QObject
     Q_OBJECT
 public:
 
-    void setGPSLine();
+//    void setGPSLine();
     void setOffSet();
-    QGraphicsLineItem getGPSLine();
+//    QGraphicsLineItem getGPSLine();
 
     Boat(QSize size, QRectF chartBoundaries);
     QGraphicsSvgItem *getBoatImage();
     QGraphicsLineItem *getBoatCompass();
-    QGraphicsLineItem *getBoatGPS();
+//    QGraphicsLineItem *getBoatGPS();
     QGraphicsPolygonItem *getPortLayline();
     QGraphicsPolygonItem *getStarBoardLayline();
     QString getName();
@@ -39,7 +39,6 @@ public:
     QPointF *pixelToGeoPoint(QPointF* pixelPoint);
     void updateBoatPosition();
     void setHeading(float hdg);
-    void receiveTimer(QElapsedTimer *timer);
     float getHeading();
     void injectLaylines(QVector<QPointF> laylines);
 
@@ -65,7 +64,7 @@ private:
     QPointF endCompassPoint;
     QPointF endSceneCompassPoint;
     QGraphicsLineItem *compass;
-    QGraphicsLineItem *gps;
+//    QGraphicsLineItem *gps;
     QGraphicsPolygonItem *portLaylineItem;
     QGraphicsPolygonItem *starBoardLaylineItem;
     QPen compass_pen;
