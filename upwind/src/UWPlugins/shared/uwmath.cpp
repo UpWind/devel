@@ -189,6 +189,11 @@ void UwMath::toConformalInverted(QPointF* object){
     object->setY(UwMath::toMercator(object->y()) * (-1));
 }
 
+void UwMath::toConformalInverted(QPointF &object){
+    object.setX(UwMath::toRadians(object.x()));
+    object.setY(UwMath::toMercator(object.y()) * (-1));
+}
+
 void UwMath::toConformalInverted(QPolygonF &object){
     QPointF * data = object.data();
 
@@ -225,6 +230,7 @@ QVector<QPointF> UwMath::toConformalInverted(const QVector<QPointF> &object){
 
     for(int i = 0; i < object.size(); i++)
         temp.append(UwMath::toConformalInverted(object.at(i)));
+
     return temp;
 }
 
@@ -238,6 +244,7 @@ void UwMath::toConformalInverted(QVector<QPointF> &object){
 void UwMath::fromConformal( QPointF &object){
     object.setX(UwMath::toDegrees(object.x()));
     object.setY(UwMath::fromMercator(object.y()));
+
 }
 
 void UwMath::fromConformal(QPolygonF &object){
