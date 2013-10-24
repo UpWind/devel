@@ -341,17 +341,23 @@ void PostgreChartProvider::initializeSettings(){
 
     settings = new Settings(this->getName());
 
-    if(info.exists())
-        settings->loadSettings();
-    else{
-        //construct the default settings
-        settings->setSetting("User", "postgres");
-        settings->setSetting("Password", "upwind");
-        settings->setSetting("Port", "5432");
-        settings->setSetting("Host", "192.168.56.102");
-        settings->setSetting("DBName", "chart57");
-        settings->setSetting("DetailLevel", "0");
-    }
+//    if(info.exists())
+//        settings->loadSettings();
+//    else{
+//        //construct the default settings
+//        settings->setSetting("User", "postgres");
+//        settings->setSetting("Password", "upwind");
+//        settings->setSetting("Port", "5432");
+//        settings->setSetting("Host", "192.168.56.101");
+//        settings->setSetting("DBName", "chart57");
+//        settings->setSetting("DetailLevel", "0");
+//    }
+    settings->setSetting("User", "postgres");
+            settings->setSetting("Password", "upwind");
+            settings->setSetting("Port", "5432");
+            settings->setSetting("Host", "192.168.56.101");
+            settings->setSetting("DBName", "chart57");
+            settings->setSetting("DetailLevel", "0");
 }
 
 QString PostgreChartProvider::getName(){

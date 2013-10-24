@@ -96,10 +96,12 @@ void Anemometer::setAngle(int angle){
 }
 
 void Anemometer::setParsedNMEAValues(QString angle, QString windSpeedMS, QString windSpeedKnots){
+
     this->parsedNMEAValues.clear();
     this->parsedNMEAValues.append(angle);
     this->parsedNMEAValues.append(windSpeedMS);
     this->parsedNMEAValues.append(windSpeedKnots);
+
 }
 
 QString Anemometer::getName(){
@@ -109,15 +111,36 @@ QString Anemometer::getName(){
 void Anemometer::parseNMEAString(const QString & text){
     //$HCHDG,101.1,,,7.1,W*3C
     //$IIMWV,5,T,7,N,3.6,M,A,*73
-    if(text[3] == QChar('M') && text[4] == QChar('W') && text[5] == QChar('V')){
+    //$IIMWD,5,T,5,M,7,N,3.6,M*44
+
+    //The Plugin Controller sends the message with this header: $IIMWD but the format that was expected is $IIMWV
+    //Since we don't know wich sentence is correct, we take both into account but we don't use the extra parameter that provide the $IIMWD sentence
+    //Also, there is some kind of problem so the Plugin Controller sends two sentences, one with the correct parameters and the other one with all the parameters at 0.
+    //Here, we filter the sentences so the sentences with all the parameters with 0 is not taken into account
+    QString value = "0.00";
+    QString value1 = "0";
+    if(text[3] == QChar('M') && text[4] == QChar('W') && (text[5] == QChar('D') || text[5] == QChar('V'))){
         QStringList strList = text.split(",");
         QString angleString=(QString)strList.at(1);
         if(!angleString.isEmpty()){
-            setAngle(angleString.toDouble() + 180.0);
             if(strList.size() > 6){
-                knots->setText((QString)strList.at(3));
-                ms->setText((QString)strList.at(5));
-                this->setParsedNMEAValues(angleString, (QString)strList.at(3), (QString)strList.at(5));
+                if(text[5] == QChar('V')){
+                    knots->setText((QString)strList.at(3));
+                    ms->setText((QString)strList.at(5));
+                    this->setParsedNMEAValues(angleString, (QString)strList.at(3), (QString)strList.at(5));
+                    setAngle(angleString.toDouble() + 180.0);
+
+                }
+                else{
+                    QString windSpeed=(QString)strList.at(5);
+                    if(text[5] == QChar('D')&& (angleString.compare(value)!=0) && (windSpeed.compare(value1)!=0)){
+                        knots->setText((QString)strList.at(5));
+                        ms->setText((QString)strList.at(7));
+                        this->setParsedNMEAValues(angleString, (QString)strList.at(5), (QString)strList.at(7));
+                        setAngle(angleString.toDouble() + 180.0);
+
+                    }
+                }
             } else{
                 QString meter = (QString)strList.at(3);
                 double meterFromKnot = meter.toDouble();
