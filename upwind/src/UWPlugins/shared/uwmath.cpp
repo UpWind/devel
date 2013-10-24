@@ -184,9 +184,12 @@ QPolygonF UwMath::toConformal(const QPolygonF &eobject){
     return object;
 }
 
+
 void UwMath::toConformalInverted(QPointF* object){
+
     object->setX(UwMath::toRadians(object->x()));
     object->setY(UwMath::toMercator(object->y()) * (-1));
+
 }
 
 void UwMath::toConformalInverted(QPointF &object){

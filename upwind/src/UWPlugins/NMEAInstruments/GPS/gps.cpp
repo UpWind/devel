@@ -104,21 +104,32 @@ void GPS::parseNMEAString( const QString & text){
     if(text[3] == QChar('R') && text[4] == QChar('M') && text[5] == QChar('C')){
         this->parsedNMEAValues.clear();
         QStringList strList = text.split(",");
-        this->parsedNMEAValues.append((QString)strList.at(3));
+
+        double latitudeDouble = strList.at(3).toDouble();
+        latitudeDouble /= 100;
+        QString latitudeValue = QString::number(latitudeDouble);
+        this->parsedNMEAValues.append(latitudeValue);
+
+        double longitudeDouble = strList.at(5).toDouble();
+        longitudeDouble /= 100;
+        QString longitudeValue = QString::number(longitudeDouble);
+        this->parsedNMEAValues.append(longitudeValue);
+
+
         if(strList.at(4) == "S"){
             this->parsedNMEAValues.append("S");
-            latitude->setText("Latitude: -" + (QString)strList.at(3) + "\tS");
+            latitude->setText("Latitude: -" + latitudeValue + "\tS");
         } else{
             this->parsedNMEAValues.append("N");
-            latitude->setText("Latitude: " + (QString)strList.at(3) + "\tN");
+            latitude->setText("Latitude: " + latitudeValue + "\tN");
         }
-        this->parsedNMEAValues.append((QString)strList.at(5));
+        this->parsedNMEAValues.append(longitudeValue);
         if(strList.at(6) == "W"){
             this->parsedNMEAValues.append("W");
-            longitude->setText("Longitude: -" + (QString)strList.at(5) + "\tW");
+            longitude->setText("Longitude: -" + longitudeValue + "\tW");
         } else{
             this->parsedNMEAValues.append("E");
-            longitude->setText("Longitude: " + (QString)strList.at(5) + "\tE");
+            longitude->setText("Longitude: " + longitudeValue + "\tE");
         }
     }
 }

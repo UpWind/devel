@@ -279,15 +279,19 @@ float Boat::getHeading(){
 //The following line is a copied from postgrechartprovider.cpp:
     QPointF* Boat::geoPointToPixel(QPointF *geoPoint){
 
-    QPointF *scenePos = new QPointF(geoPoint->x(), geoPoint->y());
-    //    QPointF *scenePos = geoPoint;
+        double x=geoPoint->x();
+        double y=geoPoint->y();
 
-    UwMath::toConformalInverted(*scenePos);
-    scenePos->setX((scenePos->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width() * zoomFactor));
-    scenePos->setY((scenePos->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height() * zoomFactor));
+    QPointF *scenePos1 = new QPointF(x, y);
 
-    return scenePos;
+    UwMath::toConformalInverted(scenePos1);
+
+    scenePos1->setX((scenePos1->x() - chartBoundaries.left()) * (size.width() / chartBoundaries.width() * zoomFactor));
+    scenePos1->setY((scenePos1->y() - chartBoundaries.top()) * (size.height()/  chartBoundaries.height() * zoomFactor));
+
+    return scenePos1;
 }
+
 
 QPointF* Boat::pixelToGeoPoint(QPointF* pixelPoint){
 

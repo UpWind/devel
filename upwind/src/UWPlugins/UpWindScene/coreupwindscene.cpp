@@ -104,6 +104,7 @@ void CoreUpWindScene::receiveDataQuery(){
 
 void CoreUpWindScene::parseNMEAString( const QString & text){
     //$IIRMC,,A,2908.38,N,16438.18,E,0.0,0.0,251210,,*06
+    //qDebug() << "I am in the coreupwindscene checkin if I am recieving the sentences";
     if(text[3] == QChar('R') && text[4] == QChar('M') && text[5] == QChar('C')){
         this->parsedNMEAValues.clear();
         QStringList strList = text.split(",");
@@ -125,8 +126,8 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
             longitude = ((QString)strList.at(5)).toDouble();
         }
 
-        //   longitude /= 100;
-        //   latitude /= 100;
+           longitude /= 100;
+           latitude /= 100;
         qDebug() << Q_FUNC_INFO << latitude << ", " << longitude;
         this->boat->setGeoPosition(longitude, latitude);
 
