@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>535</width>
+    <width>564</width>
     <height>698</height>
    </rect>
   </property>
@@ -395,6 +395,9 @@
              <family>Arial</family>
              <pointsize>12</pointsize>
             </font>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
            </property>
           </widget>
          </item>

@@ -94,7 +94,10 @@ void SettingsUI::openPort(){
 }
 
 void SettingsUI::readData(const QString & data) {
+//Here we keep the scroll bar at the bottom of the text area
     ui->textEdit->append(data);
+    QScrollBar* scroll = ui->textEdit->verticalScrollBar();
+    scroll->setValue(scroll->maximum());
 }
 
 void SettingsUI::startReading() {

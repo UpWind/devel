@@ -38,7 +38,6 @@ void SerialPort::writeByte(unsigned char byte) {
 }
 
 void SerialPort::writeString(const std::string &nmeaString) {
-
     if(open) {
         cprintf(portNumber, (nmeaString + std::string("\r\n")).c_str());
     }
