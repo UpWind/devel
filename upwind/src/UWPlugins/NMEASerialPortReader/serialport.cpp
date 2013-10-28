@@ -56,7 +56,9 @@ void serialPort::setSettings(string _portName, DWORD _dwBaudRate, BYTE _byParity
     byStopBits = _byStopBits;
     byByteSize = _byByteSize;
 #ifndef WIN32
-    file->setFileName(QString::fromStdString(portName));
+    if(!connected){
+        file->setFileName(QString::fromStdString(portName));
+    }
 #endif
 }
 

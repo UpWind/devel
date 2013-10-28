@@ -87,9 +87,11 @@ void SettingsUI::openPort(){
         ui->RadioButton_connected->setChecked(true);
         ui->textEdit->setText("<font size+=3><b>*****   Connected to port "
                               +ui->comboBox_portName->currentText()+"   *****</b></font>");
+
     } else{
         ui->textEdit->setText("<font color=red size+=3>NOT connected</font>");
         ui->RadioButton_NOTconnected->setChecked(true);
+
     }
 }
 
