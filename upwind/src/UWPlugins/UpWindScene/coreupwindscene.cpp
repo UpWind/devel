@@ -125,9 +125,11 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
             this->parsedNMEAValues.append("E");
             longitude = ((QString)strList.at(5)).toDouble();
         }
-
+        int length= text.length();
+        if(text[length-1]==QChar('*')){
            longitude /= 100;
            latitude /= 100;
+        }
         qDebug() << Q_FUNC_INFO << latitude << ", " << longitude;
         this->boat->setGeoPosition(longitude, latitude);
 

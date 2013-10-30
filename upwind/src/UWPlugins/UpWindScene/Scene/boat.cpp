@@ -310,6 +310,12 @@ void Boat::setView(QGraphicsView *view)
 
 QPointF *Boat::getGeoPosition()
 {
+//    qDebug() << "Boat Geo Position";
+//    qDebug() << *boatGeoPosition;
+//    qDebug() << "Boat Scene Position";
+//    qDebug() << *boatScenePosition;
+//    qDebug() << "\n \n \n \n \n \n \n \n";
+
     return boatGeoPosition;
 }
 
@@ -336,6 +342,8 @@ void Boat::setZoomFactor(qreal zoomFactor)
 
 QPointF Boat::getBoatScenePosition() const
 {
+//    qDebug() << "Boat Scene Position";
+//    qDebug() << *boatScenePosition;
     return *boatScenePosition;
 }
 

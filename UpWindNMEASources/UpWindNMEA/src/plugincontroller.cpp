@@ -251,6 +251,8 @@ void PluginController::getPluginString(const QString &nmeaString) {
 
     //Send NMEA string to all plugins that need it
     foreach(CorePlugin *plugin, plugins) {
+        qDebug() << "Plugin names";
+        qDebug() << plugin->getName();
         if(sender() != plugin &&  plugin->supports(CorePlugin::parseMessageID(nmeaString), true)) {
             plugin->parseNMEAString(nmeaString);
         }

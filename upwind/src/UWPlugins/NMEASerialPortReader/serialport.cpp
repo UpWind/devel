@@ -145,6 +145,7 @@ bool serialPort::openPort() {
 
 void serialPort::startReading() {
 #if defined(WIN32)
+    qDebug() << "Starting reading the serial port in Windows";
     string line;
     DWORD dwEventMask;
     bool moreData = false;
@@ -158,8 +159,10 @@ void serialPort::startReading() {
                 moreData = true;
                 this->parse(QString::fromStdString(line));
                 const QString s = QString::fromStdString(line);
-                if (display)
-                    emit newNMEAString(s);
+                if (display){
+                    qDebug() << "Emiting NMEA sentence";
+                    qDebug() << s;
+                    emit newNMEAString(s);}
             } else
                 moreData = false;
         } while(moreData);
@@ -168,6 +171,7 @@ void serialPort::startReading() {
     else
         moreData = false;
 #else
+    qDebug() << "Starting reading serial port in Linux";
     bool moreData = false;
     if(this->getConnected()){
         connected = true;
@@ -181,10 +185,14 @@ void serialPort::startReading() {
                 QString line(buf);
                 if(line.compare("") != 0){
                     this->parse(line);
-                    const QString s = line;
-                    if(display)
-                        emit newNMEAString(s);
-                    this->sleep(1);
+                    QString s = line;
+                    if(display){
+                        //The star marks that the sentence's source is the serial port.
+                        if( s[3]==QChar('R')){ // This is a very bad work but since I don't know how to do it better, I will leave this sentence.
+                            s.insert(s.length(),"*");
+                        }
+                        emit newNMEAString(s);}
+                    //this->sleep(1); If this line is not commented ther is a big delay (4 or 5 minutes) between the NMEA sentence is sent and the simulator reaction to that NMEA sentence.
                 }
                 moreData = true;
             } else
