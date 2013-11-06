@@ -191,12 +191,14 @@ void serialPort::startReading() {
                         if( s[3]==QChar('R')){ // This is a very bad work but since I don't know how to do it better, I will leave this sentence.
                             s.insert(s.length(),"*");
                         }
-                        emit newNMEAString(s);}
+                        emit newNMEAString(s);
+                        this->usleep(300000);
+                    }
                     //this->sleep(1); If this line is not commented ther is a big delay (4 or 5 minutes) between the NMEA sentence is sent and the simulator reaction to that NMEA sentence.
                 }
                 moreData = true;
             } else
-                moreData = false;
+                this->usleep(500000);
         }
     }
 #endif

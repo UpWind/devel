@@ -113,7 +113,7 @@ void NMEAGPS::startMoving() {
 }
 
 void NMEAGPS::setTimerDelay(int tDelay){
-    CorePlugin::setTimerDelay(boat.updateDelay);
+    CorePlugin::setTimerDelay(updateDelay);
 }
 
 void NMEAGPS::stopMoving() {
@@ -267,6 +267,10 @@ void NMEAGPS::coordinatesChanged() {
     str +="0.0,"; //track made good ???
     str +=","; //date
     str = str + "*" + generateChecksum(str);
+
+    if(NMEAString!=""){
+        emit newNMEAString(NMEAString);
+    }
 
     if(str != NMEAString){
         NMEAString = str;

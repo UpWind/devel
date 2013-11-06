@@ -12,6 +12,8 @@
 #include "../CorePlugin/coreplugin.h"
 #include "boat.h"
 
+const int updateDelay = 1000;
+
 namespace Ui
 {
     class NMEAGPS;
