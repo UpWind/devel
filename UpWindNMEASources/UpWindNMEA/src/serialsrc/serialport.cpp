@@ -1,6 +1,9 @@
 #include "serialport.h"
 #include "rs232.h"
-
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 #include <stdexcept>
 
 #include <QString>
@@ -11,26 +14,39 @@
 SerialPort::SerialPort(unsigned int portNumber, unsigned int baudRate):
     portNumber(portNumber), baudRate(baudRate){
 
-    int error = OpenComport(portNumber, baudRate);
-    this->open = (!error ? true : false);
 
-    if(!open) {
-        //throw std::runtime_error("Failed to open serial port!");
-        qDebug() << "Failed to open serial port!";
-    }
+    upwindSerialInfo = new QSerialPortInfo("ttyS0");
+    upwindSerial = new QSerialPort();
+
+    upwindSerial->setPort(*upwindSerialInfo);
+    upwindSerial->open(QIODevice::ReadWrite);
+    upwindSerial->setBaudRate(QSerialPort::Baud4800);
+    upwindSerial->setParity(QSerialPort::EvenParity);
+    upwindSerial->setStopBits(QSerialPort::TwoStop);
+    upwindSerial->setDataBits(QSerialPort::Data7);
+    upwindSerial->setFlowControl(QSerialPort::NoFlowControl);
+    qDebug() << upwindSerial->isOpen();
+
+    //    int error = OpenComport(portNumber, baudRate);
+    //    this->open = (!error ? true : false);
+
+    //    if(!open) {
+    //        //throw std::runtime_error("Failed to open serial port!");
+    //        qDebug() << "Failed to open serial port!";
+    //    }
 
 }
 
 SerialPort::~SerialPort() {
 
-    if(open) {
-        CloseComport(portNumber);
+    if(upwindSerial->open(QIODevice::ReadWrite)) {
+        upwindSerial->close();
     }
 
 }
 
+//Not in use for sending NMEA sentences through the serial port
 void SerialPort::writeByte(unsigned char byte) {
-
     if(open) {
         SendByte(portNumber, byte);
     }
@@ -38,28 +54,29 @@ void SerialPort::writeByte(unsigned char byte) {
 }
 
 void SerialPort::writeString(const std::string &nmeaString) {
-    if(open) {
-        cprintf(portNumber, (nmeaString + std::string("\r\n")).c_str());
+    if(isOpen()) {
+        upwindSerial->write((nmeaString + std::string("\r\n")).c_str());
+        //cprintf(portNumber, (nmeaString + std::string("\r\n")).c_str());
     }
 
 }
 
+////Not in use for sending NMEA sentences through the serial port
 void SerialPort::writeString(const QString &nmeaString) {
-
     writeString(nmeaString.toStdString());
 
 }
 
 void SerialPort::close() {
 
-    if(open) {
+    if(upwindSerial->isOpen()) {
         CloseComport(portNumber);
     }
 }
 
 bool SerialPort::isOpen() {
 
-    return open;
+    return upwindSerial->isOpen();
 
 }
 

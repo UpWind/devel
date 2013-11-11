@@ -1,3 +1,7 @@
+CONFIG += serialport
+QT += serialport
+QT += widgets
+
 TEMPLATE = subdirs
 
 SUBDIRS = \

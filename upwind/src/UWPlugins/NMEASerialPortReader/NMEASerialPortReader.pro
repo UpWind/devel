@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+CONFIG += serialport
+QT += serialport
 
 QT       += core gui xml
 

@@ -1,3 +1,9 @@
+QT += serialport
+CONFIG += serialport
+QT += widgets
+
+
+
 TEMPLATE = subdirs
 
 SUBDIRS = \
@@ -7,3 +13,5 @@ SUBDIRS = \
         upwind/src/UWPlugins \
     #    UpWindNMEASources/PluginSystem/PluginBuilder \
         UpWindNMEASources/UpWindNMEA/PluginController
+
+CONFIG += serialport

@@ -3,6 +3,9 @@
 # Project created by QtCreator 2011-02-08T08:45:37
 #
 #-------------------------------------------------
+CONFIG += serialport
+QT += serialport
+QT += widgets
 
 QT += core gui\
     network \

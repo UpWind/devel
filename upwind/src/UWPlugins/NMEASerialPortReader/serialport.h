@@ -11,7 +11,8 @@ typedef unsigned long      DWORD;
 typedef unsigned char      BYTE;
 typedef int                HANDLE;
 #endif
-
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 #include <string>
 #include <QThread>
 #include <QTimer>
@@ -102,7 +103,11 @@ private:
     QStringList DPT;
 
     bool connected;
-    QFile *file;
+    QSerialPort *file;
+    QSerialPort serial;
+
+    QSerialPort *upwindSerial;
+    QSerialPortInfo *upwindSerialInfo;
 
     void startReading();
 
@@ -132,6 +137,7 @@ private:
 
 private slots:
     void retry();
+    void upwindSerialDataReceived();
 
 signals:
     void notConnected();

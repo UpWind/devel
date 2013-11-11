@@ -3,6 +3,8 @@
 
 #include <string>
 #include <QString>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 
 class SerialPort {
 
@@ -49,6 +51,8 @@ class SerialPort {
     unsigned int portNumber;
     unsigned int baudRate;
     bool open;
+    QSerialPort *upwindSerial;
+    QSerialPortInfo *upwindSerialInfo;
 
 };
 

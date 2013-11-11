@@ -255,6 +255,8 @@ void NMEAGPS::coordinatesChanged() {
     else{
         str+= "S,";
     }
+
+    qDebug() << ui->longLineEdit->text();
     str += ui->longLineEdit->text() + ",";
 
     if(boat.longnitude<0){
