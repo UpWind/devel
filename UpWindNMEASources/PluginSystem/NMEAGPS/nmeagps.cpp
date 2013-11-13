@@ -270,14 +270,15 @@ void NMEAGPS::coordinatesChanged() {
     str +=","; //date
     str = str + "*" + generateChecksum(str);
 
-    if(NMEAString!=""){
-        emit newNMEAString(NMEAString);
-    }
+    emit newNMEAString(str);
 
-    if(str != NMEAString){
-        NMEAString = str;
-        emit newNMEAString(NMEAString);
-    }
+//    if(NMEAString!=""){
+//    }
+
+//    if(str != NMEAString){
+//        NMEAString = str;
+//        emit newNMEAString(NMEAString);
+//    }
 
     //setBoatMapLocation(lat, lng);
 }

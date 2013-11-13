@@ -11,7 +11,8 @@ SettingsUI::SettingsUI(QWidget *parent) :
     this->loadSettings();
     connect(ui->pushButton_connect, SIGNAL(clicked()), this, SLOT(openPort()));
     connect(ui->pushButton_startTest, SIGNAL(clicked()), this, SLOT(startReading()));
-    connect(ui->pushButton_endTest, SIGNAL(clicked()), this, SLOT(endTest()));
+    ui->pushButton_startTest->setEnabled(true);
+
 }
 
 SettingsUI::~SettingsUI(){
@@ -22,34 +23,20 @@ void SettingsUI::setReader(serialPort* read){
     reader=read;
 }
 
+void SettingsUI::isSerialPortConnected(bool con){
+    if(con)
+        serialPortConnected();
+    else
+        serialPortNotConnected();
+}
+
 void SettingsUI::loadSettings(){
     /** Device settings
       */
-#if defined (WIN32)
+
     portNames = serialPort::getPortNames();
-#else
-    portNames.append("/dev/ttyS0");
-    portNames.append("/dev/ttyS1");
-#endif
 
     ui->comboBox_portName->addItems(portNames);
-    Device dev;
-    dev.autoconnect = false;
-    dev.portName = "COM1";
-    dev.baudRate = 9600;
-    dev.parity = 1;
-    dev.byteSize = 7;
-    dev.stopBits = 2;
-    if(dev.portName != ""){
-        if(portNames.contains(dev.portName))
-            ui->comboBox_portName->setCurrentIndex(portNames.indexOf(dev.portName));
-        else{
-            portNames.append(dev.portName);
-            ui->comboBox_portName->addItem(dev.portName);
-            ui->comboBox_portName->setCurrentIndex(portNames.indexOf(dev.portName));
-        }
-    }
-    ui->checkBox_autoconnect->setChecked(dev.autoconnect);
 
     int k = 600;
     for(int i = 0; i < 7; i++){
@@ -57,55 +44,66 @@ void SettingsUI::loadSettings(){
         k *= 2;
     }
     ui->comboBox_baudRate->addItems(baudRates);
-    ui->comboBox_baudRate->setCurrentIndex(baudRates.indexOf(QString::number(dev.baudRate)));
 
     parityList.append("0");
     parityList.append("1");
     ui->comboBox_parity->addItems(parityList);
-    ui->comboBox_parity->setCurrentIndex(parityList.indexOf(QString::number(dev.parity)));
+
     stopBitsList.append("1");
     stopBitsList.append("2");
     ui->comboBox_stopBits->addItems(stopBitsList);
-    ui->comboBox_stopBits->setCurrentIndex(stopBitsList.indexOf(QString::number(dev.stopBits)));
+
 
     byteSizeList.append("7");
     byteSizeList.append("8");
     ui->comboBox_byteSize->addItems(byteSizeList);
-    ui->comboBox_byteSize->setCurrentIndex(byteSizeList.indexOf(QString::number(dev.byteSize)));
+
 }
 
 void SettingsUI::openPort(){
-    reader->setSettings(ui->comboBox_portName->currentText().toStdString(),
-                        ui->comboBox_baudRate->currentText().toInt(),
-                        ui->comboBox_parity->currentText().toInt(),
-                        ui->comboBox_stopBits->currentText().toInt(),
-                        ui->comboBox_byteSize->currentText().toInt());
-    connect(reader, SIGNAL(newNMEAString(const QString &)), this, SLOT(readData(const QString &)));
-    if(reader->getConnected()){
-        ui->pushButton_startTest->setEnabled(true);
-        ui->pushButton_endTest->setEnabled(true);
-        ui->RadioButton_connected->setChecked(true);
-        ui->textEdit->setText("<font size+=3><b>*****   Connected to port "
-                              +ui->comboBox_portName->currentText()+"   *****</b></font>");
+    if(ui->pushButton_connect->text().compare("Connect")==0){
+        ui->pushButton_connect->setText("Disconnect");
+        connect(reader, SIGNAL(newNMEAString(const QString &)), this, SLOT(readData(const QString &)));
+        emit canRead();
+        setSettings();
+        if(reader->getConnected()){
+            ui->connection_status->setText("<font color =green size+=3><b>Connected to port "
+                                           +ui->comboBox_portName->currentText()+"</b></font>");
+        }
 
-    } else{
-        ui->textEdit->setText("<font color=red size+=3>NOT connected</font>");
-        ui->RadioButton_NOTconnected->setChecked(true);
-
+        else{
+            if(portNames.size()==0){
+                ui->connection_status->setText("<font color =red size+=3><b>NO PORTS AVAILABLE</b></font>");
+            }
+            else{
+                ui->connection_status->setText("<font color =red size+=3><b>Cannot connect to port "
+                                               +ui->comboBox_portName->currentText()+"</b></font>");
+            }
+        }
+    }
+    else{
+        closePort();
     }
 }
 
+bool SettingsUI::readWhenStarted(){
+    return ui->checkBox_autoconnect->isChecked();
+}
+
+void canRead(){
+
+}
+
 void SettingsUI::readData(const QString & data) {
-//Here we keep the scroll bar at the bottom of the text area
+    //Here we keep the scroll bar at the bottom of the text area
     ui->textEdit->append(data);
     QScrollBar* scroll = ui->textEdit->verticalScrollBar();
     scroll->setValue(scroll->maximum());
 }
 
 void SettingsUI::startReading() {
+    setSettings();
     reader->setDisplay(true);
-    if(!reader->isRunning())
-        reader->start();
 }
 
 void SettingsUI::endTest(){
@@ -113,6 +111,48 @@ void SettingsUI::endTest(){
 }
 
 //DefaultSettings loader
+void SettingsUI::serialPortConnected(){
+    if(ui->checkBox_autoconnect->isChecked() && portNames.size()>0){
+        setSettings();
+        ui->connection_status->setText("<font color =green size+=3><b>Connected to port "
+                                       +ui->comboBox_portName->currentText()+"</b></font>");
+        connect(reader, SIGNAL(newNMEAString(const QString &)), this, SLOT(readData(const QString &)));
+        ui->pushButton_connect->setText("Disconnect");
+    }
+    else{
+        ui->connection_status->setText("<font color =red size+=3><b>Not Connected</b></font>");
+        if(portNames.size()==0){
+            ui->connection_status->setText("<font color =red size+=3><b>NO PORTS AVAILABLE</b></font>");
+        }
+    }
+
+}
+
+void SettingsUI::closePort(){
+
+        disconnect(reader, SIGNAL(newNMEAString(const QString &)), this, SLOT(readData(const QString &)));
+        ui->pushButton_connect->setText("Connect");
+        ui->connection_status->setText("<font size+=3><b>Disconnected from port "
+                              +ui->comboBox_portName->currentText()+"</b></font>");
+        emit stopReading();
+}
+
+void stopReading(){
+
+}
+
+void SettingsUI::serialPortNotConnected(){
+
+    ui->connection_status->setText("<font color=red size+=3>NOT CONNECTED. Cannot open serial port. Check the connection</font>");
+    ui->checkBox_autoconnect->setEnabled(false);
+    ui->pushButton_connect->setEnabled(false);
+    ui->pushButton_startTest->setEnabled(false);
+    ui->comboBox_baudRate->setEnabled(false);
+    ui->comboBox_byteSize->setEnabled(false);
+    ui->comboBox_parity->setEnabled(false);
+    ui->comboBox_portName->setEnabled(false);
+    ui->comboBox_stopBits->setEnabled(false);
+}
 
 void SettingsUI::setupSettings(Settings *s){
     settings = s;
@@ -154,6 +194,14 @@ void SettingsUI::updateSettings(){
         settings->setSetting("AutoConnect","true");
     else
         settings->setSetting("AutoConnect","false");
+}
+
+void SettingsUI::setSettings(){
+    reader->setSettings(ui->comboBox_portName->currentText().toStdString(),
+                        ui->comboBox_baudRate->currentText().toInt(),
+                        ui->comboBox_parity->currentText().toInt(),
+                        ui->comboBox_stopBits->currentText().toInt(),
+                        ui->comboBox_byteSize->currentText().toInt());
 }
 
 void SettingsUI::save(){

@@ -108,6 +108,8 @@ private:
 
     QSerialPort *upwindSerial;
     QSerialPortInfo *upwindSerialInfo;
+    qint8 counter;
+    bool opened;
 
     void startReading();
 
@@ -138,6 +140,8 @@ private:
 private slots:
     void retry();
     void upwindSerialDataReceived();
+    void read();
+    void stopRead();
 
 signals:
     void notConnected();

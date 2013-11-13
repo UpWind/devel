@@ -33,8 +33,8 @@ SOURCES += main.cpp \
     UI/ToolBox/toolbox.cpp \
     UI/ToolBox/tab.cpp \
     UI/pluginselect.cpp \
-    ../UWPlugins/ViewRenderer/coreviewrenderer.cpp \
     ../UWPlugins/NMEAReader/corenmeareader.cpp \
+    ../UWPlugins/ViewRenderer/coreviewrenderer.cpp \
     UI/navigationwindow.cpp \
 
 #UI/coastline.cpp

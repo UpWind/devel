@@ -265,7 +265,7 @@ QLabel {
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>6</number>
      </property>
      <widget class="QWidget" name="generalTAB">
       <attribute name="title">

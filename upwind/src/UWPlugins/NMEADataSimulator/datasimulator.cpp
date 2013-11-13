@@ -216,19 +216,9 @@ void dataSimulator::simulateNMEAGPS(){
     str += getTime() + ",";
     str += "A,";
 
-//    int simla = randInt(-2, 2);
-//    int simlo = randInt(-2, 2);
-    // antti
-//    latitude += simla * 0.001; // 10km
-//    longitude += simlo * 0.001;
-
     float trigonometricAngle = UwMath::toRadians(UwMath::toCartesian(m_currentCompassHeading));
-//    if (m_currentCompassHeading > 90)
-//        trigonometricAngle = (m_currentCompassHeading -90.0) / 180.0 * M_PI;
-//    else
-//        trigonometricAngle = (m_currentCompassHeading + 270.0) / 180.0 * M_PI;
 
-    float twa = (m_windAngle - m_currentCompassHeading);//+ UwMath::toCartesian(m_currentCompassHeading);
+    float twa = (m_windAngle - m_currentCompassHeading);
     while (twa < -180.0)
         twa += 360;
     while (twa > 180.0)
@@ -240,10 +230,7 @@ void dataSimulator::simulateNMEAGPS(){
     } else {
         m_currentVelocity = m_isAnchored ? 0.0 : m_defaultMotorVelocity * m_velocityMultiplier;
     }
-//    m_currentVelocity = m_currentVelocity *
-//            * m_currentVelocity;
 
-//    float scaleFactor = 0.03;
     double velocityInDegrees = m_currentVelocity / 60;
     double timeDeltaHours = (float)timer->interval() / 1000 / 3600;
     double longitudeCorrection = 1 / sin(m_currentGpsPositionLatitude * M_PI / 180);
@@ -257,8 +244,6 @@ void dataSimulator::simulateNMEAGPS(){
     QPointF currentGPs(m_currentGpsPositionLongitude, m_currentGpsPositionLatitude);
     UwMath::toConformalInverted(&currentGPs);
 
-//    UwMath::toConformalInverted(translate);
-
     currentGPs += translate;
 
     UwMath::fromConformalInverted(currentGPs);
@@ -266,14 +251,8 @@ void dataSimulator::simulateNMEAGPS(){
     m_currentGpsPositionLongitude = currentGPs.x();
     m_currentGpsPositionLatitude = currentGPs.y();
 
-    /*QPointF fixed = *//*UwMath::fromConformalInverted(translate);*/
-//    QPointF fixed = translate;
-
-//    m_currentGpsPositionLatitude += translate.x();
-//    m_currentGpsPositionLongitude += translate.y();
-
-    QString slatitude= QString::number(m_currentGpsPositionLatitude, 'f', 6);
-    QString slongitude= QString::number(m_currentGpsPositionLongitude, 'f', 6);
+    QString slatitude= QString::number(m_currentGpsPositionLatitude*100, 'f', 6);
+    QString slongitude= QString::number(m_currentGpsPositionLongitude*100, 'f', 6);
     str += slatitude + ",";
     if(m_currentGpsPositionLatitude >= 0)
         str += "N,";

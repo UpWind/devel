@@ -32,6 +32,14 @@ public:
     /** Save the settings with new parameters that the user has chosen
       */
     void updateSettings();
+    void serialPortNotConnected();
+    void serialPortConnected();
+    void isSerialPortConnected(bool connected);
+    bool readWhenStarted();
+    void setSettings();
+    void closePort();
+
+
 
 private:
     Ui::SettingsUI *ui;
@@ -69,6 +77,11 @@ private slots:
     /** Show the NMEAStrings in the Settings log
       */
     void readData(const QString & data);
+
+signals:
+    void canRead();
+    void stopReading();
+
 };
 
 #endif // SETTINGSUI_H
