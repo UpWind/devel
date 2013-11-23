@@ -1,5 +1,5 @@
 
-#define QT_NO_DEBUG_OUTPUT
+//#define QT_NO_DEBUG_OUTPUT
 #include <QtGui>
 #include <QFileInfo>
 #include <QDebug>
@@ -19,6 +19,8 @@ CoreUpWindScene::CoreUpWindScene(){
     this->pDiagram = PolarDiagram::getInstance();
     this->threadingStarted = 0;
     qRegisterMetaType<QVector<QPointF> >("QVector<QPointF>");
+
+
 }
 
 void CoreUpWindScene::setChartObjects(CoreChartProvider* model){
@@ -52,6 +54,7 @@ void CoreUpWindScene::initializeSettings(){
 void CoreUpWindScene::receiveData(QVector<QPointF> layLineData){
 
     this->boat->injectLaylines(layLineData);
+    qDebug() << "Laylines injected";
 }
 
 void CoreUpWindScene::error(QString /*err*/)
@@ -99,12 +102,17 @@ Settings * CoreUpWindScene::getSettings(){
 }
 
 void CoreUpWindScene::receiveDataQuery(){
+//    QPointF *position=this->boat->getGeoPosition();
+//    this->boat->setGeoPosition(position->rx()/100, position->ry()/100);
     emit injectData(this->route->getRoute(), *this->boat->getGeoPosition());
+//    qDebug() << "Boat geo position";
+//    qDebug() << this->boat->getGeoPosition()->rx();
+//    qDebug() << this->boat->getGeoPosition()->ry();
+
 }
 
 void CoreUpWindScene::parseNMEAString( const QString & text){
     //$IIRMC,,A,2908.38,N,16438.18,E,0.0,0.0,251210,,*06
-    //qDebug() << "I am in the coreupwindscene checkin if I am recieving the sentences";
     if(text[3] == QChar('R') && text[4] == QChar('M') && text[5] == QChar('C')){
         this->parsedNMEAValues.clear();
         QStringList strList = text.split(",");
@@ -128,7 +136,7 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
         longitude/=100;
         latitude/=100;
 
-        qDebug() << Q_FUNC_INFO << latitude << ", " << longitude;
+        //qDebug() << Q_FUNC_INFO << latitude << ", " << longitude;
         this->boat->setGeoPosition(longitude, latitude);
 
         calculateLaylines = new CalculateLaylines();

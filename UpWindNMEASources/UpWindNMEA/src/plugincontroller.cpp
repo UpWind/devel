@@ -159,6 +159,7 @@ void PluginController::broadcastToServer(const QString &nmeaString) {
 
 void PluginController::broadcastToSerial(const QString &nmeaString) {
     if(serialPort) {
+
         serialPort->writeString(nmeaString.toStdString());
     }
 }

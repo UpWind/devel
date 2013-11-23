@@ -86,6 +86,10 @@ win32 {
 #  MOC_DIR      = C:/tmp/moc
 #  OBJECTS_DIR  = C:/tmp/obj
     INCLUDEPATH += "$$PWD/../../../libs/win/PostgreSQL9.2/include"
+    LIBS += -L$$PWD/../../../../libs/win/PostgreSQL9.2/lib -lpq
+
+    INCLUDEPATH += "$$PWD/../../../../libs/win/gdal/include"
+    LIBS += -L$$PWD/../../../../libs/win/gdal/lib -lgdal-1
 }
 
 

@@ -117,6 +117,7 @@ void Anemometer::parseNMEAString(const QString & text){
     //Since we don't know wich sentence is correct, we take both into account but we don't use the extra parameter that provide the $IIMWD sentence
     //Also, there is some kind of problem so the Plugin Controller sends two sentences, one with the correct parameters and the other one with all the parameters at 0.
     //Here, we filter the sentences so the sentences with all the parameters with 0 is not taken into account
+
     QString value = "0.00";
     QString value1 = "0";
     if(text[3] == QChar('M') && text[4] == QChar('W') && (text[5] == QChar('D') || text[5] == QChar('V'))){

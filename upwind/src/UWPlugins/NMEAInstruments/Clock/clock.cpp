@@ -70,6 +70,8 @@ QString Clock::getName(){
 void Clock::parseNMEAString(const QString & text)
 {
 	(void)text;
+   // qDebug() << "Parse NMEA string clock line 73";
+
 }
 
 Q_EXPORT_PLUGIN2(Clock, Clock)

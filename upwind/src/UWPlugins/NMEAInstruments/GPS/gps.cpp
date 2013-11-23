@@ -101,6 +101,8 @@ QString GPS::getName(){
 
 void GPS::parseNMEAString( const QString & text){
     //$IIRMC,,A,2908.38,N,16438.18,E,0.0,0.0,251210,,*06
+    //qDebug() << "Parse NMEA string gps line 104";
+
     if(text[3] == QChar('R') && text[4] == QChar('M') && text[5] == QChar('C')){
         this->parsedNMEAValues.clear();
 

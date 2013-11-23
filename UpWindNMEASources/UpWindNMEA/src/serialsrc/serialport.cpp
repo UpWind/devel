@@ -27,14 +27,6 @@ SerialPort::SerialPort(unsigned int portNumber, unsigned int baudRate):
     upwindSerial->setFlowControl(QSerialPort::NoFlowControl);
     qDebug() << upwindSerial->isOpen();
 
-    //    int error = OpenComport(portNumber, baudRate);
-    //    this->open = (!error ? true : false);
-
-    //    if(!open) {
-    //        //throw std::runtime_error("Failed to open serial port!");
-    //        qDebug() << "Failed to open serial port!";
-    //    }
-
 }
 
 SerialPort::~SerialPort() {
@@ -56,7 +48,6 @@ void SerialPort::writeByte(unsigned char byte) {
 void SerialPort::writeString(const std::string &nmeaString) {
     if(isOpen()) {
         upwindSerial->write((nmeaString + std::string("\r\n")).c_str());
-        //cprintf(portNumber, (nmeaString + std::string("\r\n")).c_str());
     }
 
 }
@@ -70,7 +61,7 @@ void SerialPort::writeString(const QString &nmeaString) {
 void SerialPort::close() {
 
     if(upwindSerial->isOpen()) {
-        CloseComport(portNumber);
+        upwindSerial->close();
     }
 }
 

@@ -17,8 +17,9 @@ void SettingsManager::initializeSettings(){
     qDebug() << Q_FUNC_INFO << info.absoluteFilePath();
     selectedPlugins = new Settings("SelectedPlugins");
 
-    if(info.exists())
+    if(info.exists()){
         selectedPlugins->loadSettings();
+    }
     else{
         //construct a new settings
         selectedPlugins->setSetting("Renderer","");

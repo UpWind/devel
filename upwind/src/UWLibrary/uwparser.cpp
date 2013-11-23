@@ -1,4 +1,5 @@
 #include "uwparser.h"
+#include <QDebug>
 
 UWParser::UWParser()
 {
@@ -6,7 +7,7 @@ UWParser::UWParser()
 
 QStringList* UWParser::parseNMEAString(const QString &nmeaString){
 
-
+    qDebug() << "Parse NMEA string uwparser line 10";
      QString msgID;
      QStringList *parsedNMEAString = 0;
 

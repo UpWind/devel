@@ -83,6 +83,8 @@ QString Compass::getName(){
 }
 
 void Compass::parseNMEAString(const QString & text){
+    //qDebug() << "Parse NMEA string compass line 86";
+
     //$HCHDG,101.1,,,7.1,W*3C
     if(text[3] == QChar('H') && text[4] == QChar('D') && (text[5] == QChar('G') || text[5] == QChar('T'))){
         QStringList strList = text.split(",");

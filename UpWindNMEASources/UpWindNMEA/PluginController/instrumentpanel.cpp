@@ -32,6 +32,7 @@ InstrumentPanel::~InstrumentPanel() {
 
 void InstrumentPanel::parseNmeaString(const QString &text) {
 
+    qDebug() << "Parse NMEA instrument panel line 35";
     QStringList tokens;
 
     //Time information
