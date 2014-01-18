@@ -2,6 +2,7 @@
 #include "uwcore.h"
 #include <QGridLayout>
 #include <QString>
+#include <QtWidgets>
 
 ToolBox::ToolBox(/*LayersManager* layersManager,*/ QWidget *parent)
 {
@@ -124,7 +125,8 @@ void ToolBox::instrument_Clicked(bool value){
 
 void ToolBox::initializeInstruments(){
 
-    QWidget *instrumentWidget = qFindChild<QWidget*>(this, "page3");
+    //QWidget *instrumentWidget = qFindChild<QWidget*>(this, "page3");
+    QWidget *instrumentWidget = this->findChild<QWidget*>("page3");
 
     QGridLayout *layout = new QGridLayout();
     instrumentWidget->setLayout(layout);

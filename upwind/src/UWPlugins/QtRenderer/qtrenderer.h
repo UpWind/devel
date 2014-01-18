@@ -12,7 +12,7 @@ class BoatWidget;
 class QtRenderer : public CoreViewRenderer
 {
     Q_OBJECT
-    Q_INTERFACES(ViewRendererInterface UWPluginInterface)
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.QtRenderer")
 
 public:
     QtRenderer();

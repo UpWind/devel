@@ -33,6 +33,8 @@ using namespace std;
 class serialPort: public CoreNMEAReader
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.serialPort")
+
 public:
     /** Creates the file and timer and initalizate the UI Settings
       */

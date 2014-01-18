@@ -169,5 +169,3 @@ QString SimulatorWheel::getName(){
 
 void SimulatorWheel::parseNMEAString(const QString & text){
 }
-
-Q_EXPORT_PLUGIN2(simulatorWheel, SimulatorWheel)

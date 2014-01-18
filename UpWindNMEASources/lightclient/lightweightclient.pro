@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-09-15T10:24:16
 # -------------------------------------------------
-QT += core gui network \
+QT += core widgets network \
     xml
 TARGET = Lightweight_client
 DESTDIR = ../Release

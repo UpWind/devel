@@ -4,6 +4,7 @@
 
 #include <QtGui>
 #include "../ui_mainmenu.h"
+#include <QtWidgets>
 
 class MainMenu : public QWidget
 {

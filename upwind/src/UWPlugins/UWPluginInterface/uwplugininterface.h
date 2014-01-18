@@ -1,7 +1,7 @@
 #ifndef UWPLUGININTERFACE_H
 #define UWPLUGININTERFACE_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "../../Settings/settings.h"
 
 /**

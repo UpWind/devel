@@ -311,7 +311,7 @@ bool CalculateLaylines::checkGeometriesIntersection( const QString &object1, con
     sql.append( ") AS result ");
     sql.append( " ) AS intersection WHERE result = TRUE");
 
-    res = PQexec(conn, sql.toAscii() );
+    res = PQexec(conn, sql.toLatin1() );
     bool intersection = ( PQntuples(res) > 0 );
     PQclear(res);
 
@@ -335,7 +335,7 @@ bool CalculateLaylines::checkIntersection( const QString &layerName, const QStri
     }
     sql.append( " WHERE result = TRUE");
 
-    res = PQexec(conn, sql.toAscii() );
+    res = PQexec(conn, sql.toLatin1() );
     bool intersection = ( PQntuples(res) > 0 );
 
     PQclear(res);

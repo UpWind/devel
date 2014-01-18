@@ -139,5 +139,3 @@ void GPS::parseNMEAString( const QString & text){
 
     }
 }
-
-Q_EXPORT_PLUGIN2(gps, GPS)

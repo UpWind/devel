@@ -16,6 +16,9 @@ class SimulatorWheel;
 class SimulatorWheel : public CoreNMEAInstrument, public SimulatorWheelInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.SimulatorWheel")
+    Q_INTERFACES(SimulatorWheelInterface)
+
 public:
     /** Constructor of the SimulatorWheel Instrument
       * @param parent - Parent widget of the plugin widget.

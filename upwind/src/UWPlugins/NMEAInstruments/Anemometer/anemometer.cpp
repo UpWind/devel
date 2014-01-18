@@ -155,5 +155,3 @@ void Anemometer::parseNMEAString(const QString & text){
         }
     }
 }
-
-Q_EXPORT_PLUGIN2(anemometer, Anemometer)

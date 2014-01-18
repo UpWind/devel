@@ -1,4 +1,4 @@
-QT       += core gui\
+QT       += core widgets\
             network \
             xml\
             webkit

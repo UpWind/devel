@@ -173,4 +173,3 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
 
     }
 }
-Q_EXPORT_PLUGIN2(coreupwindscene, CoreUpWindScene)

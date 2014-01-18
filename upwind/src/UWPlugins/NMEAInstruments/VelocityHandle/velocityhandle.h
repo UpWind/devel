@@ -16,6 +16,8 @@ class VelocityHandle;
 class VelocityHandle : public CoreNMEAInstrument, public VelocityHandleInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.VelocityHandle")
+    Q_INTERFACES(VelocityHandleInterface)
 public:
     /** Constructor of the SimulatorWheel Instrument
       * @param parent - Parent widget of the plugin widget.

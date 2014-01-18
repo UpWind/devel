@@ -36,15 +36,18 @@ void SettingsUI::endTest(){
 }
 
 bool SettingsUI::getGPS(){
-    QCheckBox* gps = qFindChild<QCheckBox*>(this, "checkBox_GPS");
+    //QCheckBox* gps = qFindChild<QCheckBox*>(this, "checkBox_GPS");
+    QCheckBox* gps = this->findChild<QCheckBox*>("checkBox_GPS");
     return gps->isChecked();
 }
 bool SettingsUI::getAnenomter(){
-    QCheckBox* an = qFindChild<QCheckBox*>(this, "checkBox_Anenometer");
+    //QCheckBox* an = qFindChild<QCheckBox*>(this, "checkBox_Anenometer");
+    QCheckBox* an = this->findChild<QCheckBox*>("checkBox_Anenometer");
     return an->isChecked();
 }
 bool SettingsUI::getCompass(){
-    QCheckBox* com = qFindChild<QCheckBox*>(this, "checkBox_Compass");
+    //QCheckBox* com = qFindChild<QCheckBox*>(this, "checkBox_Compass");
+    QCheckBox* com = this->findChild<QCheckBox*>("checkBox_Compass");
     return com->isChecked();
 }
 
@@ -59,7 +62,8 @@ double SettingsUI::boatPositionLatitude()
 }
 
 bool SettingsUI::getClock(){
-    QCheckBox* clo = qFindChild<QCheckBox*>(this, "checkBox_Clock");
+    //QCheckBox* clo = qFindChild<QCheckBox*>(this, "checkBox_Clock");
+    QCheckBox* clo = this->findChild<QCheckBox*>("checkBox_Clock");
     return clo->isChecked();
 }
 

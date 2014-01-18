@@ -7,7 +7,7 @@ CONFIG += serialport
 QT += serialport
 QT += widgets
 
-QT += core gui\
+QT += core widgets\
     network \
     xml\
     webkit\
@@ -48,12 +48,9 @@ HEADERS += \
     ../Settings/settings.h \
     ../UWPlugins/ChartProviderInterface/chartproviderinterface.h \
     ../UWPlugins/ChartProviderInterface/corechartprovider.h \
-    ../UWPlugins/ViewRenderer/ViewRendererInterface.h \
-    ../UWPlugins/UWPluginInterface/UWPluginInterface.h \
     ../UWPlugins/UpWindScene/UpWindSceneInterface.h \
     ../UWPlugins/Logger/LoggerInterface.h \
     ../UWPlugins/RouteManager/RouteManagerInterface.h \
-    ../UWPlugins/NMEAInstruments/CoreNMEAInstrument/NMEAInstrumentInterface.h \
     ../UWPlugins/NMEAReader/corenmeareader.h \
     ../UWPlugins/ViewRenderer/coreviewrenderer.h \
     UI/mainmenu.h\
@@ -63,8 +60,7 @@ HEADERS += \
     UI/ToolBox/toolbox.h \
     UI/ToolBox/tab.h \
     UI/pluginselect.h \
-    UI/navigationwindow.h \
-    ../UWPlugins/NMEAReader/NMEAReaderInterface.h
+    UI/navigationwindow.h
 
 #UI/coastline.h
 

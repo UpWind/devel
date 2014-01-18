@@ -9,7 +9,7 @@ QT += widgets
 
 QT       += core
 
-QT       -= gui
+QT       -= widgets
 
 TARGET = UWLibrary
 

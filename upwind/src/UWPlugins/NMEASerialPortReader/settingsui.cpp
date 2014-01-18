@@ -157,12 +157,19 @@ void SettingsUI::serialPortNotConnected(){
 void SettingsUI::setupSettings(Settings *s){
     settings = s;
 
-    QComboBox* port= qFindChild<QComboBox*>(this, "comboBox_portName");
-    QComboBox* baud= qFindChild<QComboBox*>(this, "comboBox_baudRate");
-    QComboBox* parity= qFindChild<QComboBox*>(this, "comboBox_parity");
-    QComboBox* stopBits= qFindChild<QComboBox*>(this, "comboBox_stopBits");
-    QComboBox* byteSize= qFindChild<QComboBox*>(this, "comboBox_byteSize");
-    QCheckBox* autoC = qFindChild<QCheckBox*>(this, "checkBox_autoconnect");
+//    QComboBox* port= qFindChild<QComboBox*>(this, "comboBox_portName");
+//    QComboBox* baud= qFindChild<QComboBox*>(this, "comboBox_baudRate");
+//    QComboBox* parity= qFindChild<QComboBox*>(this, "comboBox_parity");
+//    QComboBox* stopBits= qFindChild<QComboBox*>(this, "comboBox_stopBits");
+//    QComboBox* byteSize= qFindChild<QComboBox*>(this, "comboBox_byteSize");
+//    QCheckBox* autoC = qFindChild<QCheckBox*>(this, "checkBox_autoconnect");
+
+    QComboBox* port = this->findChild<QComboBox*>("comboBox_portName");
+    QComboBox* baud = this->findChild<QComboBox*>("comboBox_baudRate");
+    QComboBox* parity = this->findChild<QComboBox*>("comboBox_parity");
+    QComboBox* stopBits = this->findChild<QComboBox*>("comboBox_stopBits");
+    QComboBox* byteSize = this->findChild<QComboBox*>("comboBox_byteSize");
+    QCheckBox* autoC = this->findChild<QCheckBox*>("checkBox_autoconnect");
 
     port->setCurrentIndex(portNames.indexOf(s->getSetting("Port")));
     baud->setCurrentIndex(baudRates.indexOf(s->getSetting("Baud")));
@@ -177,12 +184,19 @@ void SettingsUI::setupSettings(Settings *s){
 }
 
 void SettingsUI::updateSettings(){
-    QComboBox* port= qFindChild<QComboBox*>(this, "comboBox_portName");
-    QComboBox* baud= qFindChild<QComboBox*>(this, "comboBox_baudRate");
-    QComboBox* parity= qFindChild<QComboBox*>(this, "comboBox_parity");
-    QComboBox* stopBits= qFindChild<QComboBox*>(this, "comboBox_stopBits");
-    QComboBox* byteSize= qFindChild<QComboBox*>(this, "comboBox_byteSize");
-    QCheckBox* autoC = qFindChild<QCheckBox*>(this, "checkBox_autoconnect");
+//    QComboBox* port= qFindChild<QComboBox*>(this, "comboBox_portName");
+//    QComboBox* baud= qFindChild<QComboBox*>(this, "comboBox_baudRate");
+//    QComboBox* parity= qFindChild<QComboBox*>(this, "comboBox_parity");
+//    QComboBox* stopBits= qFindChild<QComboBox*>(this, "comboBox_stopBits");
+//    QComboBox* byteSize= qFindChild<QComboBox*>(this, "comboBox_byteSize");
+//    QCheckBox* autoC = qFindChild<QCheckBox*>(this, "checkBox_autoconnect");
+
+    QComboBox* port = this->findChild<QComboBox*>("comboBox_portName");
+    QComboBox* baud = this->findChild<QComboBox*>("comboBox_baudRate");
+    QComboBox* parity = this->findChild<QComboBox*>("comboBox_parity");
+    QComboBox* stopBits = this->findChild<QComboBox*>("comboBox_stopBits");
+    QComboBox* byteSize = this->findChild<QComboBox*>("comboBox_byteSize");
+    QCheckBox* autoC = this->findChild<QCheckBox*>("checkBox_autoconnect");
 
     settings->setSetting("Port", QString::fromStdString(port->currentText().toStdString()));
     settings->setSetting("Baud", QString::fromStdString(baud->currentText().toStdString()));

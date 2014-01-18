@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml sql
+QT       += core widgets xml sql
 
 TARGET = PostgreSQL
 TEMPLATE = lib
@@ -111,5 +111,5 @@ else:unix {
 
     INCLUDEPATH +=/usr/include/gdal/ \
         /usr/include/postgresql
-    LIBS +=-lpq -lgdal1.7.0
+    LIBS +=-lpq -lgdal
 }

@@ -213,5 +213,3 @@ QString VelocityHandle::getName(){
 
 void VelocityHandle::parseNMEAString(const QString & text){
 }
-
-Q_EXPORT_PLUGIN2(velocityHandle, VelocityHandle)

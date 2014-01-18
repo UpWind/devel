@@ -8,7 +8,7 @@ TARGET = UpWindScene
 TEMPLATE = lib
 DESTDIR = ../plugins
 
-QT       += core gui\
+QT       += core widgets\
             network \
             xml\
             webkit\
@@ -61,5 +61,5 @@ win32 {
 
 unix {
     INCLUDEPATH += /usr/include/gdal/ /usr/include/postgresql
-    LIBS +=-lpq -lgdal1.7.0
+    LIBS +=-lpq -lgdal
 }

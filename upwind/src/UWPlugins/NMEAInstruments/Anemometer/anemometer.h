@@ -14,6 +14,8 @@ class Anemometer;
 class Anemometer : public CoreNMEAInstrument
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.Anemometer")
+
 public:
     /** Constructor of the Anemometer Instrument
       * @param parent - Parent widget of the plugin widget.

@@ -1,4 +1,4 @@
-QT += core gui xml svg
+QT += core widgets xml svg
 
 TEMPLATE = lib
 
@@ -60,7 +60,7 @@ else:unix {
 
     INCLUDEPATH +=/usr/include/gdal/ \
         /usr/include/postgresql
-    LIBS +=-lpq -lgdal1.7.0
+    LIBS +=-lpq -lgdal
 }
 
 win32 {

@@ -74,7 +74,7 @@ void PostgreChartProvider::initConnection(){
                              " password=" + dbPass +
                              " port=" + QString::number(dbPort) +
                              " host=" + dbHost);
-    dataSource = OGRSFDriverRegistrar::Open(driver.toAscii(), FALSE);
+    dataSource = OGRSFDriverRegistrar::Open(driver.toLatin1(), FALSE);
 
     if(dataSource == NULL){
         qWarning() << "OGR Error: Failed to open database connection";
@@ -765,6 +765,3 @@ inline QString PostgreChartProvider::cleanupLayerName(QString layerName) {
 
     return baseName;
 }
-
-
-Q_EXPORT_PLUGIN2(postgrechartprovider, PostgreChartProvider)

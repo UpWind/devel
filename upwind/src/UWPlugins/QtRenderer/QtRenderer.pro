@@ -1,5 +1,5 @@
 
-QT += core gui svg opengl
+QT += core widgets svg opengl
 
 TARGET = QtRenderer
 
@@ -73,7 +73,7 @@ else:unix {
 
     INCLUDEPATH +=/usr/include/gdal/ \
         /usr/include/postgresql
-    LIBS +=-lpq -lgdal1.7.0
+    LIBS +=-lpq -lgdal
 }
 
 win32 {

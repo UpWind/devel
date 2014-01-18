@@ -145,7 +145,7 @@ bool LoadObstacles::createObstaclesTables() {
             sql.append( "SELECT AddGeometryColumn ('obstacles_l','wkb_geometry',-1,'LINESTRING',2);" );
             sql.append( "ALTER TABLE obstacles_r ADD COLUMN source_table char(11);" );
             sql.append( "ALTER TABLE obstacles_l ADD COLUMN source_table char(11);" );
-            res = PQexec(conn, sql.toAscii() );
+            res = PQexec(conn, sql.toLatin1() );
             PQclear(res);
 
             // INSERT POLYGON LAYERS
@@ -161,7 +161,7 @@ bool LoadObstacles::createObstaclesTables() {
                 if (debug) qDebug() << QString("UwShort: Adding obstacles of %1").arg( polygon_layers[i]);
             }
             // WARNING: very long string:
-            res = PQexec(conn, sql.toAscii() );
+            res = PQexec(conn, sql.toLatin1() );
             PQclear(res);
 
             qDebug() << "for in 1";            // INSERT POINT LAYERS WITH OFFSET
@@ -175,7 +175,7 @@ bool LoadObstacles::createObstaclesTables() {
                 if ( signsound)
                     sql.append( QString(" WHERE depth < %1 ").arg( QString::number( SIGNSOUND_THRESHOLD)));
                 sql.append( ";");
-                res = PQexec(conn, sql.toAscii() );
+                res = PQexec(conn, sql.toLatin1() );
                 if (debug) qDebug() << QString("UwShort: Adding obstacles of %1 (%2/%3): %4 obstacles").arg( point_layers[i], QString::number(i+1), QString::number(point_layers.size()), QString::number(PQntuples(res)));
                 sql.clear();
 
@@ -199,7 +199,7 @@ bool LoadObstacles::createObstaclesTables() {
                 }
                 PQclear(res);
 
-                res = PQexec( conn, sql.toAscii());
+                res = PQexec( conn, sql.toLatin1());
                 PQclear(res);
 
                 //INSERT LINE LAYERS
@@ -218,7 +218,7 @@ bool LoadObstacles::createObstaclesTables() {
                         // WARNING: very long string:
                         qDebug() << QString("UwShort: Adding obstacles of ").append( line_layers[i]);
                     }
-                    res = PQexec(conn, sql.toAscii() );
+                    res = PQexec(conn, sql.toLatin1() );
                     PQclear(res);
                 }
 

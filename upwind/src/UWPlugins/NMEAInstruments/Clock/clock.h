@@ -17,6 +17,7 @@ class Clock;
 class Clock : public CoreNMEAInstrument
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.Clock")
 
 public:
     /** Constructor of the Clock Instrument

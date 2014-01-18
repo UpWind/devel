@@ -1,6 +1,7 @@
 #include "coreplugin.h"
 #include <QStringList>
 #include <QDateTime>
+#include <QtWidgets>
 #include "../../UpWindNMEA/src/settingsmanager.h"
 
 CorePlugin::CorePlugin()
@@ -89,7 +90,7 @@ QString CorePlugin::generateChecksum(QString & nString){
     if(endI<0)
         endI = nString.length();
     for(i = 1; i< endI; i++)
-        xorRes ^= nString.at(i).toAscii();
+        xorRes ^= nString.at(i).toLatin1();
 
     QString resString;
     resString.setNum(xorRes, 16);

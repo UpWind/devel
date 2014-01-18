@@ -6,7 +6,7 @@
 
 #TODO: Check the needed Qt kits by yourself before compiling
 
-QT       += core gui \
+QT       += core widgets \
             webkit xml
 
 TARGET      =   $$qtLibraryTarget(RPS)

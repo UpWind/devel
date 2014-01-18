@@ -29,7 +29,7 @@ QString CoreNMEAReader::generateChecksum(QString & nString){
     if(endI < 0)
         endI = nString.length();
     for(i = 1; i< endI; i++)
-        xorRes ^= nString.at(i).toAscii();
+        xorRes ^= nString.at(i).toLatin1();
 
     QString resString;
     resString.setNum(xorRes, 16);
@@ -226,7 +226,7 @@ void CoreNMEAReader::setVWT(QStringList VWT){ //True Wind Speed and Angle
     this->VWTWindSpeedKmH = VWT[7]; //x.x: Wind speed km/h
 
     // TRUE WIND ANGLE
-    float TWA = ( this->VWTCalcuWindDir.toAscii().at(0) == 'L' ) ?
+    float TWA = ( this->VWTCalcuWindDir.toLatin1().at(0) == 'L' ) ?
                 this->VWTCalcuWindAng.toFloat() * (-1) : this->VWTCalcuWindAng.toFloat();
     // add TWA to the buffer
     this->twa[twa_pos] = TWA;
@@ -270,7 +270,7 @@ float CoreNMEAReader::getVWTCalcuWindAng() const{
 }
 
 int CoreNMEAReader::getVWTCalcuWindDir() const{
-    return VWTCalcuWindDir.toAscii().at(0);
+    return VWTCalcuWindDir.toLatin1().at(0);
 }
 
 QString CoreNMEAReader::getVWTCalcuWindSpeed() const{
@@ -357,5 +357,3 @@ void CoreNMEAReader::addPluginSettingsToLayout(QLayout *layout)
 Settings* CoreNMEAReader::getSettings(){
     return settings;
 }
-
-//Q_EXPORT_PLUGIN2(NMEAReader, CoreNMEAReader)

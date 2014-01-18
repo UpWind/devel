@@ -150,5 +150,3 @@ void QtRenderer::handleBoatPositionChanged()
         view->centerOn(boatWidget->getBoat()->getBoatScenePosition());
     }
 }
-
-Q_EXPORT_PLUGIN2(QtRenderer, QtRenderer)

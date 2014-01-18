@@ -16,8 +16,10 @@ SettingsUI::~SettingsUI(){
 
 void SettingsUI::setupSettings(Settings *s){
     settings = s;
-    QCheckBox* box1 = qFindChild<QCheckBox*>(this, "checkBox");
-    QCheckBox* box2 = qFindChild<QCheckBox*>(this, "checkBox_2");
+    //QCheckBox* box1 = qFindChild<QCheckBox*>(this, "checkBox");
+    QCheckBox* box1 = this->findChild<QCheckBox*>("checkBox");
+    //QCheckBox* box2 = qFindChild<QCheckBox*>(this, "checkBox_2");
+    QCheckBox* box2 = this->findChild<QCheckBox*>("checkBox_2");
 
     if(s->getSetting("Something") == "true")
         box1->setChecked(true);
@@ -31,8 +33,10 @@ void SettingsUI::setupSettings(Settings *s){
 }
 
 void SettingsUI::updateSettings(){
-    QCheckBox* box1 = qFindChild<QCheckBox*>(this, "checkBox");
-    QCheckBox* box2 = qFindChild<QCheckBox*>(this, "checkBox_2");
+    //QCheckBox* box1 = qFindChild<QCheckBox*>(this, "checkBox");
+    QCheckBox* box1 = this->findChild<QCheckBox*>("checkBox");
+    //QCheckBox* box2 = qFindChild<QCheckBox*>(this, "checkBox_2");
+    QCheckBox* box2 = this->findChild<QCheckBox*>("checkBox_2");
 
     if(box1->isChecked())
         settings->setSetting("Something", "true");

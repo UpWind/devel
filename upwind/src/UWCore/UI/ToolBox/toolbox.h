@@ -1,11 +1,11 @@
 #ifndef TOOLBOX_H_
 #define TOOLBOX_H_
 
-#include <QtGui/QWidget>
-#include <QtGui/QToolBox>
+#include <QWidget>
+#include <QToolBox>
 #include <QtGui/QtGui>
 #include <QListIterator>
-#include <QtGui/QAbstractButton>
+#include <QAbstractButton>
 
 #include "../../ui_toolBox.h"
 #include "tab.h"

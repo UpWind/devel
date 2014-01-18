@@ -18,6 +18,7 @@ class Settings;
 class PostgreChartProvider : public CoreChartProvider
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.PostgreChartProvider")
 
 public:
     PostgreChartProvider();

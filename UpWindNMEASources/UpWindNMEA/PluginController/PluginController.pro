@@ -7,7 +7,7 @@ QT += serialport
 CONFIG += serialport
 QT += widgets
 
-QT       += core gui network xml
+QT       += core widgets network xml
 
 TARGET = UpwindSimulator
 DESTDIR = ../../Release

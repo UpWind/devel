@@ -41,7 +41,7 @@ void SettingsUI::getChartNames(){
 
     OGRDataSource *dataSource;
     OGRRegisterAll();
-    dataSource = OGRSFDriverRegistrar::Open(driver.toAscii(), TRUE);
+    dataSource = OGRSFDriverRegistrar::Open(driver.toLatin1(), TRUE);
     if(!dataSource){
         qDebug() << "Open failed.";
         OGRDataSource::DestroyDataSource(dataSource);
@@ -60,7 +60,7 @@ void SettingsUI::getChartNames(){
 
         sqlQuery = "SELECT datname FROM pg_database";
 
-        databaseNames = dataSource->ExecuteSQL(sqlQuery.toAscii(), spatialFilter, dialect);
+        databaseNames = dataSource->ExecuteSQL(sqlQuery.toLatin1(), spatialFilter, dialect);
 
         for(int i = 0; i < databaseNames->GetFeatureCount(); i++){
             feat = databaseNames->GetFeature(i);
@@ -154,7 +154,7 @@ bool SettingsUI::testDBType(QString databaseName){
 
     OGRRegisterAll();
 
-    dSource = OGRSFDriverRegistrar::Open(driver.toAscii(), TRUE);
+    dSource = OGRSFDriverRegistrar::Open(driver.toLatin1(), TRUE);
     if(dSource == NULL){
         qDebug() << "Open failed.";
         OGRDataSource::DestroyDataSource(dSource);
@@ -162,7 +162,7 @@ bool SettingsUI::testDBType(QString databaseName){
     }
     else{
         query = "select table_name from information_schema.tables where table_schema='public' and table_type='BASE TABLE'";
-        testlayer = dSource->ExecuteSQL(query.toAscii(), spatialFilter, dialect);
+        testlayer = dSource->ExecuteSQL(query.toLatin1(), spatialFilter, dialect);
 
         if(testlayer){
             for(int i = 0; i < testlayer->GetFeatureCount() && !valid; i++){
@@ -171,7 +171,7 @@ bool SettingsUI::testDBType(QString databaseName){
                     layername = (QString)feat->GetFieldAsString(0);
                     query = "SELECT wkb_geometry FROM ";
                     query.append(layername);
-                    layer = dSource->ExecuteSQL(query.toAscii(), spatialFilter, dialect);
+                    layer = dSource->ExecuteSQL(query.toLatin1(), spatialFilter, dialect);
                     if(layer){
                         count = layer->GetFeatureCount(true);
                         valid = true;

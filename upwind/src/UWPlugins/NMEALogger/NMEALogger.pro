@@ -6,7 +6,7 @@
 
 QT       += core
 QT       += xml
-QT       += gui
+QT       += widgets
 
 TEMPLATE = lib
 

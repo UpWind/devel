@@ -73,7 +73,7 @@ void Compass::initializeImages(){
 void Compass::setAngle(int angle){
 //    angle = 180 - angle;
     hand->resetTransform();
-    hand->rotate(angle);
+    hand->setRotation(angle);
     this->parsedNMEAValues.clear();
     this->parsedNMEAValues.append(QString::number(angle));
 }
@@ -95,5 +95,3 @@ void Compass::parseNMEAString(const QString & text){
         setAngle(angle);
     }
 }
-
-Q_EXPORT_PLUGIN2(Compass, Compass)

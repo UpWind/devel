@@ -24,6 +24,7 @@ class CalculateLaylines;
 class CoreUpWindScene: public QObject, public UpWindSceneInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.CoreUpWindScene")
     Q_INTERFACES(UpWindSceneInterface UWPluginInterface)
 
 public:

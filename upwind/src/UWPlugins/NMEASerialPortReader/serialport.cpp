@@ -257,5 +257,3 @@ void serialPort::addPluginSettingsToLayout(QLayout *layout){
     if(layout != 0)
         layout->addWidget(settingsUI);
 }
-
-Q_EXPORT_PLUGIN2(serialport, serialPort)

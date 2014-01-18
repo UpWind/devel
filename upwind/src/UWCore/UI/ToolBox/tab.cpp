@@ -9,7 +9,6 @@ Tab::Tab(QWidget * parent)
 {
     count = 0;
     v_layout =  new QVBoxLayout(parent);
-    list.setInsertInOrder(true);
     list = QMap<QString *, QString *>();
     this->setLayout(v_layout);
 }

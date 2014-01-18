@@ -7,7 +7,7 @@ CONFIG += serialport
 QT += serialport
 QT += widgets
 
-QT       += core gui xml
+QT       += core widgets xml
 
 TARGET = Settings
 TEMPLATE = app

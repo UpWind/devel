@@ -25,6 +25,7 @@
 class Compass : public CoreNMEAInstrument
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.Compass")
 
 public:
     /** Constructor of the Compass Instrument

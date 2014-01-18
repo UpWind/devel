@@ -18,6 +18,9 @@ class PolarDiagram;
 class dataSimulator: public CoreNMEAReader, public DataSimulatorControlInterface
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.dataSimulator")
+    Q_INTERFACES(UWPluginInterface DataSimulatorControlInterface)
+
 public:
     /** Create the timer used to generate the NMEAStrings, also load which
       * instrument is active

@@ -1,10 +1,10 @@
 #ifndef TAB_H
 #define TAB_H
 
-#include <QtGui/QWidget>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QPushButton>
-#include <QtGui/QVBoxLayout>
+#include <QWidget>
+#include <QButtonGroup>
+#include <QPushButton>
+#include <QVBoxLayout>
 #include <QMap>
 #include <QMapIterator>
 #include <QDebug>

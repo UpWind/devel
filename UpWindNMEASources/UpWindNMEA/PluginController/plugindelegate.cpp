@@ -16,8 +16,11 @@ void PluginDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
     gradient.setColorAt(0.51, QColor(50, 50, 50));
     gradient.setColorAt(1.0, QColor(50, 50, 50));
 
-    if(qVariantCanConvert<QString>(index.data(Qt::DisplayRole))) {
-        QString pluginName = qVariantValue<QString>(index.data(Qt::DisplayRole));
+    //if(qVariantCanConvert<QString>(index.data(Qt::DisplayRole))) {
+      //  QString pluginName = qVariantValue<QString>(index.data(Qt::DisplayRole));
+
+    if(index.data(Qt::DisplayRole).canConvert(QMetaType::QString)) {
+          QString pluginName = index.data(Qt::DisplayRole).value<QString>();
         QPen pluginTextColor(QColor(255, 255, 255));
 
         //Quick and ugly hack to get plugin widget visibility
@@ -60,9 +63,10 @@ void PluginDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
     }
 
 
-    else if(qVariantCanConvert<QPixmap>(index.data(Qt::DecorationRole))) {
-        QPixmap button = qVariantValue<QPixmap>(index.data(Qt::DecorationRole));
-
+    //else if(qVariantCanConvert<QPixmap>(index.data(Qt::DecorationRole))) {
+    //    QPixmap button = qVariantValue<QPixmap>(index.data(Qt::DecorationRole));
+    else if(index.data(Qt::DecorationRole).canConvert(QMetaType::QPixmap)) {
+        QPixmap button = index.data(Qt::DecorationRole).value<QPixmap>();
         if(option.state & QStyle::State_MouseOver) {
 
             painter->save();
@@ -97,7 +101,8 @@ void PluginDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
 }
 
 QSize PluginDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    if(qVariantCanConvert<QString>(index.data(Qt::DisplayRole))) {
+    //if(qVariantCanConvert<QString>(index.data(Qt::DisplayRole))) {
+    if (index.data(Qt::DisplayRole).canConvert(QMetaType::QString)) {
         return QSize(50, 250);
     }
     else {

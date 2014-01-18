@@ -1,4 +1,6 @@
-#include <QtGui/QApplication>
+#include <QApplication>
+#include <QSplashScreen>
+
 #include "controllerwindow.h"
 
 #include "qeffects_p.h"

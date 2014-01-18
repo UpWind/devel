@@ -7,7 +7,7 @@
 CONFIG += serialport
 QT += serialport
 
-QT       += core gui xml
+QT       += core widgets xml
 
 TARGET = NMEASerialPortReader
 

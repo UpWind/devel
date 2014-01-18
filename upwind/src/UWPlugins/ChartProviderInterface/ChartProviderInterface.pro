@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui
+QT += core widgets
 
 TARGET = ChartProviderInterface
 
@@ -56,7 +56,7 @@ else:unix {
 
     INCLUDEPATH +=/usr/include/gdal/ \
         /usr/include/postgresql
-    LIBS +=-lpq -lgdal1.7.0
+    LIBS +=-lpq -lgdal
 }
 
 win32 {

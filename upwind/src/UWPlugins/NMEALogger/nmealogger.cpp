@@ -47,5 +47,3 @@ void NMEALogger::initializeSettings(){
         settings->setSetting("RegularInterval", "20");
     }
 }
-
-Q_EXPORT_PLUGIN2(nmealogger, NMEALogger)

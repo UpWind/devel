@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml webkit svg
+QT       += core widgets xml webkit svg
 
 TARGET = RouteManager
 TEMPLATE = lib

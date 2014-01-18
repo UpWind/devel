@@ -11,9 +11,8 @@
   */
 class GPS : public CoreNMEAInstrument
 {
-
     Q_OBJECT
-
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.GPS")
 public:
     /** Constructor of the GPS Instrument
       * @param parent - Parent widget of the plugin widget.

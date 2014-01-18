@@ -450,5 +450,3 @@ void dataSimulator::setBoatPositionLon(double longitude) {
 void dataSimulator::setBoatPositionLat(double latitude) {
     m_currentGpsPositionLatitude = latitude;
 }
-
-Q_EXPORT_PLUGIN2(datasimulator, dataSimulator)

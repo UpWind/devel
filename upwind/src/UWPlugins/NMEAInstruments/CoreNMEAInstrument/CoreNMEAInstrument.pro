@@ -1,5 +1,5 @@
 
-QT       += core gui xml opengl
+QT       += core widgets xml opengl
 
 TARGET = NMEAInstrument
 

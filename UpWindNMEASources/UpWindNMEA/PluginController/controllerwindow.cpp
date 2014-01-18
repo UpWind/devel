@@ -7,6 +7,8 @@
 #include "plugindelegate.h"
 
 #include <QInputDialog>
+#include <QShortcut>
+#include <QMessageBox>
 
 const int OUTPUTDELAYTIME = 300;
 const int OUTPUTMAXLINES = 100;
