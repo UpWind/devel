@@ -143,6 +143,7 @@ void CoreUpWindScene::parseNMEAString( const QString & text){
         calculateLaylines->setPolarDiagram(this->pDiagram);
         /*calculateLaylines->setRoutePoints(this->route->getRoute());
         calculateLaylines->setStartPoint(*this->boat->getGeoPosition());*/
+
         if (this->route->getRoute().size() > 0 && this->threadingStarted == 0){
             this->threadingStarted = 1;
             QThread* thread = new QThread;

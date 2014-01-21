@@ -47,12 +47,10 @@ public:
 public Q_SLOTS:
     void start();
 public slots:
-    void calculationComplete();
 
     void executeDataQuery();
     void receiveData(QVector<QPointF> route, QPointF startpoint);
 Q_SIGNALS:
-    //    void calculationComplete(QVector<QPointF> layLines);//rauno 09032013 removed: not used in calculation
     void emitLaylines(QVector<QPointF> layLines);
     void finished();
     void dataQuery();

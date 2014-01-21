@@ -42,10 +42,6 @@ void CalculateLaylines::start(){
     timer->start();
 }
 
-void CalculateLaylines::calculationComplete(){
-    emit emitLaylines(this->layLines);
-}
-
 void CalculateLaylines::receiveData(QVector<QPointF> route, QPointF startPoint){
     this->pathPoints = route;
     this->startPoint = startPoint;
