@@ -1,4 +1,4 @@
-
+#define QT_NO_DEBUG_OUTPUT
 #ifndef POLARDIAGRAM_H
 #define POLARDIAGRAM_H
 

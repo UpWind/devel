@@ -7,12 +7,12 @@
 
 CalculateLaylines::CalculateLaylines(QObject* parent)
     : QObject(parent)
-{}
+{
+}
 
 void CalculateLaylines::openPostgreConnection(){
 
     conn = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
-    //  qDebug() << "Connection ok!";
     if (PQstatus(conn) != CONNECTION_OK){
         qDebug() << "Connection not ok: " << PQerrorMessage(conn);
     }
@@ -45,12 +45,7 @@ void CalculateLaylines::start(){
 void CalculateLaylines::receiveData(QVector<QPointF> route, QPointF startPoint){
     this->pathPoints = route;
     this->startPoint = startPoint;
-//    qDebug() << "Data received in calculate laylines line 51";
-//    qDebug() << startPoint.rx();
-//    qDebug() << startPoint.ry();
-
 }
-
 
 void CalculateLaylines::executeDataQuery(){
 
@@ -71,38 +66,29 @@ void CalculateLaylines::startCalc(){
         QVector<QPointF> layLines;
         QVector<QPointF> rightpath;
         QVector<QPointF> leftpath;
+        qDebug() << Q_FUNC_INFO << "  ***** start *****";
         QElapsedTimer timer;
 
         if ( this->pathPoints.size() > 0 ){
             timer.start();
-            qDebug() << "##########################################################";
 
             this->openPostgreConnection();
-            qDebug() << "Time to open database connection "<< timer.elapsed() << "miliseconds";
             this->ACCU_OFFSET = 1;
             this->MAX_TURNING_POINTS = 5;
 
             this->geoBoatPos = this->startPoint;
-            qDebug() << "- Start points in startCalc function are:" << this->startPoint.rx() << ", " << this->startPoint.ry();
             this->pathPoints =  this->pathPoints;
 
             //Start process of calculating laylines. First get the the destination point on long term route (no obstacles between baot and long term route point).
-            qDebug() << "- Start process of calculating laylines";
-            qDebug() << "- Getting the destination point on long term route";
-            timer.start();
             this->updateCheckPoint();
-            qDebug() << "- Time of updateCheckPoint "<< timer.elapsed()/1000 << " seconds";
             //then calculate the laylines that takes the boat to that destination point
-            timer.start();
             this->updateLayLines();
-            qDebug() << "- Time of calculating laylines "<< timer.elapsed()/1000 << " seconds";
+
             rightpath = *pRightPath;
             leftpath = *pLeftPath;
-            qDebug() << "Starting first for loop";
             for(int i = 0; i < rightpath.size(); i++){
                 layLines.append(rightpath.at(i));
             }
-            qDebug() << "Starting second for loop";
 
             for(int i = 0; i < leftpath.size(); i++){
                 layLines.append(leftpath.at(i));
@@ -113,14 +99,10 @@ void CalculateLaylines::startCalc(){
         }
 
         this->calculationOnGoing = false;
-        timer.start();
         this->closepostgreConnection();
-        qDebug() << "- Time of closinf database "<< timer.elapsed();
-
 
         emit emitLaylines(this->layLines);
-        qDebug() << "- Laylines emited";
-        qDebug() << "########################################################";
+        qDebug() << "***********************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
     }else{
         this->calculationOnGoing = false;
     }
@@ -300,6 +282,9 @@ QString CalculateLaylines::buildWKTPoint( const QPointF &p1 ) {
 
 bool CalculateLaylines::checkGeometriesIntersection( const QString &object1, const QString &object2 ) {
 
+    QElapsedTimer timer;
+    timer.start();
+
     QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( ");
     sql.append( object1);
     sql.append( ", ");
@@ -311,10 +296,15 @@ bool CalculateLaylines::checkGeometriesIntersection( const QString &object1, con
     bool intersection = ( PQntuples(res) > 0 );
     PQclear(res);
 
+    qDebug() << "************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
     return intersection;
+
 }
 
 bool CalculateLaylines::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() ) {
+
+    QElapsedTimer timer;
+    timer.start();
 
     QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
     sql.append( object);
@@ -336,6 +326,7 @@ bool CalculateLaylines::checkIntersection( const QString &layerName, const QStri
 
     PQclear(res);
 
+    qDebug() << "************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
     return intersection;
 }
 
@@ -543,10 +534,10 @@ int CalculateLaylines::getNearestPoint( const QVector<QPointF> &route, const QPo
 QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QPointF &boatPos, const float &offset) {
 
     int nearest_point = getNearestPoint(route, boatPos);
-    qDebug() << "       -Before checkIntersection";
+    //qDebug() << "       -Before checkIntersection";
     if ( checkIntersection( "obstacles_r", boatPos ) ) {
         // if we are inside an obstacle, don't even try
-        qDebug() << "       -In checkIntersection";
+        //qDebug() << "       -In checkIntersection";
 
         return boatPos;
     }
@@ -562,15 +553,15 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
     QPointF projection_point;
     QLineF route_line, projection_line;
     QPointF a, b, c;
-    qDebug() << "       -Before route.size>=2";
+    //qDebug() << "       -Before route.size>=2";
 
     if ( route.size() >= 2 ) {
 
         // If nearest is the last one:
-        qDebug() << "       -Before route.size-nearestPoint";
+        //qDebug() << "       -Before route.size-nearestPoint";
 
         if ( route.size() - nearest_point == 1 ) {
-            qDebug() << "       -In route.size-nearestPoint";
+            //qDebug() << "       -In route.size-nearestPoint";
 
             a = UwMath::toConformal( route.at( nearest_point - 1 ) );
             b = UwMath::toConformal( route.at( nearest_point ) );
@@ -585,35 +576,27 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
             projection_line.setP2( projection_point);
 
             // If nearest is the first one:
-            qDebug() << "       -After but still in route.size-nearestPoint";
 
         } else if ( nearest_point == 0 ) {
-            qDebug() << "       -In nearestPoint==0";
 
             a = UwMath::toConformal( route.at( nearest_point) );
             b = UwMath::toConformal( route.at( nearest_point + 1) );
             c = UwMath::toConformal( (const QPointF)boatPos );
 
-            qDebug() << "       -In nearestPoint==0 after toConformal";
 
             projection_point = UwMath::getProjectionPoint( a, b, c);
-            qDebug() << "       -In nearestPoint==0 after getProjection";
 
             UwMath::fromConformal( projection_point);
-            qDebug() << "       -In nearestPoint==0 after fromConformal";
 
 
             route_line.setP1( route.at( nearest_point));
             route_line.setP2( route.at( nearest_point + 1));
-            qDebug() << "       -In nearestPoint==0 after setP1 and P2";
 
             projection_line.setP1( boatPos);
             projection_line.setP2( projection_point);
 
             // If nearest is not first or last one:
-             qDebug() << "       -End of nearestPoint==0";
         } else {
-            qDebug() << "       - In nearestPoint==0 else";
 
             a = UwMath::toConformal( route.at( nearest_point) );
             b = UwMath::toConformal( route.at( nearest_point + 1) );
@@ -629,7 +612,6 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
             // We must check if our position is between nearest and nearest + 1
             // or between nearest - 1 and nearest:
-            qDebug() << "       - In nearestPoint==0 else if";
 
             if ( !checkIntersection(route_line, projection_line) ) {
                 a = UwMath::toConformal( route.at( nearest_point - 1 ) );
@@ -653,33 +635,24 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
     //3. We'll check if there are obstacles in the projeted triangle:
     if ( route.size() < 1 ) {
-        qDebug() << "       -In route.size<1 do nothing";
-
 
     } else if ( route.size() == 1 ) {
-        qDebug() << "       -In route.size==1";
 
         // Route to process only has one point:
         QLineF heading( boatPos, route.at( nearest_point));
-        qDebug() << "       -In route.size==1 before checking itersections";
 
         bool hobs_r = checkIntersection( "obstacles_r", heading );
         bool hobs_l = checkIntersection( "obstacles_l", heading );
-        qDebug() << "       -In route.size==1 after checking itersections";
 
         // Finetune checkpoint in the heading:
         if ( hobs_r || hobs_l ) {
-            qDebug() << "       -In route.size==1 in the hobs if";
 
             this->obstacleFound = true;
             bool ready = false;
 
             QLineF last_heading;
-            qDebug() << "       -In route.size==1 before while";
 
             while ( !ready ) {
-                qDebug() << "       - Inside while reading line 669";
-
                 if ( ( hobs_r && checkIntersection( "obstacles_r", heading ) ) ||
                      ( hobs_l && checkIntersection( "obstacles_l", heading ) ) ) {
 
@@ -703,8 +676,6 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
     } else if ( route.size() > 1 ) {
         // Route to process has more than 1 point:
-        qDebug() << "       -In route.size>1 ";
-
         int i = nearest_point;
 
         QPolygonF triangle;
@@ -737,18 +708,12 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
             bool hobs_l = checkIntersection( "obstacles_l", heading, triangle );
 
             // FINETUNE CHECKPOINT IN THE HEADING
-            qDebug() << "       -In route.size>1 before hobs if";
-
             if ( hobs_r || hobs_l ) {
-                qDebug() << "       -In route.size>1 in the hobs if";
-
                 bool ready = false;
 
                 QLineF last_heading;
 
                 while ( !ready ) {
-                    qDebug() << "       -In route.size>1 while ready";
-
                     if ( ( hobs_r && checkIntersection( "obstacles_r", heading, triangle) ) ||
                          ( hobs_l && checkIntersection( "obstacles_l", heading, triangle)) ) {
 
@@ -772,53 +737,31 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
             }
         }
-        //qDebug() << Q_FUNC_INFO << ": TriangleCount at specialCheck: " << triangleCount;
         // ########################################################################
         // END SPECIAL CHECK                                                     ##
         // ########################################################################
-        qDebug() << "       -In route.size>1 special check";
-
         bool obs_r = checkIntersection( "obstacles_r", triangle, triangle );
         bool obs_l = checkIntersection( "obstacles_l", triangle, triangle );
-        qDebug() << "       -In route.size>1 special check after checkIntersection";
-
 
         //Note: This doesn't work correctly. Here the search for the route fails instantly when obstacles
         //are found on the route. What if there is obstacle-free route on the next route interval:
         while ( !obs_r && !obs_l &&  i < (route.size() - 2 )) {
-            qDebug() << "       -In route.size>1 special check inside while";
-
             triangle.clear();
-            qDebug() << "Looking for the problem: Start of the problem";
-            qDebug() << "I value:" << i;
-            qDebug() << "Route size" << route.size();
             triangle << boatPos;
             triangle << route.at( i);
 
             triangle << route.at( i + 1);// <---------------------------------------------------------------This line crashes the code if the "-2" is comented in the while statement. It was comented before, we don't know why
-            qDebug() << "Looking for the problem: End of the problem";
-
 
             obs_r = checkIntersection( "obstacles_r", triangle, triangle );
             obs_l = checkIntersection( "obstacles_l", triangle, triangle );
 
             // Finetune checkpoint:
-            qDebug() << "       -In route.size>1 special check inside while before obs if";
-            qDebug() << "Obs_r:" << obs_r;
-            qDebug() << "Obs_l:" << obs_l;
-
-
             if ( obs_r || obs_l ) {
-                qDebug() << "       -In route.size>1 special check inside while in  obs if";
-
                 bool ready = false;
 
                 QPolygonF last_triangle;
-                qDebug() << "       -In route.size>1 special check inside while in obs if before while ready";
 
                 while ( !ready ) {
-                    qDebug() << "       -In route.size>1 special check inside while in obs if in while ready";
-
                     if ( obs_r && checkIntersection( "obstacles_r", triangle, triangle) ||
                          obs_l && checkIntersection( "obstacles_l", triangle, triangle) ) {
 
@@ -852,23 +795,21 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
 void CalculateLaylines::updateCheckPoint()
 {
-
-
+    QElapsedTimer timer;
+    timer.start();
     // Let's find out which is the next point in our route.
     // Find the destiny check point in geographical format:
-    qDebug() << "   - Start Finding destiny check point";
     geoDestinyPos = this->getNextPoint( this->pathPoints, geoBoatPos, ACCU_OFFSET);
-    qDebug() << "   - Start making some strange operation with destiny check point";
     destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
-    qDebug() << "   - End making some strange operation with destiny check point";
+    qDebug() << "************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
 }
 
 void CalculateLaylines::updateLayLines()
 {
-    qDebug() << "   - Start updating laylines";
+    QElapsedTimer timer;
+    timer.start();
 
     this->pPolarDiagram->populate();
-    qDebug() << "   - Ended population method";
 
     // LayLines are not calculated with the actual TWA,
     // but the TWA that we will have when heading towards our destiny.
@@ -884,9 +825,6 @@ void CalculateLaylines::updateLayLines()
     // new paths...
     pLeftPath = new QVector<QPointF>;
     pRightPath = new QVector<QPointF>;
-
-
-    qDebug() << "   -Before if statement laylines";
 
     if ( layLinesAngle != 0 ) {
 
@@ -909,8 +847,6 @@ void CalculateLaylines::updateLayLines()
         // Checking of the heading is made when getting the checkpoint here.
 
         // Next we'll go for obstacles checking:
-        qDebug() << "   - Before second if statement";
-
         if ( checkIntersection( "obstacles_r", rhomboid, rhomboid ) ||
              checkIntersection( "obstacles_l", rhomboid, rhomboid) ) {
             // If we have polygon obstacles in the area
@@ -927,11 +863,8 @@ void CalculateLaylines::updateLayLines()
 
 
         } else {
-
             // If we don't have any obstacle in our area
             // use master turning points for the path:
-            //      qDebug() << "UPDATELAYLINES NO OBSTACLES";
-
             pRightPath->append( geoBoatPos);
             pRightPath->append( TPright );
             pRightPath->append( geoDestinyPos);
@@ -955,6 +888,8 @@ void CalculateLaylines::updateLayLines()
         pLeftPath->append( geoDestinyPos);
 
     }
+
+    qDebug() << "************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
 }
 
 
