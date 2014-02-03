@@ -60,7 +60,7 @@ else:unix {
 }
 
 win32 {
-    LIBS += -L$$PWD/../../../../libs/win/gdal/lib -lgdal-1
+    LIBS += -LC:\libs\lib -lgdal-1
 }
 
 

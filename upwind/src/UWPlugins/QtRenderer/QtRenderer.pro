@@ -77,11 +77,8 @@ else:unix {
 }
 
 win32 {
-    INCLUDEPATH += "$$PWD/../../../../libs/win/PostgreSQL9.2/include"
-    LIBS += -L$$PWD/../../../../libs/win/PostgreSQL9.2/lib -lpq
-
-    INCLUDEPATH += "$$PWD/../../../../libs/win/gdal/include"
-    LIBS += -L$$PWD/../../../../libs/win/gdal/lib -lgdal-1
+    LIBS += -LC:\libs\lib -lpq -lgdal-1
+    INCLUDEPATH += "C:\libs\include"
 }
 
 

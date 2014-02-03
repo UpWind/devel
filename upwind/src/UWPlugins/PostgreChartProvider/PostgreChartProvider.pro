@@ -64,7 +64,7 @@ else:unix {
 }
 
 win32 {
-    INCLUDEPATH += "$$PWD/../../../../libs/win/gdal/include"
-    LIBS += -L$$PWD/../../../../libs/win/gdal/lib -lgdal-1
+    LIBS += -LC:\libs\lib -lgdal-1
+    INCLUDEPATH += "C:\libs\include"
 }
 
