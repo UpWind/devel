@@ -270,7 +270,6 @@ void Boat::setLaylines(){
 
     portLaylineItem->setPolygon(this->portLayline);
     starBoardLaylineItem->setPolygon(this->starBoardLayline);
-
 }
 
 float Boat::getHeading(){

@@ -57,10 +57,8 @@ void CalculateLaylines::executeDataQuery(){
 }
 
 void CalculateLaylines::startCalc(){
-
     if (!this->calculationOnGoing){
         this->calculationOnGoing = true;
-
         this->obstacleFound = false;
 
         QVector<QPointF> layLines;
@@ -69,9 +67,7 @@ void CalculateLaylines::startCalc(){
         qDebug() << Q_FUNC_INFO << "  ***** start *****";
         QElapsedTimer timer;
 
-        if ( this->pathPoints.size() > 0 ){
-            timer.start();
-
+        if (this->pathPoints.size() > 0){
             this->openPostgreConnection();
             this->ACCU_OFFSET = 1;
             this->MAX_TURNING_POINTS = 5;
@@ -86,24 +82,22 @@ void CalculateLaylines::startCalc(){
 
             rightpath = *pRightPath;
             leftpath = *pLeftPath;
-            for(int i = 0; i < rightpath.size(); i++){
+            for (int i = 0; i < rightpath.size(); i++) {
                 layLines.append(rightpath.at(i));
             }
 
-            for(int i = 0; i < leftpath.size(); i++){
+            for (int i = 0; i < leftpath.size(); i++) {
                 layLines.append(leftpath.at(i));
             }
 
             this->layLines = layLines;
-
         }
 
         this->calculationOnGoing = false;
         this->closepostgreConnection();
-
         emit emitLaylines(this->layLines);
-        qDebug() << "***********************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
-    }else{
+
+    } else {
         this->calculationOnGoing = false;
     }
 }
