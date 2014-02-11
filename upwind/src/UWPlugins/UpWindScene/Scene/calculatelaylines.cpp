@@ -6,7 +6,8 @@
 
 
 CalculateLaylines::CalculateLaylines(QObject* parent)
-    : QObject(parent)
+    : QObject(parent),
+      conn(NULL)
 {
 }
 
@@ -22,11 +23,16 @@ void CalculateLaylines::openPostgreConnection(){
 
 CalculateLaylines::~CalculateLaylines()
 {
-    PQfinish(conn);
+    if (conn) {
+        PQfinish(conn);
+    }
 }
 
 void CalculateLaylines::closepostgreConnection(){
-    PQfinish(conn);
+    if (conn) {
+        PQfinish(conn);
+        conn = NULL;
+    }
 }
 
 void CalculateLaylines::setPolarDiagram(PolarDiagram *diagram){
@@ -50,7 +56,6 @@ void CalculateLaylines::receiveData(QVector<QPointF> route, QPointF startPoint){
 void CalculateLaylines::executeDataQuery(){
 
     emit this->dataQuery();
-    qDebug() << "Data query emit executed";
     if (this->pathPoints.size() > 0 && !this->calculationOnGoing){
         this->startCalc();
     }
@@ -64,8 +69,6 @@ void CalculateLaylines::startCalc(){
         QVector<QPointF> layLines;
         QVector<QPointF> rightpath;
         QVector<QPointF> leftpath;
-        qDebug() << Q_FUNC_INFO << "  ***** start *****";
-        QElapsedTimer timer;
 
         if (this->pathPoints.size() > 0){
             this->openPostgreConnection();
@@ -96,8 +99,7 @@ void CalculateLaylines::startCalc(){
         this->calculationOnGoing = false;
         this->closepostgreConnection();
         emit emitLaylines(this->layLines);
-
-    } else {
+    }else{
         this->calculationOnGoing = false;
     }
 }
@@ -276,9 +278,6 @@ QString CalculateLaylines::buildWKTPoint( const QPointF &p1 ) {
 
 bool CalculateLaylines::checkGeometriesIntersection( const QString &object1, const QString &object2 ) {
 
-    QElapsedTimer timer;
-    timer.start();
-
     QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( ");
     sql.append( object1);
     sql.append( ", ");
@@ -290,15 +289,11 @@ bool CalculateLaylines::checkGeometriesIntersection( const QString &object1, con
     bool intersection = ( PQntuples(res) > 0 );
     PQclear(res);
 
-    qDebug() << "************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
     return intersection;
 
 }
 
 bool CalculateLaylines::checkIntersection( const QString &layerName, const QString &object, QString shape = QString() ) {
-
-    QElapsedTimer timer;
-    timer.start();
 
     QString sql("SELECT * FROM ( SELECT DISTINCT Intersects( wkb_geometry, ");
     sql.append( object);
@@ -320,7 +315,6 @@ bool CalculateLaylines::checkIntersection( const QString &layerName, const QStri
 
     PQclear(res);
 
-    qDebug() << "************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
     return intersection;
 }
 
@@ -460,7 +454,6 @@ void CalculateLaylines::getPath( const bool &side, const float &offset, const in
 
             last_triangle = present_triangle;
             // Reduce triangle to half:
-            qDebug() << "Reduciendo triangulo";
             present_triangle = UwMath::triangleToHalf( present_triangle );
 
             while ( !ready ) {
@@ -469,7 +462,6 @@ void CalculateLaylines::getPath( const bool &side, const float &offset, const in
                      ( obs_l && checkIntersection( "obstacles_l", present_triangle, obstacles_shape ) ) ) {
 
                     // Still obstacles: reduce again!
-                    qDebug() << "Reduciendo aun mas el triangulo";
                     last_triangle = present_triangle;
                     present_triangle = UwMath::triangleToHalf( present_triangle );
 
@@ -500,7 +492,6 @@ void CalculateLaylines::getPath( const bool &side, const float &offset, const in
 }
 
 int CalculateLaylines::getNearestPoint( const QVector<QPointF> &route, const QPointF &boatPos){
-
     // Input should be in GEOGRAPHICAL format.
     // We receive a route here as a list of points.
     // Let's see at what point of the route we are:
@@ -526,13 +517,9 @@ int CalculateLaylines::getNearestPoint( const QVector<QPointF> &route, const QPo
 }
 
 QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QPointF &boatPos, const float &offset) {
-
     int nearest_point = getNearestPoint(route, boatPos);
-    //qDebug() << "       -Before checkIntersection";
     if ( checkIntersection( "obstacles_r", boatPos ) ) {
         // if we are inside an obstacle, don't even try
-        //qDebug() << "       -In checkIntersection";
-
         return boatPos;
     }
 
@@ -547,16 +534,11 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
     QPointF projection_point;
     QLineF route_line, projection_line;
     QPointF a, b, c;
-    //qDebug() << "       -Before route.size>=2";
 
     if ( route.size() >= 2 ) {
 
         // If nearest is the last one:
-        //qDebug() << "       -Before route.size-nearestPoint";
-
         if ( route.size() - nearest_point == 1 ) {
-            //qDebug() << "       -In route.size-nearestPoint";
-
             a = UwMath::toConformal( route.at( nearest_point - 1 ) );
             b = UwMath::toConformal( route.at( nearest_point ) );
             c = UwMath::toConformal( (const QPointF)boatPos );
@@ -784,25 +766,18 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
 
     }
     // End the process of searching for the checkpoints.
-
 }
 
 void CalculateLaylines::updateCheckPoint()
 {
-    QElapsedTimer timer;
-    timer.start();
     // Let's find out which is the next point in our route.
     // Find the destiny check point in geographical format:
     geoDestinyPos = this->getNextPoint( this->pathPoints, geoBoatPos, ACCU_OFFSET);
     destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
-    qDebug() << "************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
 }
 
 void CalculateLaylines::updateLayLines()
 {
-    QElapsedTimer timer;
-    timer.start();
-
     this->pPolarDiagram->populate();
 
     // LayLines are not calculated with the actual TWA,
@@ -882,8 +857,6 @@ void CalculateLaylines::updateLayLines()
         pLeftPath->append( geoDestinyPos);
 
     }
-
-    qDebug() << "************************" << Q_FUNC_INFO << " DONE: " << timer.elapsed();
 }
 
 

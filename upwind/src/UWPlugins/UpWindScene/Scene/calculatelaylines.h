@@ -95,6 +95,7 @@ private:
     bool calculationOnGoing;
     bool obstacleFound;
 
+
     friend class bm_calculateLaylines;
 };
 
