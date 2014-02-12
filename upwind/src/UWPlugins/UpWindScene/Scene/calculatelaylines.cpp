@@ -738,8 +738,8 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
                 QPolygonF last_triangle;
 
                 while ( !ready ) {
-                    if ( obs_r && checkIntersection( "obstacles_r", triangle, triangle) ||
-                         obs_l && checkIntersection( "obstacles_l", triangle, triangle) ) {
+                    if ( ( obs_r && checkIntersection( "obstacles_r", triangle, triangle) ) ||
+                         ( obs_l && checkIntersection( "obstacles_l", triangle, triangle) ) ) {
 
                         last_triangle = triangle;
                         triangle = UwMath::triangleToHalf_OnePointVersion( triangle);
@@ -763,9 +763,9 @@ QPointF CalculateLaylines::getNextPoint( const QVector<QPointF> &route, const QP
             i++;
         }
         return triangle.at( 2);
-
     }
     // End the process of searching for the checkpoints.
+    return QPointF();
 }
 
 void CalculateLaylines::updateCheckPoint()

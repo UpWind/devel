@@ -505,7 +505,9 @@ void UwMath::getTurningPoints(
     double x2 = UwMath::toRadians(lon2);
 
     // the input data is already converted to conformal
-    double cartesianAngleWithDestiny = UwMath::getCartesianAngleWithDestiny(x1, y1, x2, y2);
+    /* Unsed variable
+     double cartesianAngleWithDestiny = UwMath::getCartesianAngleWithDestiny(x1, y1, x2, y2);
+    */
 
     // navigation rhomboid interior angle from origin or destiny points
     double fullInAngle = (layLinesAngle > 90) ?
@@ -516,10 +518,11 @@ void UwMath::getTurningPoints(
                 UwMath::mod(wAngle + layLinesAngle, 360.0) :
                 UwMath::mod(wAngle - layLinesAngle, 360.0);
 
-    // triangle in the left half of the rhomboid
-    double alpha = UwMath::getDiffPolars(layLineLeftAngle,
-                                         UwMath::toPolar(cartesianAngleWithDestiny));
-    /* double beta = fullInAngle - alpha;
+    /*
+       // triangle in the left half of the rhomboid
+       double alpha = UwMath::getDiffPolars(layLineLeftAngle,
+                                            UwMath::toPolar(cartesianAngleWithDestiny));
+       double beta = fullInAngle - alpha;
        double gamma = 180.0 - beta - alpha;
        with the sinus rule, the distances to the turning point can be found, for instance
        distance_to_left_turning_point = sin(beta) * distance_with_destiny / sin(gamma)

@@ -215,7 +215,7 @@ void Route::setNavigLinesCorrectedFromDB(){
             }
         }
     } else {
-       bool res = createNavigLinesCorrected();
+       createNavigLinesCorrected();
     }
 }
 

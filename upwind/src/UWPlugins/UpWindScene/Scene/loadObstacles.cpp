@@ -228,6 +228,7 @@ bool LoadObstacles::createObstaclesTables() {
             }
         }
     }
+    return false;
 }
 
 QString LoadObstacles::buildWKTPolygon( const QPointF &epoint, const float &offset ) {
