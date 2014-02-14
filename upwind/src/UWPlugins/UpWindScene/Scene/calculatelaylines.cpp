@@ -81,7 +81,7 @@ void CalculateLaylines::startCalc(){
             //Start process of calculating laylines. First get the the destination point on long term route (no obstacles between baot and long term route point).
             this->updateCheckPoint();
             //then calculate the laylines that takes the boat to that destination point
-            this->updateLayLines();
+            this->updateLaylines();
 
             rightpath = *pRightPath;
             leftpath = *pLeftPath;
@@ -776,7 +776,7 @@ void CalculateLaylines::updateCheckPoint()
     destinyPos = UwMath::toConformalInverted( (const QPointF)geoDestinyPos);
 }
 
-void CalculateLaylines::updateLayLines()
+void CalculateLaylines::updateLaylines()
 {
     this->pPolarDiagram->populate();
 

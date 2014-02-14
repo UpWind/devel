@@ -69,7 +69,7 @@ private:
 
     void openPostgreConnection();
     void updateCheckPoint();
-    void updateLayLines();
+    void updateLaylines();
     void startCalc();
     void closepostgreConnection();
 
