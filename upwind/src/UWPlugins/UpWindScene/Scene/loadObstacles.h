@@ -20,8 +20,8 @@
  * along with UwShort library.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
-#ifndef SHORTNAVIG_H
-#define SHORTNAVIG_H
+#ifndef LOADOBSTAC_H
+#define LOADOBSTAC_H
 
 #include "../ChartProviderInterface/chartobjectinterface.h"
 
