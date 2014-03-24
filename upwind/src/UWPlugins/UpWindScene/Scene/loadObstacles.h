@@ -47,8 +47,6 @@ public:
     */
 
     void loadChartObjects(QVector<ChartObjectInterface*> cObjects);
-    PGresult *res;
-    PGconn *conn;
 
 private:
     static QString buildWKTPolygon( const QPolygonF &rhomboid );
@@ -61,7 +59,7 @@ private:
     QVector<QPolygonF> signsound;
     QVector<QPolygonF> offset;
     static LoadObstacles *instance;
-    bool createObstaclesTables();
+    bool initializeObstaclesTables();
 
     bool debug, new_data, status;
 

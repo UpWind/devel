@@ -54,30 +54,9 @@ LoadObstacles* LoadObstacles::getInstance(){
     } else
         return instance;
 }
+
 LoadObstacles::LoadObstacles(){
-
     qDebug() << __PRETTY_FUNCTION__;
-    //something todo
-//    const char *connInfo = "";
-    // conn = PQconnectStart(connInfo);
-
-    /*
-PGconn *PQsetdbLogin(const char *pghost,
-                     const char *pgport,
-                     const char *pgoptions,
-                     const char *pgtty,
-                     const char *dbName,
-                     const char *login,
-                     const char *pwd);
-
-    */
-
-    conn = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
-
-    if (PQstatus(conn) != CONNECTION_OK){
-        qDebug() << "Connection not ok: " << PQerrorMessage(conn);
-    }
-
 }
 
 LoadObstacles::~LoadObstacles()
@@ -91,7 +70,6 @@ LoadObstacles::~LoadObstacles()
 //    QString sql = "DROP TABLE obstacles_r, obstacles_l;";
 //    res = PQexec(conn, sql.toAscii() );
 //    PQclear(res);
-    PQfinish(conn);
 }
 
 void LoadObstacles::clear()
@@ -101,11 +79,42 @@ void LoadObstacles::clear()
 
 void LoadObstacles::loadChartObjects(QVector<ChartObjectInterface*> cObjects) {
     this->chartObjects = cObjects;
-    createObstaclesTables();
+    initializeObstaclesTables();
 }
 
-bool LoadObstacles::createObstaclesTables() {
+bool LoadObstacles::initializeObstaclesTables() {
     qDebug()<<"bool LoadObstacles::createObstaclesTables()";
+
+    PGconn *connection = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
+    PGresult *res = NULL;
+    QString sql;
+
+    if (PQstatus(connection) != CONNECTION_OK){
+        qDebug() << "Connection not ok: " << PQerrorMessage(connection);
+        connection = NULL;
+    }
+
+    if (connection) {
+        /// Check if obstacles tables exists
+        bool exists = false;
+
+        sql = "SELECT EXISTS (select * from information_schema.tables where table_type='BASE TABLE' and table_name='obstacles_r')";
+        res = PQexec(connection, sql.toLatin1() );
+        if (res && PQresultStatus(res) == PGRES_TUPLES_OK) {
+            qDebug() << "value: " << PQgetvalue(res, 0, 0);
+            exists = (QString("t") == (QString(PQgetvalue(res, 0, 0))));
+        }
+        PQclear(res);
+        sql.clear();
+
+        if (exists) {
+            qDebug() << "obstacles_r table exists, do not create new obstable tables";
+            PQfinish(connection);
+            connection = NULL;
+            return false;
+        }
+        qDebug() << "create new obstacle tables";
+    }
 
     /// POINT_OFFSET is the area around the obstacle,
     /// so is it's value is 5, it will draw 10 m^2
@@ -139,13 +148,13 @@ bool LoadObstacles::createObstaclesTables() {
     for (int i = 0 ; i < this->chartObjects.size(); i++) {
         if(this->chartObjects.at(i)->getTableName() == "signsound_p") {
             // CREATE NEW TABLES
-            QString sql = "CREATE TABLE obstacles_r (ogc_fid serial);";
+            sql = "CREATE TABLE obstacles_r (ogc_fid serial);";
             sql.append( "CREATE TABLE obstacles_l (ogc_fid serial);" );
             sql.append( "SELECT AddGeometryColumn ('obstacles_r','wkb_geometry',-1,'POLYGON',2);" );
             sql.append( "SELECT AddGeometryColumn ('obstacles_l','wkb_geometry',-1,'LINESTRING',2);" );
             sql.append( "ALTER TABLE obstacles_r ADD COLUMN source_table char(11);" );
             sql.append( "ALTER TABLE obstacles_l ADD COLUMN source_table char(11);" );
-            res = PQexec(conn, sql.toLatin1() );
+            res = PQexec(connection, sql.toLatin1() );
             PQclear(res);
 
             // INSERT POLYGON LAYERS
@@ -161,7 +170,7 @@ bool LoadObstacles::createObstaclesTables() {
                 if (debug) qDebug() << QString("UwShort: Adding obstacles of %1").arg( polygon_layers[i]);
             }
             // WARNING: very long string:
-            res = PQexec(conn, sql.toLatin1() );
+            res = PQexec(connection, sql.toLatin1() );
             PQclear(res);
 
             qDebug() << "for in 1";            // INSERT POINT LAYERS WITH OFFSET
@@ -175,7 +184,7 @@ bool LoadObstacles::createObstaclesTables() {
                 if ( signsound)
                     sql.append( QString(" WHERE depth < %1 ").arg( QString::number( SIGNSOUND_THRESHOLD)));
                 sql.append( ";");
-                res = PQexec(conn, sql.toLatin1() );
+                res = PQexec(connection, sql.toLatin1() );
                 if (debug) qDebug() << QString("UwShort: Adding obstacles of %1 (%2/%3): %4 obstacles").arg( point_layers[i], QString::number(i+1), QString::number(point_layers.size()), QString::number(PQntuples(res)));
                 sql.clear();
 
@@ -199,7 +208,7 @@ bool LoadObstacles::createObstaclesTables() {
                 }
                 PQclear(res);
 
-                res = PQexec( conn, sql.toLatin1());
+                res = PQexec(connection, sql.toLatin1());
                 PQclear(res);
 
                 //INSERT LINE LAYERS
@@ -218,7 +227,7 @@ bool LoadObstacles::createObstaclesTables() {
                         // WARNING: very long string:
                         qDebug() << QString("UwShort: Adding obstacles of ").append( line_layers[i]);
                     }
-                    res = PQexec(conn, sql.toLatin1() );
+                    res = PQexec(connection, sql.toLatin1());
                     PQclear(res);
                 }
 
@@ -228,7 +237,10 @@ bool LoadObstacles::createObstaclesTables() {
             }
         }
     }
-    return false;
+    if (connection) {
+        PQfinish(connection);
+    }
+    return true;
 }
 
 QString LoadObstacles::buildWKTPolygon( const QPointF &epoint, const float &offset ) {
