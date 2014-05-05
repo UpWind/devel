@@ -85,7 +85,7 @@ void LoadObstacles::loadChartObjects(QVector<ChartObjectInterface*> cObjects) {
 bool LoadObstacles::initializeObstaclesTables() {
     qDebug()<<"bool LoadObstacles::createObstaclesTables()";
 
-    PGconn *connection = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart57' user = 'postgres' password = 'upwind'");
+    PGconn *connection = PQconnectdb("hostaddr = '192.168.56.101' port = '5432' dbname = 'chart26' user = 'postgres' password = 'upwind'");
     PGresult *res = NULL;
     QString sql;
 

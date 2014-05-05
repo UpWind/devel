@@ -297,9 +297,14 @@ void dataSimulator::initializeSettings(){
         settings->setSetting("Compass", "true");
         settings->setSetting("Clock", "true");
         settings->setSetting("Timer", "600");
+
+        // Init boat position to Turku near Ruissalo
+        settings->setSetting("boatPosLongitude", "22.0912");
+        settings->setSetting("boatPosLatitude", "60.405100");
+
         // Init boat position to Oulu area
-        settings->setSetting("boatPosLongitude", "25.109253");
-        settings->setSetting("boatPosLatitude", "65.013026");
+        //settings->setSetting("boatPosLongitude", "25.109253");
+        //settings->setSetting("boatPosLatitude", "65.013026");
     }
 }
 
