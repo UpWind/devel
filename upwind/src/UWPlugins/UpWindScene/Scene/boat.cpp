@@ -222,6 +222,9 @@ void Boat::setHeading(float hdg)
 
 void Boat::injectLaylines(QVector<QPointF> laylines){
 
+    if (laylines.isEmpty())
+        return;
+
     this->layLinePoints = laylines;
 
     QPointF startPath = layLinePoints.at(0);
@@ -266,8 +269,8 @@ void Boat::geoLaylineToPixel(QPointF *geoPoint){
 
 }
 
-void Boat::setLaylines(){
-
+void Boat::setLaylines()
+{
     portLaylineItem->setPolygon(this->portLayline);
     starBoardLaylineItem->setPolygon(this->starBoardLayline);
 }
@@ -303,18 +306,11 @@ QPointF* Boat::pixelToGeoPoint(QPointF* pixelPoint){
 
 void Boat::setView(QGraphicsView *view)
 {
-    //    qDebug() << "Set view!";
     this->view = view;
 }
 
 QPointF *Boat::getGeoPosition()
 {
-//    qDebug() << "Boat Geo Position";
-//    qDebug() << *boatGeoPosition;
-//    qDebug() << "Boat Scene Position";
-//    qDebug() << *boatScenePosition;
-//    qDebug() << "\n \n \n \n \n \n \n \n";
-
     return boatGeoPosition;
 }
 
@@ -341,8 +337,6 @@ void Boat::setZoomFactor(qreal zoomFactor)
 
 QPointF Boat::getBoatScenePosition() const
 {
-//    qDebug() << "Boat Scene Position";
-//    qDebug() << *boatScenePosition;
-    return *boatScenePosition;
+    return boatScenePosition;
 }
 
