@@ -2,7 +2,7 @@
 #include "ui_nmeavarwindspeedmeter.h"
 #include "settingsmanager.h"
 //#include "dialog.h"
-#include <QtGui>
+#include <QtWidgets>
 #include <QDebug>
 const static double KNOT_TO_METER_MULTI = 0.514444444;
 

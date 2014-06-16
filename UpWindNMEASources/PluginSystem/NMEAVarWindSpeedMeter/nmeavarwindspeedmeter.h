@@ -19,6 +19,7 @@ class NMEAVarWindSpeedMeter;
 class NMEAVarWindSpeedMeter : public CorePlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.PluginSimulation.NMEAVarWindSpeedMeter")
     Q_INTERFACES(CoreInterface)
 
 private:

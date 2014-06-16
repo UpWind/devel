@@ -1,9 +1,9 @@
 #ifndef COREPLUGIN_H
 #define COREPLUGIN_H
 
-#include <QObject>
-#include <QWidget>
-#include <QtGui>
+//#include <QObject>
+#include <QtWidgets>
+#include <QtWidgets>
 #include <QTimer>
 #include "coreinterface.h"
 

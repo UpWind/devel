@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QFrame>
-#include <QtGui>
+#include <QtWidgets>
 #include <QTimer>
 #include "../CorePlugin/coreinterface.h"
 #include "../CorePlugin/coreplugin.h"
@@ -18,11 +18,12 @@ namespace Ui {
 class NMEACompass : public CorePlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.PluginSimulation.NMEACompass")
     Q_INTERFACES(CoreInterface)
 private:
     Ui::CompassWidget *ui;
     int heading;
-    QWindowsStyle winStyle;
+    //QWindowsStyle winStyle;
 
     //parseNMEAStrings variables to store values
 protected:

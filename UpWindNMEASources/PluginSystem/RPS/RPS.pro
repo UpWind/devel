@@ -7,7 +7,7 @@
 #TODO: Check the needed Qt kits by yourself before compiling
 
 QT       += core widgets \
-            webkit xml
+            webkitwidgets xml
 
 TARGET      =   $$qtLibraryTarget(RPS)
 TEMPLATE    =   lib

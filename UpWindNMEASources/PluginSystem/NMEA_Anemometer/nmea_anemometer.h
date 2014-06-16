@@ -3,7 +3,7 @@
 
 #include "../CorePlugin/coreinterface.h"
 #include "../CorePlugin/coreplugin.h"
-#include <QtGui>
+#include <QtWidgets>
 
 const int updateDelay = 1000;
 
@@ -14,6 +14,7 @@ namespace Ui {
 class NMEA_Anemometer : public CorePlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.PluginSimulation.NMEA_Anemometer")
     Q_INTERFACES(CoreInterface)
 
 public:
@@ -43,7 +44,7 @@ protected:
 private:
     Ui::AnemometerWidget *ui;
     double windSpeedValue;
-    QWindowsStyle winStyle;
+    //QWindowsStyle winStyle;
 
 
 private slots:

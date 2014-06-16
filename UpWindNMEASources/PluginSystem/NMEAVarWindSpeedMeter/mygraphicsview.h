@@ -7,7 +7,7 @@
 #include <QTimer>
 #include <QPainterPath>
 #include <QDial>
-#include <QtGui>
+#include <QtWidgets>
 #include "myline.h"
 
 class MyQGraphicsView : public QGraphicsView

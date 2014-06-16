@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
-#include <QtGui>
+#include <QtWidgets>
 #include <QTimer>
 #include "../CorePlugin/coreinterface.h"
 #include "../CorePlugin/coreplugin.h"
@@ -20,6 +20,7 @@ namespace Ui {
 class NMEAClock : public CorePlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.PluginSimulation.NMEAClock")
     Q_INTERFACES(CoreInterface)
 private:
     Ui::ClockWidget *ui;

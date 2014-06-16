@@ -1,7 +1,7 @@
 #ifndef COREINTERFACE_H
 #define COREINTERFACE_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QObject>
 
 /**

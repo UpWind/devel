@@ -4,9 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core widgets \
+QT       += widgets \
             network \
-            webkit \
+            webkitwidgets \
             xml
 
 TARGET      =   $$qtLibraryTarget(nmeagps)

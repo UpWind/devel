@@ -32,7 +32,7 @@ void NMEACompass::setHeading(int heading){
 
 void NMEACompass::CreateGUI(){
     ui->setupUi(plugin_widget);
-    ui->dial->setStyle(&winStyle);
+    //ui->dial->setStyle(&winStyle);
 
     connect(ui->dial, SIGNAL(valueChanged(int)), this, SLOT(updateLineEdit(int)));
     connect(ui->orientationButton,SIGNAL(clicked()),this,SLOT(updateDial()));
@@ -52,6 +52,7 @@ void NMEACompass::updateDial(){
         ui->lineEdit->setText("0");
     }
 
+    // TODO: wtf
     if(dialValue>=180 ? dialValue -=180 : dialValue += 180);
     heading = dialValue;
     ui->dial->setValue(dialValue);
@@ -61,6 +62,8 @@ void NMEACompass::updateDial(){
 
 void NMEACompass::updateLineEdit(int value){
     int lineValue = value;
+
+    // TODO: wtf
     if(lineValue>179 ? lineValue -=180 : lineValue += 180);
     heading = lineValue;
     ui->lineEdit->setText(QString::number(lineValue));
@@ -90,6 +93,8 @@ void NMEACompass::parseNMEAString( const QString & text){
     ui->lineEdit->setText(strList.at(1));
     int dialValue = ((QString)strList.at(1)).toInt();
     heading = dialValue;
+
+    // TODO: wtf
     if(dialValue>=180 ? dialValue -=180 : dialValue += 180);
     ui->dial->setValue(dialValue);
 }

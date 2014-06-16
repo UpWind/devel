@@ -26,7 +26,7 @@ NMEA_Anemometer::~NMEA_Anemometer()
 void NMEA_Anemometer::CreateGUI()
 {
     ui->setupUi(plugin_widget);
-    ui->windAngleDial->setStyle(&winStyle);
+    //ui->windAngleDial->setStyle(&winStyle);
 
     QGridLayout *aLayout = (QGridLayout*)ui->frame->layout();
     aLayout->setAlignment(ui->windSpeedSlider, Qt::AlignCenter);

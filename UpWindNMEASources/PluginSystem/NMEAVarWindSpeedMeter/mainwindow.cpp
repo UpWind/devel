@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QtGui>
+#include <QtWidgets>
 #include<QDial>
 #include<QDebug>
 #include<QScrollArea>

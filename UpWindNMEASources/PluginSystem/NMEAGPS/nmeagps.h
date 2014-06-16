@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QWidget>
-#include <QtGui>
+#include <QtWidgets>
 #include <QTimer>
 #include <QWebView>
 #include <QWebFrame>
@@ -21,6 +21,7 @@ namespace Ui
 
 class NMEAGPS : public CorePlugin {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.PluginSimulation.NMEAGPS")
     Q_INTERFACES(CoreInterface)
 private:
     Ui::NMEAGPS *ui;

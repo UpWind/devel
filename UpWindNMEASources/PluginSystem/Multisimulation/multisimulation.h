@@ -6,7 +6,6 @@
 #include <QObject>
 #include "client.h"
 #include "boat.h"
-#include <QWebFrame>
 #include <QList>
 #include "nmea_anemometer.h"
 
@@ -48,6 +47,7 @@ public:
 class Multisimulation : public CorePlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "fi.oulu.UpWind.PluginSimulation.MultiSimulation")
     Q_INTERFACES(CoreInterface)
 private:
     Ui::MultiWidget *ui;
