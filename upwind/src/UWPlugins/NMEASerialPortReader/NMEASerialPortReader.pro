@@ -15,15 +15,15 @@ TEMPLATE = lib
 
 
 SOURCES += \
+    serialportreader.cpp \
     ../NMEAReader/corenmeareader.cpp \
-    serialport.cpp \
     ../../Settings/settings.cpp \
     settingsui.cpp
 
 HEADERS += \
+    serialportreader.h \
     ../NMEAReader/corenmeareader.h \
     ../NMEAReader/NMEAReaderInterface.h \
-    serialport.h \
     ../../Settings/settings.h \
     settingsui.h \
     Device.h
