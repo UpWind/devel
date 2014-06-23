@@ -1,10 +1,25 @@
-Makefile
 UWCore.app
+.DS_Store
+
+# QtCreator specific
 *.pro.user
+
+# Vim specific
+*.swp
+*.swo
+
+# Qt
+Makefile
 *.o
 moc_*.cpp
-qrc_resources.cpp
+qrc_*
 ui_*.h
-qrc_resource.cpp
+*.moc
+*.pro.test
+
+# UpWind Generated
 plugins/
-.DS_Store
+*.so*
+logs/
+
+
