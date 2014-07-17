@@ -60,7 +60,7 @@ ToolBox* UIManager::getToolBox(){
     return toolbox;
 }
 
-NavigationWindow * UIManager::getMap(){
+NavigationWindow * UIManager::chartDisplayWidget() {
     return navigationWindow;
 }
 

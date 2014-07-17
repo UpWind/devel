@@ -58,7 +58,7 @@ private:
     QGraphicsView *view;
     QGraphicsSvgItem *boatImage;
     QString boatName;
-    QPointF *boatScenePosition, *boatGeoPosition;
+    QPointF boatScenePosition, *boatGeoPosition;
     QPointF firstScenePosition, secondScenePosition;
     QPointF firstPoint, secondPoint;
     QPointF endCompassPoint;

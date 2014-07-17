@@ -24,10 +24,10 @@ public:
     ~UIManager();
 
     /**
-     * Getter for the ChartWidget where the map is to be drawn.
-     * @return pointer to the ChartWidget.
+     * A QWidget where the chart and plugin components are drawn.
+     * @return pointer to the NavigationWindow
      */
-    NavigationWindow * getMap();
+    NavigationWindow *chartDisplayWidget();
 
     /**
      * Getter for the SettingsForm ui object.

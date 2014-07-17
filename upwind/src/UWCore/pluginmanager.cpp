@@ -135,12 +135,10 @@ void PluginManager::connectViewRenderer(ViewRendererInterface *viewR){
     connect(UWCore::getInstance()->getUIManager()->getToolBox(), SIGNAL(drawRoute(bool)), render, SLOT(drawRoute(bool)), Qt::QueuedConnection);
 
 
-    if(upWindScene && provider){
-        chartProvider->setChartWidgetSize(UWCore::getInstance()->getUIManager()->getMap()->size());
-        viewR->ConnectPlugin(upWindScene, UWCore::getInstance()->getUIManager()->getMap(), provider);
-        UWCore::getInstance()->getUIManager()->getMap()->lower();
-
-
+    if (upWindScene && provider) {
+        chartProvider->setChartWidgetSize(UWCore::getInstance()->getUIManager()->chartDisplayWidget()->size());
+        viewR->ConnectPlugin(upWindScene, UWCore::getInstance()->getUIManager()->chartDisplayWidget(), provider);
+        UWCore::getInstance()->getUIManager()->chartDisplayWidget()->lower();
     }
 }
 

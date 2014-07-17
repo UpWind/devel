@@ -2,8 +2,9 @@
 #include "../../shared/uwmath.h"
 #include "../UpWindScene/Scene/projection.h"
 
-Boat::Boat(QSize size, QRectF chartBoundaries){
-
+Boat::Boat(QSize size, QRectF chartBoundaries)
+    : boatScenePosition(0, 0)
+{
     this->boatImage = new QGraphicsSvgItem(":sailboat2.svg");
     this->boatImage->setPos(0, 0);
     this->boatScale = 0.2f;
@@ -45,18 +46,11 @@ Boat::Boat(QSize size, QRectF chartBoundaries){
 //    gps->setOpacity(0.7);
 
     // Initial position Oulu
-    this->boatGeoPosition = new QPointF(25.109253, 65.013026 /*25.2715, 65.1126*/);
-
-    if(boatImage != NULL)
-    {
-        qDebug() << "Boat image loaded.";
-        qDebug() << "Name: " << this->boatName;
-    }
+    //this->boatGeoPosition = new QPointF(25.109253, 65.013026 /*25.2715, 65.1126*/);
 
     this->chartBoundaries = chartBoundaries;
     this->size = size;
     this->zoomFactor = 1.0f;
-    updateBoatPosition();
 
     //141112: Rotate boat, should rotate automatically depending on the laylines??
     //071212: values for setting boat image right place
@@ -153,14 +147,12 @@ void Boat::setGeoPosition(QPointF position)
 
 void Boat::setOffSet(){
 
-    boatImage->setPos(boatScenePosition->x() - 10, boatScenePosition->y() - 20);
+    boatImage->setPos(boatScenePosition.x() - 10, boatScenePosition.y() - 20);
 }
 
 void Boat::updateBoatPosition()
 {
-    this->boatScenePosition = geoPointToPixel(this->boatGeoPosition);
-
-    //Katja 12.12.12:
+    this->boatScenePosition = *geoPointToPixel(this->boatGeoPosition);
 
 //    setGPSLine();
     setOffSet();
@@ -278,11 +270,12 @@ void Boat::setLaylines()
 float Boat::getHeading(){
     return this->heading;
 }
-//The following line is a copied from postgrechartprovider.cpp:
-    QPointF* Boat::geoPointToPixel(QPointF *geoPoint){
 
-        double x=geoPoint->x();
-        double y=geoPoint->y();
+//The following line is a copied from postgrechartprovider.cpp:
+QPointF* Boat::geoPointToPixel(QPointF *geoPoint) {
+
+    double x=geoPoint->x();
+    double y=geoPoint->y();
 
     QPointF *scenePos1 = new QPointF(x, y);
 
