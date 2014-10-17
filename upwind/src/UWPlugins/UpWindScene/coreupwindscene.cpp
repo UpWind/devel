@@ -54,7 +54,7 @@ void CoreUpWindScene::initializeSettings(){
 void CoreUpWindScene::receiveData(QVector<QPointF> layLineData){
 
     this->boat->injectLaylines(layLineData);
-    qDebug() << "Laylines injected";
+    qDebug() << "Laylines injected: " << layLineData.size();
 }
 
 void CoreUpWindScene::error(QString /*err*/)

@@ -29,7 +29,7 @@ void SettingsUI::getChartNames(){
 
     QString driver = "PG:";
     driver.append("dbname=");
-    driver.append("chart26");
+    driver.append("chart57");
     driver.append(" user=");
     driver.append(pgchart->getConUser());
     driver.append(" password=");
