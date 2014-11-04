@@ -784,7 +784,7 @@ void CalculateLaylines::updateLaylines()
     // but the TWA that we will have when heading towards our destiny.
 
     //************HARDCODED VALUE FOR futureTrueWindAngle*************
-    this->trueWindDirection = 270.0;
+    this->trueWindDirection = 90; //270.0;
     float futureTrueWindAngle = UwMath::getTWA( geoBoatPos, geoDestinyPos, trueWindDirection );
     //************HARDCODED VALUE FOR windSpeed*************
     windSpeed = 10;
